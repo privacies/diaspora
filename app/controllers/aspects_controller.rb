@@ -218,4 +218,7 @@ class AspectsController < ApplicationController
       }
     end
   end
+  
+  def lfn
+  end
 end
