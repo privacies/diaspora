@@ -69,4 +69,16 @@ class ApplicationController < ActionController::Base
                            :limit => opts[:limit])
     contacts.collect!{ |contact| contact.person }
   end
+  
+  def makeHTTPReq(params)
+    require 'net/http'
+    require 'uri'
+    uri = URI.parse( "http://10.0.0.250/LAMService.svc" )
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Get.new(uri.path)
+    request.set_form_data( params )
+    request = Net::HTTP::Get.new( uri.path+ '?' + request.body )
+    response = http.request(request)
+    logger.debug(response.body)
+  end
 end

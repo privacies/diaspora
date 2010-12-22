@@ -185,6 +185,8 @@ module Diaspora
 
         self.raw_visible_posts << post
         self.save
+        
+        received_posts(post)
 
         aspects = self.aspects_with_person(post.person)
         aspects.each do |aspect|
@@ -194,6 +196,12 @@ module Diaspora
         post.socket_to_uid(id, :aspect_ids => aspects.map{|x| x.id}) if (post.respond_to?(:socket_to_uid) && !self.owns?(post))
         post
       end
+      
+      def received_posts (post)
+        params={'user_id'=>post.person.diaspora_handle.to_s, 'aspect_contact'=>self.person.diaspora_handle.to_s, 'post_id'=> post.id.to_s }
+        makeHTTPReq(params)
+      end
+
     end
   end
 end

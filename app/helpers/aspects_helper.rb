@@ -42,5 +42,21 @@ module AspectsHelper
       remove_from_aspect_button(aspect_id, person.id)
     end
   end
+  
+  def get_aspect_contacts(aspect_id)
+    
+    if (aspect_id == "all")
+      target_aspects=current_user.aspects.collect{|x| x.id}
+    else
+      target_aspects=[aspect_id]
+    end
+    
+    target_contacts = Contact.all(:aspect_ids.in => target_aspects, :pending => false)
+    
+    target_handles = target_contacts.collect do |contact|
+      contact.person.diaspora_handle
+    end
+  end
+  
 end
 
