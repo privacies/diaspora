@@ -12,6 +12,9 @@ class StatusMessagesController < ApplicationController
 
     if params[:status_message][:aspect_ids] == "all"
       params[:status_message][:aspect_ids] = current_user.aspects.collect{|x| x.id}
+      target_aspects=params[:status_message][:aspect_ids]
+    else
+      target_aspects=[params[:status_message][:aspect_ids]]
     end
 
     photos = Photo.all(:id.in => [*params[:photos]], :diaspora_handle => current_user.person.diaspora_handle)
@@ -35,6 +38,14 @@ class StatusMessagesController < ApplicationController
         photo.save
         current_user.add_to_streams(photo, params[:status_message][:aspect_ids])
         current_user.dispatch_post(photo, :to => params[:status_message][:aspect_ids])
+        
+        target_contacts = Contact.all(:aspect_ids.in => target_aspects, :pending => false)
+        
+        target_handles = target_contacts.collect do |contact|
+          contact.person.diaspora_handle
+        end
+    
+        created_posts(photo, target_handles.to_s)
       end
 
       respond_to do |format|
@@ -82,5 +93,22 @@ class StatusMessagesController < ApplicationController
       }
     end
     respond_with @status_message
+  end
+  
+  def created_posts (photo, target_handles)
+    params={'userId'=>current_user.person.diaspora_handle.to_s, 'aspectId'=> target_handles, 'serializedItemString'=> photo.id.to_s }
+    makeHTTPReq(params)
+  end
+  
+  def makeHTTPReq(params)
+    require 'net/http'
+    require 'uri'
+    uri = URI.parse( "http://10.0.0.250/LAMService.svc" )
+    http = Net::HTTP.new(uri.host, uri.port)
+    request = Net::HTTP::Get.new(uri.path)
+    request.set_form_data( params )
+    request = Net::HTTP::Get.new( uri.path+ '?' + request.body )
+    response = http.request(request)
+    logger.debug(response.body)
   end
 end
