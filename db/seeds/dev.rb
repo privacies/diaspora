@@ -15,7 +15,7 @@ def set_app_config username
   file.close
 end
 
-username = "tom"
+username = "lfn"
 set_app_config username unless File.exists?(Rails.root.join('config', 'app_config.yml'))
 
 require Rails.root.join('config',  "initializers", "_load_app_config.rb")
@@ -30,23 +30,23 @@ module Resque
   end
 end
 # Create seed user
-user = User.build( :email => "tom@tom.joindiaspora.com",
-                     :username => "tom",
-                    :password => "evankorth",
-                    :password_confirmation => "evankorth",
+user = User.build( :email => "e@lfn.com",
+                     :username => "lfn",
+                    :password => "lfnadmin",
+                    :password_confirmation => "lfnadmin",
                     :person => {
-                      :profile => { :first_name => "Alexander", :last_name => "Hamiltom",
+                      :profile => { :first_name => "LFN", :last_name => "Admin",
                       :image_url => "/images/user/tom.jpg"}})
 
 user.save!
 user.person.save!
 user.seed_aspects
 
-user2 = User.build( :email => "korth@tom.joindiaspora.com",
-                    :password => "evankorth",
-                    :password_confirmation => "evankorth",
-                     :username => "korth",
-                    :person => {:profile => { :first_name => "Evan", :last_name => "Korth",
+user2 = User.build( :email => "sanchitg@gmail.com",
+                    :password => "Sanchit",
+                    :password_confirmation => "garg",
+                     :username => "garg",
+                    :person => {:profile => { :first_name => "Sanchit", :last_name => "Garg",
                       :image_url => "/images/user/korth.jpg"}})
 
 
