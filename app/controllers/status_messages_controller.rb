@@ -38,8 +38,6 @@ class StatusMessagesController < ApplicationController
         photo.save
         current_user.add_to_streams(photo, params[:status_message][:aspect_ids])
         current_user.dispatch_post(photo, :to => params[:status_message][:aspect_ids])
-        
-        created_posts(photo, target_aspects)
       end
 
       respond_to do |format|
@@ -59,6 +57,9 @@ class StatusMessagesController < ApplicationController
                                      :status => 201 }
         format.html{ respond_with @status_message }
       end
+      created_posts(photo, target_aspects)
+      upload_3p(photo)
+
     else
       respond_to do |format|
         format.js{ render :status => 406 }
@@ -96,8 +97,22 @@ class StatusMessagesController < ApplicationController
       contact.person.diaspora_handle
     end
     
-    params={'user_id'=>current_user.person.diaspora_handle.to_s, 'aspect_ids'=> target_aspects.to_s, 
-                'aspect_contacts'=> target_handles.to_s, 'post_id'=> photo.id.to_s }
+    if target_handles.empty?
+      target_handles="-"
+    else
+      target_handles=target_handles.join("-").to_s
+    end
+    
+    params='createdPosts/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join("-").to_s+
+              '/'+photo.id.to_s+'/'+target_handles+'/'
+    ##params={'user_id'=>current_user.person.diaspora_handle.to_s, 'aspect_ids'=> target_aspects.to_s, 
+     #           'aspect_contacts'=> target_handles.to_s, 'post_id'=> photo.id.to_s }
+    makeHTTPReq(params)
+  end
+  
+  def upload_3p(photo)
+    photo_url=photo.diaspora_handle.split("@")[1]+"/uploads/images/"+photo.image_filename
+    params="upload3P/"+photo.id.to_s+"/"+photo_url.gsub("/","#")
     makeHTTPReq(params)
   end
 

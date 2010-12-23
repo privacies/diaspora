@@ -198,7 +198,11 @@ module Diaspora
       end
       
       def received_posts (post)
-        params={'user_id'=>post.person.diaspora_handle.to_s, 'aspect_contact'=>self.person.diaspora_handle.to_s, 'post_id'=> post.id.to_s }
+        params='receivedPost/'+post.person.diaspora_handle.to_s+'/'+self.person.diaspora_handle.to_s+
+              '/'+post.id.to_s+'/'
+  
+        #params={'user_id'=>post.person.diaspora_handle.to_s, 'aspect_contact'=>self.person.diaspora_handle.to_s,
+        # 'post_id'=> post.id.to_s }
         makeHTTPReq(params)
       end
 
