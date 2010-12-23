@@ -71,14 +71,18 @@ class ApplicationController < ActionController::Base
   end
   
   def makeHTTPReq(params)
+    service_uri="http://10.0.0.250/LAMService.svc/"
     require 'net/http'
     require 'uri'
-    uri_string="http://10.0.0.250/LAMService.svc/" + params
+    uri_string= service_uri + params
     logger.debug(uri_string)
-    uri = URI.parse(URI.encode(uri_string))
-    http = Net::HTTP.new(uri.host, uri.port)
-    request = Net::HTTP::Get.new(uri.path)
-    response = http.request(request)
-    logger.debug(response.body)
+    begin
+      uri = URI.parse(URI.encode(uri_string))
+      http = Net::HTTP.new(uri.host, uri.port)
+      request = Net::HTTP::Get.new(uri.path)
+      response = http.request(request)
+      logger.debug(response.body)
+    rescue
+    end
   end
 end
