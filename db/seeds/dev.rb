@@ -43,9 +43,9 @@ user.person.save!
 user.seed_aspects
 
 user2 = User.build( :email => "sanchitg@gmail.com",
-                    :password => "Sanchit",
-                    :password_confirmation => "garg",
-                     :username => "garg",
+                    :password => "sanchit",
+                    :password_confirmation => "sanchit",
+                     :username => "sanchit",
                     :person => {:profile => { :first_name => "Sanchit", :last_name => "Garg",
                       :image_url => "/images/user/korth.jpg"}})
 
