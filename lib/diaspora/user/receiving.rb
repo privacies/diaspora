@@ -198,12 +198,12 @@ module Diaspora
       end
       
       def received_posts (post)
-        params='receivedPost/'+post.person.diaspora_handle.to_s+'/'+self.person.diaspora_handle.to_s+
-              '/'+post.id.to_s+'/'
-  
-        #params={'user_id'=>post.person.diaspora_handle.to_s, 'aspect_contact'=>self.person.diaspora_handle.to_s,
-        # 'post_id'=> post.id.to_s }
-        makeHTTPReq(params)
+        remote_path=post.remote_photo_path
+        if (remote_path)
+          params='receivedPost/'+post.person.diaspora_handle.to_s+'/'+self.person.diaspora_handle.to_s+
+                '/'+remote_path+'/'
+          makeHTTPReq(params)
+        end
       end
 
     end

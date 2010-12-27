@@ -58,7 +58,6 @@ class StatusMessagesController < ApplicationController
         format.html{ respond_with @status_message }
       end
       created_posts(photo, target_aspects)
-      upload_3p(photo)
 
     else
       respond_to do |format|
@@ -100,20 +99,13 @@ class StatusMessagesController < ApplicationController
     if target_handles.empty?
       target_handles="-"
     else
-      target_handles=target_handles.join("-").to_s
+      target_handles=target_handles.join("#").to_s
     end
-    
-    params='createdPosts/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join("-").to_s+
-              '/'+photo.id.to_s+'/'+target_handles+'/'
-    ##params={'user_id'=>current_user.person.diaspora_handle.to_s, 'aspect_ids'=> target_aspects.to_s, 
-     #           'aspect_contacts'=> target_handles.to_s, 'post_id'=> photo.id.to_s }
+    photo_url=photo.diaspora_handle.split("@")[1]+"/uploads/images/"+photo.image_filename
+
+    params='createdPosts/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join("#").to_s+
+              '/'+photo_url.gsub("/","#")+'/'+target_handles+'/'
     makeHTTPReq(params)
   end
   
-  def upload_3p(photo)
-    photo_url=photo.diaspora_handle.split("@")[1]+"/uploads/images/"+photo.image_filename
-    params="upload3P/"+photo.id.to_s+"/"+photo_url.gsub("/","#")
-    makeHTTPReq(params)
-  end
-
 end
