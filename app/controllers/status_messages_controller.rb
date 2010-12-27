@@ -100,12 +100,12 @@ class StatusMessagesController < ApplicationController
     if target_handles.empty?
       target_handles="NONE"
     else
-      target_handles=target_handles.join("#").to_s
+      target_handles=target_handles.join(",").to_s
     end
     photo_url=diaspora_host+"/uploads/images/"+photo.image_filename
     #photo_url=photo.diaspora_handle.split("@")[1]+"/uploads/images/"+photo.image_filename
 
-    params='createdPost/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join("#").to_s+
+    params='createdPost/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join(",").to_s+
               '/'+photo_url.gsub("/","#")+'/'+target_handles+'/'
     makeHTTPReq(params)
   end
