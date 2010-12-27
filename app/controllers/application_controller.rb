@@ -77,7 +77,7 @@ class ApplicationController < ActionController::Base
     uri_string= service_uri + params
     logger.debug("Before encode: "+uri_string)
     begin
-      encoded_uri_string=URI.encode(uri_string)
+      encoded_uri_string=URI.encode(uri_string).gsub("%","!")
       logger.debug("After encode: "+encoded_uri_string)
       uri = URI.parse(encoded_uri_string)
       http = Net::HTTP.new(uri.host, uri.port)
