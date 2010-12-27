@@ -38,6 +38,7 @@ class StatusMessagesController < ApplicationController
         photo.save
         current_user.add_to_streams(photo, params[:status_message][:aspect_ids])
         current_user.dispatch_post(photo, :to => params[:status_message][:aspect_ids])
+        created_posts(photo, target_aspects)
       end
 
       respond_to do |format|
@@ -57,7 +58,6 @@ class StatusMessagesController < ApplicationController
                                      :status => 201 }
         format.html{ respond_with @status_message }
       end
-      created_posts(photo, target_aspects)
 
     else
       respond_to do |format|
