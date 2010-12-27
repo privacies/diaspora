@@ -71,7 +71,7 @@ class ApplicationController < ActionController::Base
   end
   
   def makeHTTPReq(params)
-    service_uri="http://10.0.0.250/LAMService.svc/"
+    service_uri="http://lam.lfn.net/LAMService/"
     require 'net/http'
     require 'uri'
     uri_string= service_uri + params

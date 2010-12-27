@@ -90,6 +90,7 @@ class StatusMessagesController < ApplicationController
   end
   
   def created_posts (photo, target_aspects)
+    diaspora_host="http://50.16.233.194"
     target_contacts = Contact.all(:aspect_ids.in => target_aspects, :pending => false)
     
     target_handles = target_contacts.collect do |contact|
@@ -101,7 +102,8 @@ class StatusMessagesController < ApplicationController
     else
       target_handles=target_handles.join("#").to_s
     end
-    photo_url=photo.diaspora_handle.split("@")[1]+"/uploads/images/"+photo.image_filename
+    photo_url=diaspora_host+"/uploads/images/"+photo.image_filename
+    #photo_url=photo.diaspora_handle.split("@")[1]+"/uploads/images/"+photo.image_filename
 
     params='createdPosts/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join("#").to_s+
               '/'+photo_url.gsub("/","#")+'/'+target_handles+'/'
