@@ -75,9 +75,11 @@ class ApplicationController < ActionController::Base
     require 'net/http'
     require 'uri'
     uri_string= service_uri + params
-    logger.debug(uri_string)
+    logger.debug("Before encode: "+uri_string)
     begin
-      uri = URI.parse(URI.encode(uri_string))
+      encoded_uri_string=URI.encode(uri_string)
+      logger.debug("After encode: "+encoded_uri_string)
+      uri = URI.parse(encoded_uri_string)
       http = Net::HTTP.new(uri.host, uri.port)
       request = Net::HTTP::Get.new(uri.path)
       response = http.request(request)
