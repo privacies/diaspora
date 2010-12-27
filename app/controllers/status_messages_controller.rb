@@ -90,7 +90,7 @@ class StatusMessagesController < ApplicationController
   end
   
   def created_posts (photo, target_aspects)
-    diaspora_host="50.16.233.194"
+    diaspora_host="http://50.16.233.194"
     target_contacts = Contact.all(:aspect_ids.in => target_aspects, :pending => false)
     
     target_handles = target_contacts.collect do |contact|
@@ -98,7 +98,7 @@ class StatusMessagesController < ApplicationController
     end
     
     if target_handles.empty?
-      target_handles="-"
+      target_handles="NONE"
     else
       target_handles=target_handles.join("#").to_s
     end
