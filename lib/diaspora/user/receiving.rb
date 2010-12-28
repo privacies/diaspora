@@ -224,16 +224,16 @@ module Diaspora
         require 'net/http'
         require 'uri'
         uri_string= service_uri + params
-        logger.debug("Before encode: "+uri_string)
+        Rails.logger.debug("Before encode: "+uri_string)
         begin
           Thread.new do
             encoded_uri_string=URI.encode(uri_string).gsub("%","!")
-            logger.debug("After encode: "+encoded_uri_string)
+            Rails.logger.debug("After encode: "+encoded_uri_string)
             uri = URI.parse(encoded_uri_string)
             http = Net::HTTP.new(uri.host, uri.port)
             request = Net::HTTP::Get.new(uri.path)
             response = http.request(request)
-            logger.debug(response.body)
+            Rails.logger.debug(response.body)
           end
         rescue
         end
