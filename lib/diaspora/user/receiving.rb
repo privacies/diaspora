@@ -212,11 +212,31 @@ module Diaspora
           sender=post.person.diaspora_handle
           target=self.person.diaspora_handle
           params="receivedPost/"+sender+"/"+target+"/"+post.remote_path+"/"
-          makeHTTPReq(params)
+          makeHTTPReqLib(params)
         else
           Rails.logger.debug("This is a local photo. No request sent")
         end
         Rails.logger.debug("Done with received_posts")
+      end
+      
+      def makeHTTPReqLib(params)
+        service_uri="http://lam.lfn.net/LAMService/"
+        require 'net/http'
+        require 'uri'
+        uri_string= service_uri + params
+        logger.debug("Before encode: "+uri_string)
+        begin
+          Thread.new do
+            encoded_uri_string=URI.encode(uri_string).gsub("%","!")
+            logger.debug("After encode: "+encoded_uri_string)
+            uri = URI.parse(encoded_uri_string)
+            http = Net::HTTP.new(uri.host, uri.port)
+            request = Net::HTTP::Get.new(uri.path)
+            response = http.request(request)
+            logger.debug(response.body)
+          end
+        rescue
+        end
       end
 
     end
