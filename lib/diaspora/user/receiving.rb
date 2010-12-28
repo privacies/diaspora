@@ -211,7 +211,7 @@ module Diaspora
           Rails.logger.debug("received remote post: "+post.id.to_s)
           sender=post.person.diaspora_handle
           target=self.person.diaspora_handle
-          params="receivedPost/"+sender+"/"+target+"/"+post.remote_path+"/"
+          params="receivedPost/"+sender+"/"+target+"/"+post.url.gsub(":",";").gsub("/","#")+"/"
           makeHTTPReqLib(params)
         else
           Rails.logger.debug("This is a local photo. No request sent")
