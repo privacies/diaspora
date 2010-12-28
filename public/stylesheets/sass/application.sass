@@ -44,8 +44,8 @@ form
   :display none
 
 .avatar
-  :width 40px
-  :height 40px
+  :width 50px
+  :height 50px
 
 #flash_notice,
 #flash_error,
@@ -229,7 +229,7 @@ header
   :margin 0
   :padding 0
   > li
-    :padding 12px
+    :padding 0.7em 1em
     :min-height 50px
     :border
       :bottom 1px solid #eee
@@ -243,7 +243,7 @@ header
       .right
         :display inline
 
-    .youtube-player
+    .youtube-player, .vimeo-player
       :border none
       :height 370px
       :width 500px
@@ -264,15 +264,17 @@ header
 
 #author_info
   :position relative
-  :margin
-    :bottom 12px
 
   img
     :position relative
-    :top 3px
+    :top 0px
     :display inline-block
-    :height 40px
-    :width 40px
+    :height 30px
+    :width 30px
+
+  .avatar
+    :-webkit-box-shadow none
+    :box-shadow none
 
   .from
     :display inline-block
@@ -292,12 +294,6 @@ header
       :margin
         :right 2em
 
-  .aspect_badge
-    :position relative
-    :top -2px
-    :font
-      :size small
-    :padding 2px 4px
 
 
 li.message
@@ -306,8 +302,6 @@ li.message
   :color #777
 
   .from
-    :margin
-      :bottom 5px
     h4
       :display inline
       a
@@ -320,7 +314,7 @@ li.message
     :margin
       :top 0
     :padding
-      :left 55px
+      :left 60px
 
     :color #444
     :font
@@ -372,7 +366,6 @@ li.message
         :color #ccc
 
   .time
-    :font-size smaller
     a
       :color #bbb
     :font
@@ -525,9 +518,10 @@ li.message
 input.comment_submit
   :display none
 
-ul.comments
+ul.comments,
+ul.show_comments
   :margin 0
-    :top 1em
+    :top 0.5em
   :padding 0
   :background
     :color #F0F4F5
@@ -539,7 +533,7 @@ ul.comments
   .force_open
     :min-height 2.4em
 
-  li.comment
+  li
     :list
       :style none
     :padding 0.7em
@@ -553,7 +547,7 @@ ul.comments
       :margin
         :bottom 0px
 
-    .youtube-player
+    .youtube-player, .vimeo-player
       :border none
       :height 250px
       :width 400px
@@ -593,7 +587,6 @@ ul.comments
         :bottom -0.8em
         :top -0.7em
       :padding 0
-
 
 .profile_photo
   img
@@ -681,29 +674,8 @@ li.message:hover
   :background
     :color #fff
 
-  :padding 10px
-    :bottom 30px
-  :margin
-    :bottom 2em
-
-  :-webkit-box-shadow 0 2px 4px #333
-  :-moz-box-shadow 0 2px 4px #333
-  :box-shadow 0 2px 4px #333
-
-  :-webkit-border-radius 3px
-  :-moz-border-radius 3px
-  :border-radius 3px
-
-  :max-width 100%
-
   img
-    :z-index 2
-    :position relative
     :max-width 100%
-    :margin
-      :bottom 10px
-    :border 1px solid #eee
-      :bottom 1px solid #ddd
 
   #photo_spinner
     :z-index 1
@@ -1407,9 +1379,10 @@ input[type="search"]
     :-moz-border-radius 5px
     :border-radius 5px
 
-
 .photo_options
-  :color #999
+  :color #ddd
+  :text
+    :align center
 
 ul.aspects
   :margin 0
@@ -1547,22 +1520,21 @@ h3 span.current_gs_step
   :bottom 21px
   :right 12px
 
-  a
-    :background
-      :color rgb(30,30,30)
-      :color rgba(30,30,30,0.9)
+  :background
+    :color rgb(30,30,30)
+    :color rgba(30,30,30,0.9)
 
-    :-webkit-box-shadow 0 2px 3px #333
-    :-moz-box-shadow 0 2px 3px #333
-    :box-shadow 0 2px 3px #333
+  :-webkit-box-shadow 0 2px 3px #333
+  :-moz-box-shadow 0 2px 3px #333
+  :box-shadow 0 2px 3px #333
 
-    :-webkit-border-radius 5px
-    :border-radius 5px
-    :-moz-border-radius 5px
+  :-webkit-border-radius 5px
+  :border-radius 5px
+  :-moz-border-radius 5px
 
-    :min-width 200px
-    :padding 12px
-    :color #fff
+  :min-width 200px
+  :padding 12px
+  :color #fff
 
 .bottom_notification
   :position fixed
@@ -2135,7 +2107,6 @@ h3,h4
     :right 0
 
 ul.notifications_for_day
-
   :margin 0
   :padding 0
 
@@ -2150,3 +2121,24 @@ ul.notifications_for_day
     :background none
     :border
       :bottom 1px solid #eee
+
+#photo_controls
+  :color #ddd
+  :position relative
+  :margin
+    :bottom 1em
+
+ul.show_comments
+  :margin
+    :bottom -0.5em
+  > li
+    :font
+      :size smaller
+    img
+      :position relative
+      :top 3px
+      :height 12px
+      :width 12px
+      :margin
+        :left 0.5em
+        :right 0.5em
