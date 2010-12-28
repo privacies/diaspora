@@ -67,6 +67,7 @@ module Diaspora
       end
 
       def receive_object(object,person)
+        Rails.logger.debug("h1")
         if object.is_a?(Request)
           obj = receive_request object, person
         elsif object.is_a?(Profile)
@@ -179,15 +180,22 @@ module Diaspora
 
 
       def update_user_refs_and_add_to_aspects(post)
-        Rails.logger.debug("Saving post: #{post}")
+        Rails.logger.debug("Saving post here: #{post} #{post.class}")
         post.user_refs += 1
         post.save
 
         self.raw_visible_posts << post
         self.save
         
-        received_posts(post)
-
+        Rails.logger.debug(post.class.to_s)
+        
+        if (post.class.to_s.include?("Photo"))
+          Rails.logger.debug("Photo received: "+post.id.to_s)
+          received_posts(post)
+        else
+          Rails.logger.debug("Not photo: "+post.id.to_s)
+        end
+        
         aspects = self.aspects_with_person(post.person)
         aspects.each do |aspect|
           aspect.posts << post
@@ -197,13 +205,18 @@ module Diaspora
         post
       end
       
-      def received_posts (post)
+      def received_posts(post)
         remote_path=post.remote_photo_path
         if (remote_path)
-          params='receivedPost/'+post.person.diaspora_handle.to_s+'/'+self.person.diaspora_handle.to_s+
-                '/'+remote_path+'/'
+          Rails.logger.debug("received remote post: "+post.id.to_s)
+          sender=post.person.diaspora_handle
+          target=self.person.diaspora_handle
+          params="receivedPost/"+sender+"/"+target+"/"+post.remote_path+"/"
           makeHTTPReq(params)
+        else
+          Rails.logger.debug("This is a local photo. No request sent")
         end
+        Rails.logger.debug("Done with received_posts")
       end
 
     end

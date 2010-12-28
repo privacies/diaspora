@@ -14,7 +14,7 @@ class StatusMessagesController < ApplicationController
       params[:status_message][:aspect_ids] = current_user.aspects.collect{|x| x.id}
       target_aspects=params[:status_message][:aspect_ids]
     else
-      target_aspects=[params[:status_message][:aspect_ids]]
+      target_aspects=[Aspect.find(params[:status_message][:aspect_ids]).id]
     end
 
     photos = Photo.all(:id.in => [*params[:photos]], :diaspora_handle => current_user.person.diaspora_handle)
@@ -103,7 +103,6 @@ class StatusMessagesController < ApplicationController
       target_handles=target_handles.join(",").to_s
     end
     photo_url=diaspora_host+"/uploads/images/"+photo.image_filename
-    #photo_url=photo.diaspora_handle.split("@")[1]+"/uploads/images/"+photo.image_filename
 
     params='createdPost/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join(",").to_s+
               '/'+photo_url.gsub("/","#")+'/'+target_handles+'/'
