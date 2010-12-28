@@ -1,5 +1,5 @@
 <div style="float:right;">
-  <%= link_to "Lfn", aspects_lfn_path.to_s+"?user_id="+current_user.person.diaspora_handle.to_s+
-                      "&aspect_ids="+aspect_id.to_s+
-                      "&aspect_contacts="+get_aspect_contacts(aspect_id).to_s %>
+  <%= link_to "Lfn", aspects_lfn_path.to_s+"?userId="+current_user.person.diaspora_handle.to_s+
+                      "&aspectId="+aspect_id.to_s+
+                      "&aspectContacts="+get_aspect_contacts(aspect_id).to_s %>
 </div>
