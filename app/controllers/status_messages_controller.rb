@@ -90,22 +90,27 @@ class StatusMessagesController < ApplicationController
   end
   
   def created_posts (photo, target_aspects)
-    diaspora_host="http;//50.16.233.194" ##encoded
     target_contacts = Contact.all(:aspect_ids.in => target_aspects, :pending => false)
-    
+    diaspora_host=photo.diaspora_handle.split("@")[1]
+  
     target_handles = target_contacts.collect do |contact|
       contact.person.diaspora_handle
     end
     
-    if target_handles.empty?
-      target_handles="NONE"
-    else
-      target_handles=target_handles.join(",").to_s
+    local_target_handles = target_handles.select do |handle|
+      handle.split("@")[1].eql?(diaspora_host)
     end
-    photo_url=diaspora_host+"/uploads/images/"+photo.image_filename
+    
+    if local_target_handles.empty?
+      local_target_handles="NONE"
+    else
+      local_target_handles=target_handles.join(",").to_s
+    end
+    
+    photo_url="http;//"+diaspora_host+photo.url
 
     params='createdPost/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join(",").to_s+
-              '/'+photo_url.gsub("/","#")+'/'+target_handles+'/'
+              '/'+photo_url.gsub("/","#")+'/'+local_target_handles+'/'
     makeHTTPReq(params)
   end
   
