@@ -1,3 +1,41 @@
+<script type="text/javascript" src="/javascripts/Silverlight.js"></script>
+<script type="text/javascript">
+  function onSilverlightError(sender, args) {
+      var appSource = "";
+      if (sender != null && sender != 0) {
+          appSource = sender.getHost().Source;
+      }
+
+      var errorType = args.ErrorType;
+      var iErrorCode = args.ErrorCode;
+
+      if (errorType == "ImageError" || errorType == "MediaError") {
+          return;
+      }
+
+      var errMsg = "Unhandled Error in Silverlight Application " + appSource + "\n";
+
+      errMsg += "Code: " + iErrorCode + "    \n";
+      errMsg += "Category: " + errorType + "       \n";
+      errMsg += "Message: " + args.ErrorMessage + "     \n";
+
+      if (errorType == "ParserError") {
+          errMsg += "File: " + args.xamlFile + "     \n";
+          errMsg += "Line: " + args.lineNumber + "     \n";
+          errMsg += "Position: " + args.charPosition + "     \n";
+      }
+      else if (errorType == "RuntimeError") {
+          if (args.lineNumber != 0) {
+              errMsg += "Line: " + args.lineNumber + "     \n";
+              errMsg += "Position: " + args.charPosition + "     \n";
+          }
+          errMsg += "MethodName: " + args.methodName + "     \n";
+      }
+
+      throw new Error(errMsg);
+  }
+</script>
+
 <div id="silverlightControlHost">
   <object data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="99%">
     <param name="source" value="/data/ActivityStream.xap" />
@@ -17,7 +55,7 @@
 <script type="text/javascript">
   function stretch()
   {
-    var obj=document.getElementById("bd");
+    var obj=document.getElementById("silverlightControlHost");
     var parent=obj.parentNode.parentNode;
     parent.style.width="100%";
     obj.parentNode.style.width="100%";
