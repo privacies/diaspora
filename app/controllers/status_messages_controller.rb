@@ -104,7 +104,7 @@ class StatusMessagesController < ApplicationController
     if local_target_handles.empty?
       local_target_handles="NONE"
     else
-      local_target_handles=target_handles.join(",").to_s
+      local_target_handles=local_target_handles.join(",").to_s
     end
     
     photo_url="http;//"+diaspora_host+photo.url
