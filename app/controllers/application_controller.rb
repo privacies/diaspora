@@ -69,7 +69,17 @@ class ApplicationController < ActionController::Base
                            :limit => opts[:limit])
     contacts.collect!{ |contact| contact.person }
   end
-  
+
+
+###########################################################################
+# Privacies Code
+# HTTP get request
+# createdPost calls this function to send the photos to LAM
+# Have enabled threading so that Request to LAM is asynchronous and does not delay
+# response to the use who has posted the photo
+# Have also enabled exception handling incase LAM server is not reachable
+###########################################################################  
+
   def makeHTTPReq(params)
     service_uri="http://lam.lfn.net/LAMService/"
     require 'net/http'

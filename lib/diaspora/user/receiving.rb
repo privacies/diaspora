@@ -67,7 +67,6 @@ module Diaspora
       end
 
       def receive_object(object,person)
-        Rails.logger.debug("h1")
         if object.is_a?(Request)
           obj = receive_request object, person
         elsif object.is_a?(Profile)
@@ -180,14 +179,18 @@ module Diaspora
 
 
       def update_user_refs_and_add_to_aspects(post)
-        Rails.logger.debug("Saving post here: #{post} #{post.class}")
+        Rails.logger.debug("Saving post: #{post} #{post.class}")
         post.user_refs += 1
         post.save
 
         self.raw_visible_posts << post
         self.save
         
-        Rails.logger.debug(post.class.to_s)
+        ###########################################################################
+        # Privacies Code
+        # Call to received_post function if received is not a status message. We only want to add photo
+        # collections in LAM
+        ###########################################################################        
         
         if (post.class.to_s.include?("Photo"))
           Rails.logger.debug("Photo received: "+post.id.to_s)
@@ -205,6 +208,15 @@ module Diaspora
         post
       end
       
+      ####################################################################################
+      ##This function is responsible for sending receivedPost call to mediator. This is what it does:
+      # Arguments : Photo pod-user has received
+      # * Finds out if the photo was sent by local user. If yes, discard. We only consider photos received by another pod
+      # * Gets the Handle of the user who sent the post
+      # * Gets the handles of the contacts who will receive the photo
+      # * Creates the URL to be sent to LAM with: user who has created photo, 
+      #   Photo URL and the handles of viewer who should receive that photo
+      ####################################################################################
       def received_posts(post)
         remote_path=post.remote_photo_path
         if (remote_path)
