@@ -46,7 +46,7 @@
             = link_to t('_home'), root_path
 
           - for aspect in @aspects
-            %li{:class => ("selected" if current_aspect?(aspect))}
+            %li{:class => ("selected" if current_aspect?(aspect)), :id=> (aspect.id)}
               = link_for_aspect aspect
           %li
             = link_to '+', '#add_aspect_pane', :class => "add_aspect_button", :title => t('aspects.manage.add_a_new_aspect')

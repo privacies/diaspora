@@ -16,7 +16,7 @@ class HandlerController < ApplicationController
     
     @return_xml=mediator(uri_string)
     
-    cxml_uri="http://cxml.lfn.net/posts.cxml?xml="+@return_xml
+    cxml_uri="http://cxml.lfn.net/internalposts.cxml?xml="+@return_xml
     
     begin
       encoded_uri_string=URI.encode(cxml_uri)
