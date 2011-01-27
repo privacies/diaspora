@@ -33,7 +33,7 @@ class HandlerController < ApplicationController
       response = http.request(request)
     rescue
     end
-    @return_body = response
+    @return_body = response.body
     logger.debug(response.body)
     
   end
