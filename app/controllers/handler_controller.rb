@@ -23,18 +23,24 @@ class HandlerController < ApplicationController
     
     begin
       encoded_uri_string=URI.encode(cxml_uri)
-      params = {'xml' => URI.encode(@return_xml)}
-      
-      uri = URI.parse(encoded_uri_string)
-      http = Net::HTTP.new(uri.host, uri.port)
-      request = Net::HTTP::Get.new(uri.path)
-      request.set_form_data( params )
-      request = Net::HTTP::Get.new( uri.path+ '?' + request.body ) 
-      response = http.request(request)
+      xml_val=URI.encode(@return_xml)
+      params = {'xml' => xml_val }
+     response=Net::HTTP.post_form(URI.parse(encoded_uri_string), {'xml'=>xml_val}) 
+      #uri = URI.parse(encoded_uri_string)
+      #http = Net::HTTP.new(uri.host, uri.port)
+      #request = Net::HTTP::Get.new(uri.path)
+      #request.set_form_data( params )
+      #request = Net::HTTP::Get.new( uri.path+ '?' + request.body ) 
+      #response = http.request(request)
     rescue
     end
-    @return_body = response.body
-    logger.debug(response.body)
+@cxml_call=encoded_uri_string+"?xml="+xml_val
+logger.debug(encoded_uri_string)
+logger.debug(xml_val)
+logger.debug(response)
+    @return_body = if (response.nil?); "EMPTY"; else; response.body; end
+    
+
     
   end
   
