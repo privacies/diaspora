@@ -83,5 +83,39 @@ class StatusMessagesController < ApplicationController
 
     respond_with @status_message
   end
+####################################################################################
+  # Privacies Code
+  ##This function is responsible for sending createdPost call to mediator. This is what it does:
+  # Arguments : Photo Shared and Aspects in which photo is shared
+  # * Finds out the contacts associated with the aspects
+  # * Gets the Handles of the contacts
+  # * Throws away the handles of the contacts who are in different pod
+  # * Creates the URL to be sent to LAM with: user who has created photo, Aspects in which he has shared the phtoo
+  # , Photo URL and the handles of viewers who should receive that photo
+  ####################################################################################
+  def created_posts (photo, target_aspects)
+    target_contacts = Contact.all(:aspect_ids.in => target_aspects, :pending => false)
+    diaspora_host=photo.diaspora_handle.split("@")[1]
+  
+    target_handles = target_contacts.collect do |contact|
+      contact.person.diaspora_handle
+    end
+    
+    local_target_handles = target_handles.select do |handle|
+      handle.split("@")[1].eql?(diaspora_host)
+    end
+    
+    if local_target_handles.empty?
+      local_target_handles="NONE"
+    else
+      local_target_handles=local_target_handles.join(",").to_s
+    end
+    
+    photo_url="http;//"+diaspora_host+photo.url
 
+    params='createdPost/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join(",").to_s+
+              '/'+photo_url.gsub("/","#")+'/'+local_target_handles+'/'
+    makeHTTPReq(params)
+  end
+  
 end
