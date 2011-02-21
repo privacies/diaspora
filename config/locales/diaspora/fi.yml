@@ -4,34 +4,40 @@
 
 
 fi: 
+  _aspect: "Näkymä"
+  _aspects: "Näkymää"
+  _comment: "Kommentoi"
   _comments: "Kommentit"
+  _contact: "Kontakti"
+  _contacts: "Kontaktit"
   _home: "Etusivu"
+  _more: "Lisää"
   _photos: "kuvat"
   _services: "Ulkoiset palvelut"
   account: "Käyttäjätili"
-  activemodel: 
+  activerecord: 
     errors: 
       models: 
         contact: 
           attributes: 
             person_id: 
-              taken: "täytyy olla yksilöllinen tämän käyttäjän kontakteissa."
+              taken: "on oltava yksilöllinen."
         person: 
           attributes: 
             diaspora_handle: 
-              taken: "on jo käytössä"
+              taken: "on jo varattu."
         request: 
           attributes: 
             from_id: 
-              taken: "on samanlainen aiemman pyynnön kanssa."
+              taken: "on jo tehdyn pyynnön kaksoiskappale."
         user: 
           attributes: 
             email: 
-              taken: "on jo käytössä"
+              taken: "on jo varattu."
             person: 
-              invalid: "ei kelpaa."
+              invalid: "ei ole kelvollinen."
             username: 
-              taken: "on jo käytössä."
+              taken: "on jo varattu."
   ago: "%{time} sitten"
   application: 
     helper: 
@@ -41,32 +47,42 @@ fi:
       video_title: 
         unknown: "Videon Otsikko Tuntematon"
   are_you_sure: "Oletko varma?"
+  aspect_memberships: 
+    destroy: 
+      failure: "Failed to remove person from aspect"
+      no_membership: "Could not find the selected person in that aspect"
+      success: "Successfully removed person from aspect"
   aspects: 
     add_to_aspect: 
       failure: "Kontaktin lisäys näkymään epäonnistui."
       success: "Ystävän lisäys näkymään onnistui."
-    all_aspects_contacts: 
-      all_contacts: "Kaikki kontaktit"
-      aspects: "Verkostonäkymät"
-      manage_aspects: "hallitse näkymiä"
-      no_contacts: "Sinulla ei vielä ole kontakteja.  Etsi kontaktejasi täältä."
     aspect_contacts: 
       done_editing: "muokkaus valmis"
+    aspect_stream: 
+      activity: "activity"
+      post_time: "post time"
+      sort_by: "sort by:"
+    contacts_not_visible: "Kontaktit tässä näkymässä eivät voi nähdä toisiaan."
+    contacts_visible: "Kontaktit tässä näkymässä voivat nähdä toisensa."
     create: 
-      failure: "Verkostonäkymän luonti epäonnistui."
+      failure: "Näkymän luonti epäonnistui."
       success: "Uusi näkymäsi, %{name}, on luotu"
     destroy: 
       success: "%{name} poistettiin onnistuneesti."
-    edit_aspect_pane: 
+    edit: 
       add_existing: "Lisää olemassa oleva kontakti"
-      confirm_remove_aspect: "Oletko varma, että haluat poistaa tämän näkymän?"
+      confirm_remove_aspect: "Oletko varma että haluat poistaa tämän näkymän?"
+      make_aspect_list_visible: "tee näkymälistasta näkyvä sen jäsenille"
       remove_aspect: "Poista näkymä"
+      rename: "nimeä uudelleen"
+      save: "Tallenna"
     helper: 
       are_you_sure: "Haluatko varmasti poistaa tämän näkymän?"
-      aspect_not_empty: "Verkostonäkymä ei ole tyhjä"
+      aspect_not_empty: "Näkymä ei ole tyhjä"
       remove: "poista"
     index: 
       handle_explanation: "Tämä on Diaspora-osoitteesi. Voit käyttää sitä kuten sähköpostiosoitettasi. Sen avulla sinut tavoitetaan Diasporasta."
+      no_contacts: "Ei kontakteja"
     manage: 
       add_a_new_aspect: "Lisää uusi näkymä"
       add_a_new_contact: "Lisää uusi kontakti"
@@ -77,7 +93,7 @@ fi:
     move_contact: 
       error: "Virhe siirrettäessä kontaktia: %{inspect}"
       failure: "ei toiminut %{inspect}"
-      success: "Henkilö siirretty toiseen näkymään"
+      success: "Henkilö siirretty uuteen näkymään"
     new_aspect: 
       create: "Luo"
       name: "Nimi"
@@ -86,12 +102,9 @@ fi:
       add_contact_to: "Lisää henkilö näkymään %{aspect_name}"
       invite: "Kutsu ystäväsi Diasporan käyttäjäksi!"
       nobody: "Tuo elämäsi tärkeät ihmiset Diasporaan!"
-      nobody_in_aspect: "Verkostonäkymäsi '%{aspect_name}' on tyhjä."
+      nobody_in_aspect: "Näkymäsi, '%{aspect_name}', on tyhjä."
     no_posts_message: 
       start_talking: "Kukaan ei ole sanonut vielä mitään. Aloita keskustelu!"
-    remove_from_aspect: 
-      failure: "Henkilön poisto näkymästä epäonnistui"
-      success: "Henkilön poisto näkymästä onnistui"
     seed: 
       family: "Perhe"
       work: "Työ"
@@ -99,21 +112,32 @@ fi:
       edit_aspect: "muokkaa näkymää"
     update: 
       failure: "Antamasi näkymän nimi, %{name}, on liian pitkä."
-      success: "Verkostonäkymäsi, %{name}, muokkaus onnistui."
+      success: "Näkymäsi, %{name}, muokkaus onnistui."
   back: "Takaisin"
   cancel: "Peruuta"
   comments: 
     new_comment: 
       comment: "Kommentoi"
       commenting: "Kommentoidaan..."
-      enter: "lisää"
-      press: "paina"
-      to_comment: "kommentoidaksesi"
   contacts: 
+    create: 
+      failure: "Failed to create contact"
+    destroy: 
+      failure: "Failed to disconnect from %{name}"
+      success: "Successfully disconnected from %{name}"
     few: "%{count} kontaktia"
     one: "1 kontakti"
     other: "%{count} kontaktia"
+    share_with_pane: 
+      accepts: "Once %{name} accepts, you'll start seeing each other's posts on Diaspora"
+      add_new_aspect: "add to new aspect"
+      share_with: "Start sharing with %{name}"
     zero: "ei kontakteja"
+  date: 
+    formats: 
+      birthday: "%B %d"
+      birthday_with_year: "%B %d %Y"
+      fullmonth_day: "%B %d"
   delete: "Poista"
   email: "Sähköposti"
   error_messages: 
@@ -148,18 +172,23 @@ fi:
       sign_up: "rekisteröidy"
     new: 
       already_invited: "On jo kutsuttu"
-      aspect: "Verkostonäkymä"
+      aspect: "Näkymä"
       comma_seperated_plz: "Voit syöttää useita sähköpostiosoitteita pilkuilla erotettuna."
-      if_they_accept_info: "jos he hyväksyvät, heidät lisätään siihen näkymään, johon heidät kutsuit."
+      if_they_accept_info: "jos he hyväksyvät kutsun, heidät lisätään siihen näkymään, johon heidät kutsuit."
       invite_someone_to_join: "Kutsu joku Diasporan käyttäjäksi!"
       personal_message: "Henkilökohtainen viesti"
+      resend: "Lähetä uudelleen"
       send_an_invitation: "Lähetä kutsu"
       send_invitation: "Lähetä kutsu"
       to: "Vastaanottaja"
   layouts: 
     application: 
+      have_a_problem: "Ongelmia? Löydä ratkaisu täältä"
+      logged_in_as: "kirjautuneena nimellä %{name}"
       powered_by: "PALVELUN TARJOAA DIASPORA*"
+      toggle: "vaihda mobiili sivustoon"
       whats_new: "Uutta"
+      your_aspects: "näkymäsi"
     header: 
       account_settings: "käyttäjätilin asetukset"
       blog: "blogi"
@@ -168,6 +197,7 @@ fi:
       login: "kirjaudu sisään"
       logout: "kirjaudu ulos"
       view_profile: "profiili"
+  more: "Lisää"
   new_notifications: "%{count} uutta ilmoitusta"
   new_requests: 
     few: "%{count} uutta pyyntöä!"
@@ -177,24 +207,40 @@ fi:
   next: "seuraava"
   no_new_notifications: "ei uusia ilmoituksia"
   notifications: 
+    also_commented: "kommentoi myös kontaktisi"
     comment_on_post: "kommentoi sinun"
     deleted: "poistetut"
     index: 
+      mark_all_as_read: "Merkitse kaikki luetuiksi"
       notifications: "Ilmoitukset"
+    mentioned: "on maininnut sinut heidän"
     new_request: "haluaa jakaa kanssasi."
     post: "viesti"
     request_accepted: "hyväksyi jakopyyntösi."
   notifier: 
+    also_commented: 
+      commented: "kommentoi myös käyttäjän %{post_author} viestiin:"
+      sign_in: "Kirjaudu sisään nähdäksesi."
+      subject: "%{name} on myös kommentoinut kontaktisi viestiin."
+    comment_on_post: 
+      commented: "on kommentoinut viestiisi:"
+      sign_in: "Kirjaudu sisään nähdäksesi."
+      subject: "%{name} on kommentoinut viestiisi."
     diaspora: "diasporan sähköpostirobotti"
     hello: "Hei %{name}!"
     love: "terveisin,"
+    mentioned: 
+      mentioned: "mainitsi sinut viestissään:"
+      sign_in: "Kirjaudu sisään nähdäksesi."
+      subject: "%{name} on maininnut sinut Diaspora*:ssa"
     new_request: 
       just_sent_you: "lähetti juuri äsken sinulle kontaktipyynnön Diaspora*ssa"
-      sign_in: "kirjaudu sisään täältä"
+      sign_in: "Kirjaudu sisään täältä"
       subject: "uusi Diaspora* kontaktipyyntö henkilöltä %{from}"
       try_it_out: "Sinun todella kannattaisi tutustua siihen."
     request_accepted: 
       accepted: "on hyväksynyt kontaktipyyntösi!"
+      sign_in: "Enregistrez-vous ici"
       subject: "%{name} on hyväksynyt kontaktipyyntösi Diaspora*ssa"
     single_admin: 
       admin: "Diasporasi ylläpitäjä"
@@ -209,26 +255,13 @@ fi:
   password_confirmation: "Salasanan varmistus"
   people: 
     aspect_list: 
-      edit_membership: "muokkaa jäsenen näkymää."
-    edit: 
-      allow_search: "Salli ihmisten etsiä sinua Diasporassa"
-      edit_profile: "Muokkaa profiilia"
-      first_name: "Etunimi"
-      info_available_to: "Nämä tiedot näkyvät kaikille, keihin olet yhteydessä Diasporassa."
-      last_name: "Sukunimi"
-      update_profile: "Päivitä profiili"
-      your_bio: "Tietoja sinusta"
-      your_birthday: "Syntymäpäiväsi"
-      your_gender: "Sukupuolesi"
-      your_name: "Nimesi"
-      your_photo: "Kuvasi"
-      your_profile: "Profiilisi"
+      edit_membership: "muokkaa näkymän jäsenyyttä."
     helper: 
       people_on_pod_are_aware_of: " ihmiset podissa tietävät, että"
       results_for: " tulokset kyselylle %{params}"
     index: 
       couldnt_find_them_send_invite: "Etkö löytänyt heitä? Lähetä kutsu!"
-      no_one_found: "...eikä ketään löytynyt."
+      no_one_found: "...ketään ei löytynyt."
       no_results: "Hei! Sinun tulisi etsiä jotakin."
       results_for: "hakutulokset kohteelle"
     person: 
@@ -237,17 +270,14 @@ fi:
       pending_request: "odottaa vastausta"
       thats_you: "tarkoittaa sinua!"
     profile_sidebar: 
-      bio: "biografia"
-      born: "syntymäpäivä"
+      bio: "Biografia"
+      born: "Syntymäpäivä"
       cannot_remove: "Henkilöä, %{name}, ei voida poistaa viimeisestä näkymästä. (Jos haluat katkaista yhteyden henkilöön, täytyy sinun poistaa kontakti.)"
       edit_my_profile: "Muokkaa profiilia"
-      gender: "sukupuoli"
+      gender: "Sukupuoli"
       in_aspects: "näkymissä"
       remove_contact: "poista kontakti"
       remove_from: "Poista %{name} näkymästä %{aspect}?"
-    share_with: 
-      accepts: "Kun %{name} hyväksyy, alatte näkemään toistenne viestit Diasporassa."
-      share_with: "Aloita jakaminen henkilölle %{name}"
     show: 
       does_not_exist: "Henkilöä ei ole olemassa!"
       incoming_request: "Tämä henkilö on lähettänyt sinulle pyynnön."
@@ -256,11 +286,9 @@ fi:
       recent_posts: "Viimeisimmät tapahtumat"
       recent_public_posts: "Viimeisimmät julkiset tapahtumat"
       return_to_aspects: "Palaa näkymiin"
-      similar_contacts: "samankaltaiset kontaktit"
+      similar_contacts: "Yhteiset kontaktit"
+      start_sharing: "aloita jakamaan"
       to_accept_or_ignore: "hyväksyäksesi, tai hylätäksesi sen."
-    update: 
-      failed: "Profiilin päivittäminen epäonnistui"
-      updated: "Profiili päivitetty"
     webfinger: 
       fail: "Valitettavasti tunnusta %{handle} ei löytynyt."
   photos: 
@@ -286,19 +314,37 @@ fi:
     photo: 
       view_all: "näytä kaikki käyttäjän %{name} kuvat"
     show: 
+      collection_permalink: "tallenna pysyvä linkki"
       delete_photo: "Poista kuva"
       edit: "muokkaa"
       edit_delete_photo: "Muokkaa kuvan kuvausta / poista kuva"
       make_profile_photo: "laita profiilikuvaksi"
+      original_post: "Alkuperäinen viesti"
       permalink: "pysyvä linkki"
       update_photo: "Päivitä kuva"
       view: "näytä"
-      view_original_post: "alkuperäinen viesti"
     update: 
       error: "Kuvan muokkaus epäonnistui."
       notice: "Kuva päivitettiin onnistuneesti."
   previous: "edellinen"
   profile: "Profiili"
+  profiles: 
+    edit: 
+      allow_search: "Allow for people to search for you within Diaspora"
+      edit_profile: "Edit profile"
+      first_name: "First name"
+      info_available_to: "This info will be available to whomever you connect with on Diaspora."
+      last_name: "Last name"
+      update_profile: "Update Profile"
+      your_bio: "Your bio"
+      your_birthday: "Your birthday"
+      your_gender: "Your gender"
+      your_name: "Your name"
+      your_photo: "Your photo"
+      your_profile: "Your profile"
+    update: 
+      failed: "Failed to update profile"
+      updated: "Profile updated"
   registrations: 
     closed: "Rekisteröityminen on suljettu tässä Diaspora-podissa."
     create: 
@@ -338,6 +384,14 @@ fi:
       success: "Tunnistuksen poisto onnistui."
     failure: 
       error: "palvelun yhdistämisessä tapahtui virhe"
+    finder: 
+      friends: 
+        few: "%{count} ystävää"
+        one: "1 ystävä"
+        other: "%{count} ystävää"
+        zero: "ei ystäviä"
+      invite_your_friends_from: "Kutsu ystäväsi palvelusta %{service}"
+      not_connected: "ei yhdistetty"
     index: 
       connect_to_facebook: "Yhdistä palveluun facebook"
       connect_to_twitter: "Yhdistä palveluun twitter"
@@ -345,21 +399,30 @@ fi:
       edit_services: "Muokkaa palveluita"
       logged_in_as: "kirjautunut käyttäjänä"
       really_disconnect: "katkaise %{service}?"
+    inviter: 
+      click_link_to_accept_invitation: "Paina tätä linkkiä hyväksyäksesi kutsun"
+      join_me_on_diaspora: "DIASPORA* kutsuu!"
+    remote_friend: 
+      invite: "kutsu"
+      resend: "lähetä uudelleen"
   settings: "Asetukset"
   shared: 
     add_contact: 
       create_request: "Etsi Diaspora-tunnuksella"
       diaspora_handle: "diaspora@handle.org"
       enter_a_diaspora_username: "Anna Diaspora-käyttäjätunnus:"
-      know_email: "Tiedätkö heidän sähköpostiosoitteita? Mikset kutsuisi heitä Diasporaan?"
+      know_email: "Tiedätkö heidän sähköpostiosoitteitansa? Kutsu heidät!"
       your_diaspora_username_is: "Diaspora käyttäjätunnuksesi on: %{diaspora_handle}"
     contact_list: 
       all_contacts: "Kaikki kontaktit"
       cannot_remove: "Henkilöä ei voitu poistaa viimeisestä näkymästä. (Jos haluat katkaista yhteyden tähän henkilöön, tulee sinun poistaa kontakti.)"
     invitations: 
+      by_email: "Sähköpostilla"
       dont_have_now: "Sinulla ei ole yhtään kutsua jäljellä, mutta lisää tulee pian!"
+      from_facebook: "Facebookista"
       invitations_left: "(%{count} jäljellä)"
       invite_someone: "Kutsu joku"
+      invite_your_friends: "Kutsu kavereitasi"
       invites: "Kutsut"
       invites_closed: "Kutsut on toistaiseksi suljettu tällä Diaspora-palvelimella"
     notification: 
@@ -374,18 +437,21 @@ fi:
       all: "kaikki"
       all_contacts: "kaikki kontaktit"
       make_public: "tee julkiseksi"
+      mention_helper_text: "mainitaksesi jonkun, valitse '@' ja kirjoita nimen alku"
       post_a_message_to: "Lähetä viesti näkymään %{aspect}"
       posting: "Lähetetään..."
       share: "Jaa"
-      share_with: "Jaa näkymän, %{aspect}, kanssa"
-      share_with_all: "Jaa viesti kaikkiin näkymiin"
+      share_with: "Jaa"
+      whats_on_your_mind: "Mitä mielessä?"
     reshare: 
       reshare: "Jaa uudelleen"
   status_messages: 
+    destroy: 
+      failure: "Viestin poisto epäonnistui"
     helper: 
       no_message_to_display: "Ei näytettäviä viestejä."
     new_status_message: 
-      oh_yeah: "komiaa!"
+      oh_yeah: "Hienoa!"
       tell_me_something_good: "kerro jotain mukavaa"
     show: 
       destroy: "Poista"
@@ -402,6 +468,7 @@ fi:
       change_language: "Vaihda kieli"
       change_password: "Vaihda salasana"
       close_account: "Sulje käyttäjätili"
+      current_password: "Nykyinen salasana"
       download_photos: "lataa kaikki kuvat"
       download_xml: "lataa tiedot XML-muodossa"
       edit_account: "Muokkaa käyttäjätiliä"
@@ -412,32 +479,19 @@ fi:
       your_email: "Sähköpostiosoitteesi"
       your_handle: "Diaspora-tunnuksesi"
     getting_started: 
+      connect_on_diaspora: "Yhdistä Diasporaan"
       connect_services: "Yhdistä muut palvelusi"
-      define_aspects: "Määritä näkymäsi"
       edit_profile: "Muokkaa profiiliasi"
       finished: "Valmis!"
       save_and_continue: "Tallenna ja jatka"
       signup_steps: "Viimeistele rekisteröitymisesi näiden kolmen vaiheen kautta:"
       skip: "ohita aloitusohjeet"
       step_2: 
-        add: "Lisää"
-        aspect_name: "Verkostonäkymän nimi"
-        description: "Kerro Diasporalle mitä näkymiä näytetään kontakteillesi. Voit muokata näitä asetuksia myöhemmin yläoikealta löytyvän valikon kautta. Näkymäsi ovat yksilöllisiä sinulle, eikä niitä näytetä muille. "
-        drag_to_add: "Raahaa heidät näkymään itsestäsi, jonka he tietävät"
-        no_requests: "Ei pyyntöjä"
-        your_aspects: "Verkostonäkymäsi"
-        your_inviter: "Tässä ovat sinua odottavat henkilöt:"
+        find_your_friends_on_diaspora: "Haluatko löytää Facebook kaverisi Diasporassa?"
+        skip: "Ohita"
       step_3: 
-        description: "Voit yhdistää käyttämäsi yhteisöpalvelut Diaspora-käyttäjätiliisi. Sinun on mahdollista lähettää ulospäin julkisia viestejä etusivulta valitsemalla \"tee julkiseksi.\""
-        your_services: "Palvelusi"
-      step_4: 
-        change_profile: "Voit muokata profiiliasi ja hallita yhdistettyjä palveluitasi koska tahansa valitsemalla "
-        continue: "Jatka etusivulle, joka tarjoaa yleisnäkymän kaikkiin näkymiisi."
-        finish: "Valmis"
-        manage_aspects: "Voit myös lisätä kontakteja ollessasi missä hyvänsä näkymässä."
-        ready_to_share: "Olet nyt valmis aloittamaan jakamisen henkilöille"
-        set_up: "Olet nyt asettanut kaiken, %{name}!"
-        user_menu: "käyttäjävalikko yläoikealla."
+        finish: "Viimeistely"
+        people_already_on_diaspora: "Diasporassa jo olevat henkilöt"
       welcome: "Tervetuloa Diasporaan!"
     public: 
       does_not_exist: "Käyttäjää %{username} ei ole olemassa!"

@@ -4,9 +4,12 @@
 
 :javascript
  function createUploader(){
+
+   var aspectIds = "#{aspect_ids}".split(',');
+
    var uploader = new qq.FileUploaderBasic({
        element: document.getElementById('file-upload'),
-       params: {'photo' : {'pending' : 'true', 'aspect_ids' : "#{aspect_id}"}, 'set_profile_image' : "#{set_profile_image if defined?(set_profile_image)}"},
+       params: {'photo' : {'pending' : 'true', 'aspect_ids' : aspectIds}, 'set_profile_image' : "#{set_profile_image if defined?(set_profile_image)}"},
        allowedExtensions: ['jpg', 'jpeg', 'png'],
        action: "#{photos_path}",
        debug: true,
@@ -42,14 +45,31 @@
 
         $('#new_status_message').append("<input type='hidden' value='" + id + "' name='photos[]' />");
         $('#photodropzone').append(
-          "<li style='position:relative;'>" +
-            "<img src='" + url +"' data-id='" + id + "' />" +
+          "<li class='publisher_photo' style='position:relative;'>" +
+            "<img  src='" + url +"' data-id='" + id + "' />" + 
+            "<div class='x'> X </div>" +
+            "<div class='circle'></div>" +
           "</li>"
           );
         $('#publisher').find("input[type='submit']").removeAttr('disabled');
+        $('.x').live('click', function(){
+          var photo = $(this).closest('.publisher_photo');
+          photo.addClass("dim");
+          $.ajax({url: "photos/" + photo.children('img').attr('data-id'),
+                  type: 'DELETE',
+                  success: function() {
+                            photo.fadeOut(400, function(){
+                              photo.remove();
+                              if ( $('.publisher_photo').length  == 0){
+                                $("#publisher textarea").removeClass("with_attachments");
+                              }
+                            });
+                          }
+                  });
+        });
        }
 
    });
  }
 
- window.onload = createUploader;
+ createUploader();

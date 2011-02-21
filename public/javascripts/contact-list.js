@@ -3,28 +3,41 @@
 *   the COPYRIGHT file.
 */
 
+var List = {
+  initialize: function() {
+    $(".contact_list_search").live("keyup", function(e) {
+      var search = $(this);
+      var list   = $(this).siblings("ul").first();
+      var query  = new RegExp(search.val(),'i');
 
-$(document).ready( function(){
-  var List = {
-    initialize: function(){
-      $(".contact_list_search").keyup(function(e){
-        var search = $(this);
-        var list   = $(this).siblings("ul").first();
-        var query  = new RegExp(search.val(),'i');
-
-        $("li", list).each( function() {
-          var element = $(this);
-          if( !element.text().match(query) ){
-            if( !element.hasClass('invis') ){
-              element.addClass('invis').fadeOut(100);
-            }
-          } else {
-            element.removeClass('invis').fadeIn(100);
+      $("li", list).each( function() {
+        var element = $(this);
+        if( !element.text().match(query) ) {
+          if( !element.hasClass('hidden') ) {
+            element.addClass('hidden');
           }
-        });
+        } else {
+          element.removeClass('hidden');
+        }
       });
-    }
-  };
+    });
+  },
+  disconnectUser: function(contact_id){
+        $.ajax({
+            url: "/contacts/" + contact_id,
+            type: "DELETE",
+            success: function(){
+                if( $('.contact_list').length == 1){
+                  $('.contact_list li[data-contact_id='+contact_id+']').fadeOut(200);
+                } else if($('#aspects_list').length == 1) {
+                  $.facebox.close();
+                };
+              }
+            });
+  }
+};
+
+$(document).ready(function() {
 
   $('.added').live('ajax:loading', function() {
     $(this).fadeTo(200,0.4);
@@ -40,15 +53,27 @@ $(document).ready( function(){
       }
     }
 
-    $(".aspect_badge[guid='"+json['aspect_id']+"']", ".aspects").remove();
-    $(this).parent().html(json['button_html']);
+    $(".aspect_badge[guid='" + json.aspect_id + "']", ".aspects").remove();
+    $(this).parent().html(json.button_html);
     $(this).fadeTo(200,1);
   });
 
   $('.added').live('ajax:failure', function(data, html, xhr) {
-    alert("#{t('.cannot_remove')}");
+    if(confirm(Diaspora.widgets.i18n.t('shared.contact_list.cannot_remove'))){
+      var contact_id;
+
+      if( $('.contact_list').length == 1){
+        contact_id = $(this).parents('li').attr("data-contact_id");
+        $('.contact_list li[data-contact_id='+contact_id+']').fadeOut(200);
+      } else if($('#aspects_list').length == 1) {
+        contact_id = $(this).parents('#aspects_list').attr("data-contact_id");
+      };
+
+      List.disconnectUser(contact_id);
+    };
     $(this).fadeTo(200,1);
   });
+
 
   $('.add').live('ajax:loading', function() {
     $(this).fadeTo(200,0.4);
@@ -60,18 +85,30 @@ $(document).ready( function(){
       $("#no_contacts").fadeOut(200);
     }
 
-    $(".badges").prepend(json['badge_html']);
-    $(this).parent().html(json['button_html']);
+    $(".badges").prepend(json.badge_html);
+    $(this).parent().html(json.button_html);
+
+    if($('#aspects_list').length == 1) {
+      $('.aspect_list').attr('data-contact_id', json.contact_id);
+      $('.aspect_list ul').find('.add').each(function(a,b){$(b).attr('href', $(b).attr('href').replace('contacts','aspect_memberships'));})
+    };
+
     $(this).fadeTo(200,1);
   });
 
-  $('.added').live('mouseover', function(){
+  $('.added').live('mouseover', function() {
     $(this).addClass("remove");
     $(this).children("img").attr("src","/images/icons/monotone_close_exit_delete.png");
-  }).live('mouseout', function(){
+  }).live('mouseout', function() {
     $(this).removeClass("remove");
     $(this).children("img").attr("src","/images/icons/monotone_check_yes.png");
   });
+
+  $('.new_aspect').live('ajax:success', function(data, json, xhr){
+      var json = JSON.parse(json);
+      $('#aspects_list ul').append(json.html);
+      $("#aspects_list ul li[data-guid='" + json.aspect_id + "'] .add.button").click();
+      });
 
   List.initialize();
 });

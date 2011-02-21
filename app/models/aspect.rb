@@ -2,46 +2,27 @@
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
 
-class Aspect
-  include MongoMapper::Document
+class Aspect < ActiveRecord::Base
+  belongs_to :user
 
-  key :name,        String
-  key :post_ids,    Array
+  has_many :aspect_memberships
+  has_many :contacts, :through => :aspect_memberships
 
-  many :contacts, :foreign_key => 'aspect_ids', :class_name => 'Contact'
-  many :posts,    :in => :post_ids, :class_name => 'Post'
-
-  belongs_to :user, :class_name => 'User'
+  has_many :post_visibilities
+  has_many :posts, :through => :post_visibilities
 
   validates_presence_of :name
   validates_length_of :name, :maximum => 20
-  validates_uniqueness_of :name, :scope => :user_id
+  validates_uniqueness_of :name, :scope => :user_id, :case_sensitive => false
+
   attr_accessible :name
-  
+
   before_validation do
     name.strip!
   end
-  
-  timestamps!
 
   def to_s
     name
   end
-  
-  def person_objects
-    person_ids = people.map{|x| x.person_id}
-    Person.all(:id.in => person_ids)
-  end
-
-  def as_json(opts = {})
-    {
-      :aspect => {
-        :name   => self.name,
-        :people => self.people.each{|person| person.as_json},
-        :posts  => self.posts.each {|post|   post.as_json  },
-      }
-    }
-  end
-
 end
 

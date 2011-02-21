@@ -8,21 +8,18 @@ require File.join(Rails.root, 'lib/diaspora/exporter')
 describe Diaspora::Exporter do
 
   before do
-    @user1 =  make_user
-    @user2 =  make_user
-    @user3 =  make_user
+    @user1 =  alice
+    @user2 =  Factory.create(:user)
+    @user3 =  bob
 
-    @aspect  =  @user1.aspects.create(:name => "Old Work")
+    @aspect  =  @user1.aspects.first
     @aspect1 =  @user1.aspects.create(:name => "Work")
     @aspect2 =  @user2.aspects.create(:name => "Family")
-    @aspect3 =  @user3.aspects.create(:name => "Pivots")
+    @aspect3 =  @user3.aspects.first
 
     @status_message1 =  @user1.post(:status_message, :message => "One", :public => true, :to => @aspect1.id)
     @status_message2 =  @user1.post(:status_message, :message => "Two", :public => true, :to => @aspect1.id)
     @status_message3 =  @user2.post(:status_message, :message => "Three", :public => false, :to => @aspect2.id)
-
-    @user1.reload
-    @user2.reload
   end
 
   def exported
@@ -33,14 +30,14 @@ describe Diaspora::Exporter do
     before do
       @user_xml = exported.xpath('//user').to_s
     end
-    it 'should include a users private key' do
+    it 'includes a users private key' do
       @user_xml.to_s.should include @user1.serialized_private_key
     end
   end
 
   context '<aspects/>' do
 
-    it 'should include the post_ids' do
+    it 'includes the post_ids' do
       aspects_xml = exported.xpath('//aspects').to_s
       aspects_xml.should include @status_message1.id.to_s
       aspects_xml.should include @status_message2.id.to_s
@@ -50,14 +47,13 @@ describe Diaspora::Exporter do
   context '<contacts/>' do
 
     before do
-      connect_users(@user1, @aspect1, @user3, @aspect3)
-      @user1.add_contact_to_aspect(@user1.contact_for(@user3.person), @aspect)
+      @user1.add_contact_to_aspect(@user1.contact_for(@user3.person), @aspect1)
       @user1.reload
     end
 
     let(:contacts_xml) {exported.xpath('//contacts').to_s}
-    it 'should include a person id' do
-      contacts_xml.should include @user3.person.id.to_s
+    it 'includes a person id' do
+      contacts_xml.should include @user3.person.guid
     end
 
     it 'should include an aspects names of all aspects they are in' do
@@ -71,12 +67,9 @@ describe Diaspora::Exporter do
 
   context '<people/>' do
     let(:people_xml) {exported.xpath('//people').to_s}
-    before do
-      connect_users(@user1, @aspect1, @user3, @aspect3)
-      @user1.reload
-    end
+
     it 'should include persons id' do
-      people_xml.should include @user3.person.id.to_s
+      people_xml.should include @user3.person.guid
     end
 
     it 'should include their profile' do
@@ -103,7 +96,8 @@ describe Diaspora::Exporter do
 
     it 'should include post created at time' do
       doc = Nokogiri::XML::parse(posts_xml)
-      Time.parse(doc.xpath('//posts/status_message/created_at').first.text).should == @status_message1.created_at
+      xml_time = Time.zone.parse(doc.xpath('//posts/status_message/created_at').first.text)
+      xml_time.to_i.should == @status_message1.created_at.to_i
     end
   end
 end

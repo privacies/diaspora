@@ -5,36 +5,56 @@
 require 'spec_helper'
 
 describe User do
-  let(:inviter)  {new_user = make_user; new_user.invites = 5; new_user.save; new_user;}
+  let(:inviter)  {new_user = eve; new_user.invites = 5; new_user.save; new_user;}
   let(:aspect)   {inviter.aspects.create(:name => "awesome")}
-  let(:another_user) {make_user}
+  let(:another_user) {alice}
   let(:wrong_aspect) {another_user.aspects.create(:name => "super")}
-  let(:inviter_with_3_invites) { new_user = make_user; new_user.invites = 3; new_user.save; new_user;}
+  let(:inviter_with_3_invites) { new_user = Factory.create(:user); new_user.invites = 3; new_user.save; new_user;}
   let(:aspect2) {inviter_with_3_invites.aspects.create(:name => "Jersey Girls")}
 
-  context "creating invites" do 
+  before do
+    @email = "bob@bob.com"
+  end
+
+  context "creating invites" do
     it 'requires your aspect' do
-      inviter.invite_user("maggie@example.com",  wrong_aspect.id).should == false
+      lambda {
+        inviter.invite_user(wrong_aspect.id, "email", "maggie@example.com")
+      }.should raise_error ActiveRecord::RecordNotFound
+    end
+    
+    it 'takes a service parameter' do
+      @invite_params = {:service => 'email'}
+      Invitation.should_receive(:invite).with(hash_including(@invite_params))
+      inviter.invite_user(aspect.id, 'email', @email) 
+    end
+
+    it 'takes an indentifier parameter' do
+      @invite_params = {:identifier => @email}
+      Invitation.should_receive(:invite).with(hash_including(@invite_params))
+      inviter.invite_user(aspect.id, 'email', @email)
     end
 
     it 'calls Invitation.invite' do
       Invitation.should_receive(:invite)
-      inviter.invite_user(@email, aspect.id)
+      inviter.invite_user(aspect.id, 'email', @email)
     end
 
     it 'has an invitation' do
-      inviter.invite_user("joe@example.com", aspect.id).invitations_to_me.count.should == 1
+      inviter.invite_user(aspect.id, 'email', @email).invitations_to_me.count.should == 1
     end
 
     it 'creates it with an email' do
-      inviter.invite_user("joe@example.com", aspect.id).email.should == "joe@example.com"
+      inviter.invite_user(aspect.id, 'email', @email).email.should == @email
     end
 
 
     it 'throws if you try to add someone you"re connected to' do
       connect_users(inviter, aspect, another_user, wrong_aspect)
       inviter.reload
-      proc{inviter.invite_user(another_user.email, aspect.id)}.should raise_error MongoMapper::DocumentNotValid
+      proc{
+        inviter.invite_user(aspect.id, 'email', another_user.email)
+      }.should raise_error ActiveRecord::RecordInvalid
     end
 
   end
@@ -42,14 +62,17 @@ describe User do
   context "limit on invites" do
 
     it 'does not invite people I already invited' do
-      inviter_with_3_invites.invite_user("email1@example.com", aspect2.id)
-      proc{inviter_with_3_invites.invite_user("email1@example.com", aspect2.id)}.should raise_error /You already invited this person/
+      inviter_with_3_invites.invite_user(aspect2.id, 'email', "email1@example.com")
+      proc{
+        inviter_with_3_invites.invite_user(aspect2.id, 'email', "email1@example.com")
+      }.should raise_error /You already invited this person/
     end
   end
 
 
   describe "#accept_invitation!" do
     let(:invited_user) {@invited_user_pre.accept_invitation!(:invitation_token => "abc",
+                              :email    => "a@a.com",
                               :username => "user",
                               :password => "secret",
                               :password_confirmation => "secret",
@@ -57,7 +80,7 @@ describe User do
                                 :last_name  => "Smith"}} )}
 
     before do
-      @invited_user_pre = Invitation.invite(:from => inviter, :email => 'invitee@example.org', :into => aspect).reload
+      @invited_user_pre = Invitation.invite(:from => inviter, :service => 'email', :identifier => 'invitee@example.org', :into => aspect).reload
       @person_count = Person.count
     end
 
@@ -74,15 +97,16 @@ describe User do
       end
 
       it 'resolves incoming invitations into contact requests' do
-        Request.to(invited_user).count.should == 1
+        Request.where(:recipient_id => invited_user.person.id).count.should == 1
       end
 
       context 'after request acceptance' do
         before do
           fantasy_resque do
-            invited_user.accept_and_respond(Request.to(invited_user).first.id,
-                                                invited_user.aspects.create(
-                                                  :name => 'first aspect!').id)
+            invited_user.accept_and_respond(
+              Request.where(:recipient_id => invited_user.person.id).first.id,
+              invited_user.aspects.create(:name => 'first aspect!').id
+            )
           end
           invited_user.reload
           inviter.reload
@@ -90,7 +114,7 @@ describe User do
         it 'successfully connects invited_user to inviter' do
           invited_user.contact_for(inviter.person).should_not be_nil
           invited_user.contact_for(inviter.person).should_not be_pending
-          Request.to(invited_user).count.should == 0
+          Request.where(:recipient_id => invited_user.person.id).count.should == 0
         end
 
         it 'successfully connects inviter to invited_user' do

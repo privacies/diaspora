@@ -5,9 +5,9 @@
 require 'spec_helper'
 
 describe Salmon do
-  let(:user){make_user}
-  let(:user2) {make_user}
-  let(:user3) {make_user}
+  let(:user){alice}
+  let(:user2) {eve}
+  let(:user3) {Factory.create(:user)}
   let(:post){ user.post :status_message, :message => "hi", :to => user.aspects.create(:name => "sdg").id }
 
   let!(:created_salmon) {Salmon::SalmonSlap.create(user, post.to_diaspora_xml)}
@@ -71,8 +71,8 @@ describe Salmon do
 
       it 'should fail if no author is found' do
         parsed_salmon.author_email = 'tom@tom.joindiaspora.com'
-        
-        
+
+
         proc {parsed_salmon.author.public_key}.should raise_error "did you remember to async webfinger?"
 
       end

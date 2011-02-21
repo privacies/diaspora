@@ -3,20 +3,30 @@
 #   the COPYRIGHT file.
 
 Diaspora::Application.routes.draw do
-  get "handler/getPosts"
+  get "handler/get_posts"
 
   resources :status_messages, :only => [:create, :destroy, :show]
   resources :comments,        :only => [:create]
   resources :requests,        :only => [:destroy, :create]
+
+  resource :profile
+  match 'services/inviter/:provider' => 'services#inviter', :as => 'service_inviter'
+  match 'services/finder/:provider' => 'services#finder', :as => 'friend_finder'
   resources :services
-  
-  resources :notifications
+
+  match 'admins/user_search' => 'admins#user_search'
+  match 'admins/admin_inviter' => 'admins#admin_inviter'
+  match 'statistics/generate_single' => 'statistics#generate_single'
+  resources :statistics
+
+  match 'notifications/read_all' => 'notifications#read_all'
+  resources :notifications,   :only => [:index, :update]
   resources :posts,           :only => [:show], :path => '/p/'
 
+  resources :contacts
+  resources :aspect_memberships
 
-
-  match '/people/share_with' => 'people#share_with', :as => 'share_with'
-  resources :people do
+  resources :people, :except => [:edit, :update] do
     resources :status_messages
     resources :photos
   end
@@ -30,14 +40,19 @@ Diaspora::Application.routes.draw do
 
   devise_for :users, :controllers => {:registrations => "registrations",
                                       :password      => "devise/passwords",
-                                      :invitations   => "invitations"}
+                                      :invitations   => "invitations"} do
+
+    get 'invitations/resend/:id' => 'invitations#resend', :as => 'invitation_resend'
+                                      end
+
+
   # added public route to user
   match 'public/:username',          :to => 'users#public'
   match 'getting_started',           :to => 'users#getting_started', :as => 'getting_started'
   match 'getting_started_completed', :to => 'users#getting_started_completed'
   match 'users/export',              :to => 'users#export'
   match 'users/export_photos',       :to => 'users#export_photos'
-  match 'login',                     :to => 'users#sign_up'
+  match 'login'                      => redirect('/users/sign_in')
   resources :users,                  :except => [:create, :new, :show]
 
   match 'aspects/move_contact',      :to => 'aspects#move_contact', :as => 'move_contact'
@@ -45,15 +60,17 @@ Diaspora::Application.routes.draw do
   match 'aspects/remove_from_aspect',:to => 'aspects#remove_from_aspect', :as => 'remove_from_aspect'
   match 'aspects/manage',            :to => 'aspects#manage'
   match 'aspects/lfn',               :to => 'aspects#lfn'
-  resources :aspects,                :except => [:edit]
+  resources :aspects
 
   #public routes
   match 'webfinger',            :to => 'publics#webfinger'
-  match 'hcard/users/:id',      :to => 'publics#hcard'
+  match 'hcard/users/:guid',      :to => 'publics#hcard'
   match '.well-known/host-meta',:to => 'publics#host_meta'
-  match 'receive/users/:id',    :to => 'publics#receive'
+  match 'receive/users/:guid',    :to => 'publics#receive'
   match 'hub',                  :to => 'publics#hub'
 
+  match'localize', :to => "localize#show"
+  match 'mobile/toggle', :to => 'home#toggle_mobile', :as => 'toggle_mobile'
   #root
   root :to => 'home#show'
 end

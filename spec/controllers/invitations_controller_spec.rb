@@ -2,31 +2,31 @@
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
 
-require File.join(File.dirname(__FILE__), "..", "spec_helper")
+require 'spec_helper'
 
 describe InvitationsController do
   include Devise::TestHelpers
 
   render_views
 
-  let!(:user)   { make_user }
-  let!(:aspect) { user.aspects.create(:name => "WIN!!") }
-
   before do
+    @user   = alice
+    @aspect = @user.aspects.first
+
     request.env["devise.mapping"] = Devise.mappings[:user]
   end
 
   describe "#create" do
     before do
-      user.invites = 5
+      @user.invites = 5
 
-      sign_in :user, user
-      @invite = {:invite_message=>"test", :aspect_id=> aspect.id.to_s, :email=>"abc@example.com"}
-      @controller.stub!(:current_user).and_return(user)
+      sign_in :user, @user
+      @invite = {:invite_message=>"test", :aspect_id=> @aspect.id.to_s, :email=>"abc@example.com"}
+      @controller.stub!(:current_user).and_return(@user)
       request.env["HTTP_REFERER"]= 'http://test.host/cats/foo'
     end
 
-    it 'calls the resque job Jobs::InviteUser'  do
+    it 'calls the resque job Job::InviteUser'  do
       Resque.should_receive(:enqueue)
       post :create,  :user => @invite
     end
@@ -52,8 +52,8 @@ describe InvitationsController do
     end
 
     it "doesn't invite anyone if you have 0 invites" do
-      user.invites = 0
-      user.save!
+      @user.invites = 0
+      @user.save!
       lambda {
         post :create, :user => @invite.merge(:email => "mbs@gmail.com, foo@bar.com, foo.com, lala@foo, cool@bar.com")
       }.should_not change(User, :count)
@@ -67,10 +67,11 @@ describe InvitationsController do
 
   describe "#update" do
     before do
-      user.invites = 5
-      @invited_user = user.invite_user("a@a.com",  user.aspects.first.id)
+      @user.invites = 5
+      @invited_user = @user.invite_user(@aspect.id, 'email', "a@a.com")
       @accept_params = {:user=>
         {:password_confirmation =>"password",
+         :email => "a@a.com", 
          :username=>"josh",
          :password=>"password",
          :invitation_token => @invited_user.invitation_token}}
@@ -90,13 +91,14 @@ describe InvitationsController do
 
       it 'adds a pending request' do
         put :update, @accept_params
-        Request.to(invited.person).count.should == 1
+        Request.where(:recipient_id => invited.person.id).count.should == 1
       end
+
     end
     context 'failure' do
       before do
         @fail_params = @accept_params
-        @fail_params[:user][:username] = user.username
+        @fail_params[:user][:username] = @user.username
       end
       it 'stays on the invitation accept form' do
         put :update, @fail_params
@@ -111,8 +113,36 @@ describe InvitationsController do
 
   describe '#new' do
     it 'renders' do
-      sign_in :user, user
+      sign_in :user, @user
       get :new
+    end
+  end
+
+  describe '#resend' do
+    before do
+      @user.invites = 5
+
+      sign_in :user, @user
+      @controller.stub!(:current_user).and_return(@user)
+      request.env["HTTP_REFERER"]= 'http://test.host/cats/foo'
+
+      @invited_user = @user.invite_user(@aspect.id, 'email', "a@a.com", "")
+    end
+
+    it 'calls resend invitation if one exists' do
+      @user.reload.invitations_from_me.count.should == 1
+      invitation = @user.invitations_from_me.first
+      Resque.should_receive(:enqueue)
+      put :resend, :id => invitation.id
+    end
+
+    it 'does not send an invitation for a different user' do
+      @user2 = bob
+      @aspect2 = @user2.aspects.create(:name => "cats")
+      @user2.invite_user(@aspect2.id, 'email', "b@b.com", "")
+      invitation2 = @user2.reload.invitations_from_me.first
+      Resque.should_not_receive(:enqueue)
+      put :resend, :id => invitation2.id 
     end
   end
 end

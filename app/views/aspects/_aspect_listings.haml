@@ -1,0 +1,19 @@
+-#   Copyright (c) 2010, Diaspora Inc.  This file is
+-#   licensed under the Affero General Public License version 3 or later.  See
+-#   the COPYRIGHT file.
+
+= hidden_field_tag :contact_json, @selected_contacts.map{|contact| contact.person}.to_json
+
+%h4
+  .right
+    = link_to t('contacts', :count => contacts.count), aspects_manage_path, :title => t('aspects.manage.manage_aspects')
+
+  = aspects.count
+  - if aspects.count == 1
+    = t('_aspect')
+  - else
+    = t('_aspects')
+
+%ul
+  - for aspect in aspects
+    = render 'aspects/aspect', :aspect => aspect, :contacts => aspect.contacts.reject{|x| x.pending == true}

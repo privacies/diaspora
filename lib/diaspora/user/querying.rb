@@ -7,76 +7,54 @@ module Diaspora
     module Querying
 
       def find_visible_post_by_id( id )
-        self.raw_visible_posts.find id.to_id
+        self.raw_visible_posts.where(:id => id).includes({:person => :profile}, {:comments => {:person => :profile}}, :photos).first
+      end
+
+      def raw_visible_posts
+        Post.joins(:aspects).where(:pending => false,
+                                   :aspects => {:user_id => self.id}).select('DISTINCT `posts`.*')
+      end
+
+      def visible_photos
+        p = Photo.arel_table
+        Photo.joins(:aspects).where(p[:status_message_id].not_eq(nil).or(p[:pending].eq(false))
+          ).where(:aspects => {:user_id => self.id}).select('DISTINCT `posts`.*').order("posts.updated_at DESC")
       end
 
       def visible_posts( opts = {} )
-        opts[:order] ||= 'created_at DESC'
-        opts[:pending] ||= false
-        opts[:_type] ||= ["StatusMessage","Photo"]
+        order = opts.delete(:order)
+        order ||= 'created_at DESC'
+        opts[:type] ||= ["StatusMessage", "Photo"]
 
-        if opts[:by_members_of] && opts[:by_members_of] != :all
-          aspect = self.aspects.find_by_id( opts[:by_members_of].id )
-          aspect.posts.find_all_by_pending_and__type(opts[:pending], opts[:_type], :order => opts[:order])
+        if (aspect = opts[:by_members_of]) && opts[:by_members_of] != :all
+          raw_visible_posts.where(:aspects => {:id => aspect.id}).order(order)
         else
-          self.raw_visible_posts.all(opts)
+          self.raw_visible_posts.where(opts).order(order)
         end
-      end
-
-      def visible_person_by_id( id )
-        id = id.to_id
-        if id == self.person.id
-          self.person
-        elsif contact = contacts.first(:person_id => id)
-          contact.person
-        else
-          visible_people.detect{|x| x.id == id }
-        end
-      end
-
-      def my_posts
-        Post.where(:diaspora_handle => person.diaspora_handle)
       end
 
       def contact_for(person)
-        id = person.id
-        contact_for_person_id(id) 
+        return nil unless person
+        contact_for_person_id(person.id)
+      end
+      def aspects_with_post(post_id)
+        self.aspects.joins(:post_visibilities).where(:post_visibilities => {:post_id => post_id})
       end
 
       def contact_for_person_id(person_id)
-        contacts.first(:person_id => person_id.to_id) if person_id
-
-      end
-
-      def contacts_not_in_aspect( aspect ) 
-        person_ids = Contact.all(:user_id => self.id, :aspect_ids.ne => aspect._id).collect{|x| x.person_id }
-        Person.all(:id.in => person_ids)
-      end
-
-      def person_objects(contacts = self.contacts)
-        person_ids = contacts.collect{|x| x.person_id} 
-        Person.all(:id.in => person_ids)
+        Contact.unscoped.where(:user_id => self.id, :person_id => person_id).first if person_id
       end
 
       def people_in_aspects(aspects, opts={})
         person_ids = contacts_in_aspects(aspects).collect{|contact| contact.person_id}
-        people = Person.all(:id.in => person_ids)
+        people = Person.where(:id => person_ids)
 
         if opts[:type] == 'remote'
-          people.delete_if{ |p| !p.owner.blank? }
+          people = people.where(:owner_id => nil)
         elsif opts[:type] == 'local'
-          people.delete_if{ |p| p.owner.blank? }
+          people = people.where('`people`.`owner_id` IS NOT NULL')
         end
         people
-      end
-
-      def aspect_by_id( id )
-        id = id.to_id
-        aspects.detect{|x| x.id == id }
-      end
-
-      def aspects_with_post( id )
-        self.aspects.find_all_by_post_ids( id.to_id )
       end
 
       def aspects_with_person person
@@ -93,23 +71,15 @@ module Diaspora
         self.aspects.all.collect{|x| x.id}
       end
 
-      def request_for(to_person)
-        Request.from(self.person).to(to_person).first
+      def request_from(person)
+        Request.where(:sender_id => person.id,
+                      :recipient_id => self.person.id).first
       end
 
       def posts_from(person)
-        post_ids = []
-
-        public_post_ids = Post.where(:person_id => person.id, :_type => "StatusMessage", :public => true).fields('id').all
-        public_post_ids.map!{ |p| p.id }
-
-        directed_post_ids = self.visible_posts(:person_id => person.id, :_type => "StatusMessage")
-        directed_post_ids.map!{ |p| p.id }
-
-        post_ids += public_post_ids
-        post_ids += directed_post_ids
-
-        Post.all(:id.in => post_ids, :order => 'created_at desc')
+        asp = Aspect.arel_table
+        p = Post.arel_table
+        person.posts.includes(:aspects, :comments).where( p[:public].eq(true).or(asp[:user_id].eq(self.id))).select('DISTINCT `posts`.*').order("posts.updated_at DESC")
       end
     end
   end

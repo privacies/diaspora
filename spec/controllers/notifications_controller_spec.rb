@@ -6,30 +6,55 @@ require 'spec_helper'
 
 describe NotificationsController do
 
-  let!(:user) { make_user }
-  let!(:aspect) { user.aspects.create(:name => "AWESOME!!") }
-  
-  before do
-    sign_in :user, user
 
+  before do
+    @user   = alice
+    @aspect = @user.aspects.first
+    sign_in :user, @user
   end
 
   describe '#update' do
     it 'marks a notification as read' do
-      note = Notification.create(:user_id => user.id)
+      note = Factory(:notification, :recipient => @user)
       put :update, :id => note.id
       Notification.first.unread.should == false
     end
 
     it 'only lets you read your own notifications' do
-      user2 = make_user
+      user2 = bob
 
-      Notification.create(:user_id => user.id)
-      note = Notification.create(:user_id => user2.id)
+      Factory(:notification, :recipient => @user)
+      note = Factory(:notification, :recipient => user2)
 
       put :update, :id => note.id
 
-      Notification.find(note.id).unread.should == true 
+      Notification.find(note.id).unread.should == true
+    end
+  end
+
+  describe "#read_all" do
+    it 'marks all notifications as read' do
+      request.env["HTTP_REFERER"] = "I wish I were spelled right"
+      Factory(:notification, :recipient => @user)
+      Factory(:notification, :recipient => @user)
+
+      Notification.where(:unread => true).count.should == 2
+      get :read_all
+      Notification.where(:unread => true).count.should == 0
+    end
+  end
+
+  describe '#index' do
+    it 'paginates the notifications' do
+      35.times do
+        Factory(:notification, :recipient => @user)
+      end
+
+      get :index
+      assigns[:notifications].count.should == 25
+
+      get :index, :page => 2
+      assigns[:notifications].count.should == 10
     end
   end
 end

@@ -7,17 +7,22 @@
 
 #edit_aspect_pane
   - if @contacts.count > 0
-    %h4= t('.add_existing')
-    = render 'shared/contact_list', :aspect_id => aspect.id, :contact_hashes => contacts, :manage => defined?(manage)
+    %h4= t('aspects.edit.add_existing')
+    = render 'shared/contact_list', :aspect_id => aspect.id, :contacts => contacts, :manage => defined?(manage)
 
   = render 'shared/add_contact', :aspect_id => aspect.id
 
   %hr
   = form_for aspect do |asp|
     = asp.text_field :name, :value => aspect.name
-    = asp.submit "Rename Aspect"
+    = t('aspects.contacts_visible')
+    = aspect.check_box :contacts_visible, :default => true
+    %br
+    = t('aspects.contacts_not_visible')
+    -#contacts_visible should be editable here
+    = asp.submit t('aspects.edit.rename_aspect')
 
   %hr
   .big_buttons
-    = button_to t('.remove_aspect'), aspect, :method => "delete", :confirm => t('.confirm_remove_aspect')
+    = button_to t('aspects.edit.remove_aspect'), aspect, :method => "delete", :confirm => t('aspects.edit.confirm_remove_aspect')
 

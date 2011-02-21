@@ -7,23 +7,18 @@ require 'spec_helper'
 describe RequestsController do
   render_views
   before do
-    @user = make_user
+    @user = alice
+    @other_user = eve
+
     @controller.stub!(:current_user).and_return(@user)
     sign_in :user, @user
     request.env["HTTP_REFERER"] = "http://test.host"
-
-    @user.aspects.create!(:name => "lame-os")
-    @user.reload
-
-    @other_user = make_user
-    @other_user.aspects.create!(:name => "meh")
-    @other_user.reload
   end
 
   describe '#destroy' do
     before do
       @other_user.send_contact_request_to(@user.person, @other_user.aspects.first)
-      @friend_request = Request.to(@user.person).first
+      @friend_request = Request.where(:recipient_id => @user.person.id).first
     end
     describe 'when accepting a contact request' do
       it "succeeds" do
@@ -31,7 +26,17 @@ describe RequestsController do
           :accept    => "true",
           :aspect_id => @user.aspects.first.id.to_s,
           :id        => @friend_request.id.to_s
-        response.should redirect_to(aspect_path(@user.aspects.first))
+        response.should redirect_to(requests_path)
+      end
+      it "marks the notification as read" do
+        notification = Notification.where(:recipient_id => @user.id, :target_id=> @friend_request.id).first
+        notification.unread = true
+        notification.save
+        xhr :delete, :destroy,
+          :accept    => "true",
+          :aspect_id => @user.aspects.first.id.to_s,
+          :id        => @friend_request.id.to_s
+        notification.reload.unread.should == false
       end
     end
     describe 'when ignoring a contact request' do
@@ -45,6 +50,15 @@ describe RequestsController do
           xhr :delete, :destroy,
             :id => @friend_request.id.to_s
         }.should change(Request, :count).by(-1)
+      end
+
+      it "marks the notification as read" do
+        notification = Notification.where(:recipient_id => @user.id, :target_id=> @friend_request.id).first
+        notification.unread = true
+        notification.save
+          xhr :delete, :destroy,
+            :id => @friend_request.id.to_s
+        notification.reload.unread.should == false
       end
     end
   end
@@ -61,7 +75,7 @@ describe RequestsController do
         @user.contact_for(@other_user).should be_nil
         lambda {
           post :create, @params
-        }.should change(Contact,:count).by(1)
+        }.should change(Contact.unscoped,:count).by(1)
         new_contact = @user.reload.contact_for(@other_user.person)
         new_contact.should_not be_nil
         new_contact.should be_pending
@@ -79,9 +93,9 @@ describe RequestsController do
         :to => @other_user.diaspora_handle,
         :into => @user.aspects[0].id}
       )
-      Request.to(@user).first.should be_nil
+      Request.where(:recipient_id => @user.person.id).first.should be_nil
       @user.contact_for(@other_user.person).should be_true
-      @user.aspects[0].contacts.all(:person_id => @other_user.person.id).should be_true
+      @user.aspects[0].contacts.where(:person_id => @other_user.person.id).first.should be_true
     end
 
     it "redirects when requesting to be contacts with yourself" do

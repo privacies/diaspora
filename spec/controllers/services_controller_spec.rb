@@ -6,10 +6,6 @@ require 'spec_helper'
 
 describe ServicesController do
   render_views
-  let(:user)    { make_user }
-  let!(:aspect) { user.aspects.create(:name => "lame-os") }
-
-
   let(:mock_access_token) { Object.new }
 
   let(:omniauth_auth) {
@@ -21,20 +17,24 @@ describe ServicesController do
   }
 
   before do
-    sign_in :user, user
-    @controller.stub!(:current_user).and_return(user)
+    @user   = alice
+    @aspect = @user.aspects.first
+    @user.invites = 100
+    @user.save
+
+    sign_in :user, @user
+    @controller.stub!(:current_user).and_return(@user)
     mock_access_token.stub!(:token => "12345", :secret => "56789")
   end
 
   describe '#index' do
-    let!(:service1) {a = Factory(:service); user.services << a; a}
-    let!(:service2) {a = Factory(:service); user.services << a; a}
-    let!(:service3) {a = Factory(:service); user.services << a; a}
-    let!(:service4) {a = Factory(:service); user.services << a; a}
-
     it 'displays all connected serivices for a user' do
+      4.times do
+        Factory(:service, :user => @user)
+      end
+
       get :index
-      assigns[:services].should == user.services
+      assigns[:services].should == @user.services
     end
   end
 
@@ -43,18 +43,18 @@ describe ServicesController do
       request.env['omniauth.auth'] = omniauth_auth
       lambda{
         post :create
-      }.should change(user.services, :count).by(1)
+      }.should change(@user.services, :count).by(1)
     end
 
     it 'redirects to getting started if the user is getting started' do
-      user.getting_started = true
+      @user.getting_started = true
       request.env['omniauth.auth'] = omniauth_auth
       post :create
       response.should redirect_to getting_started_path(:step => 3)
     end
 
     it 'redirects to services url' do
-      user.getting_started = false
+      @user.getting_started = false
       request.env['omniauth.auth'] = omniauth_auth
       post :create
       response.should redirect_to services_url
@@ -62,22 +62,82 @@ describe ServicesController do
 
 
     it 'creates a twitter service' do
-      user.getting_started = false
+      Service.delete_all
+      @user.getting_started = false
       request.env['omniauth.auth'] = omniauth_auth
       post :create
-      user.services.first.class.name.should == "Services::Twitter"
+      @user.reload.services.first.class.name.should == "Services::Twitter"
     end
   end
 
   describe '#destroy' do
     before do
-      @service1 = Factory.create(:service)
-      user.services << @service1
+      @service1 = Factory.create(:service, :user => @user)
     end
     it 'destroys a service selected by id' do
       lambda{
         delete :destroy, :id => @service1.id
-      }.should change(user.services, :count).by(-1)
+      }.should change(@user.services, :count).by(-1)
+    end
+  end
+
+  describe '#finder' do
+    before do
+      @service1 = Services::Facebook.new
+      @user.services << @service1
+      @person = Factory(:person)
+      @user.services.stub!(:where).and_return([@service1])
+      @hash = {"facebook_id" => {:contact => @user.contact_for(bob.person), :name => "Robert Bobson", :person => bob.person},
+              "facebook_id2" => {:name    => "Robert Bobson2"}}
+      @service1.should_receive(:finder).and_return(@hash)
+    end
+
+    it 'calls the finder method for the service for that user' do
+      get :finder, :provider => @service1.provider
+      response.should be_success
+    end
+    it 'has no translations missing' do
+      get :finder, :provider => @service1.provider
+      response.body.match(/translation/).should be_nil
+    end
+  end
+
+  describe '#invite' do
+
+    before do
+      @uid = "abc"
+      @invite_params = {:provider => 'facebook', :uid => @uid, :aspect_id => @user.aspects.first.id}
+    end
+
+    it 'sets the subject' do
+      put :inviter, @invite_params
+      assigns[:subject].should_not be_nil
+    end
+
+    it 'sets a message containing the invitation link' do
+      put :inviter, @invite_params
+      assigns[:message].should include(User.last.invitation_token)
+    end
+
+    it 'redirects to a prefilled facebook message url' do
+      put :inviter, @invite_params
+      response.location.should match(/https:\/\/www\.facebook\.com\/\?compose=1&id=.*&subject=.*&message=.*&sk=messages/)
+    end
+
+    it 'creates an invitation' do
+      lambda {
+        put :inviter, @invite_params
+      }.should change(Invitation, :count).by(1)
+    end
+
+    it 'does not create a duplicate invitation' do
+      inv = Invitation.create!(:sender_id => @user.id, :recipient_id => eve.id, :aspect_id => @user.aspects.first.id)
+      @invite_params[:invitation_id] = inv.id
+
+      lambda {
+        put :inviter, @invite_params
+      }.should_not change(Invitation, :count)
     end
   end
 end
+

@@ -10,11 +10,13 @@ class PublicsController < ApplicationController
   skip_before_filter :count_requests
   skip_before_filter :set_invites
   skip_before_filter :set_locale
+  skip_before_filter :which_action_and_user
 
   layout false
+  caches_page :host_meta
 
   def hcard
-    @person = Person.find_by_id params[:id]
+    @person = Person.where(:guid => params[:guid]).first
     unless @person.nil? || @person.owner.nil?
       render 'publics/hcard'
     else
@@ -28,7 +30,7 @@ class PublicsController < ApplicationController
 
   def webfinger
     @person = Person.local_by_account_identifier(params[:q]) if params[:q]
-    unless @person.nil? 
+    unless @person.nil?
       render 'webfinger', :content_type => 'application/xrd+xml'
     else
       render :nothing => true, :status => 404
@@ -47,16 +49,16 @@ class PublicsController < ApplicationController
       return
     end
 
-    person = Person.first(:id => params[:id])
+    person = Person.where(:guid => params[:guid]).first
 
     if person.owner_id.nil?
-      Rails.logger.error("Received post for nonexistent person #{params[:id]}")
+      Rails.logger.error("Received post for nonexistent person #{params[:guid]}")
       render :nothing => true, :status => 404
       return
     end
 
     @user = person.owner
-    Resque.enqueue(Jobs::ReceiveSalmon, @user.id, params[:xml])
+    Resque.enqueue(Job::ReceiveSalmon, @user.id, CGI::unescape(params[:xml]))
 
     render :nothing => true, :status => 200
   end

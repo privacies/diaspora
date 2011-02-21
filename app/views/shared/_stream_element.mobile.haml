@@ -2,27 +2,22 @@
 -#   licensed under the Affero General Public License version 3 or later.  See
 -#   the COPYRIGHT file.
 
-%li.message{:data=>{:guid=>post.id}}
-  = person_image_link(post.person)
+.stream_element{:data=>{:guid=>post.id}}
+  .right
+    %span.time
+      = time_ago_in_words(post.created_at)
+
+  = person_image_link(post.person, :size => :thumb_small)
 
   .content
     .from
-      = link_to post.person.name, post.person
-      .aspect
-        ➔
-        - if post.public?
-          = t('the_world')
-        - else
-          = current_user.aspects_with_post( post.id ).join(', ')
+      = person_link(post.person)
 
-    = render type_partial(post), :post => post
+    = render 'status_messages/status_message', :post => post, :photos => post.photos
 
     .info
-      %span.time= link_to(how_long_ago(post), object_path(post))
-      /= link_to "#{t('.show_comments')} (#{post.comments.count})", '#', :class => "show_post_comments"
-
-      - if current_user.owns?(post)
-        .right
-          = link_to t('delete'), photo_path(post), :confirm => t('are_you_sure'), :method => :delete, :remote => true, :class => "delete"
-    /= render   "comments/comments", :post => post
+      - if post.comments.length == 1
+        = link_to "#{post.comments.length} #{t('_comment').downcase} →", status_message_path(post), :class => 'comment_link'
+      - else
+        = link_to "#{post.comments.length} #{t('_comments').downcase} →", status_message_path(post), :class => 'comment_link'
 

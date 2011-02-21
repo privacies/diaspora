@@ -7,9 +7,10 @@ class PostsController < ApplicationController
   skip_before_filter :count_requests
   skip_before_filter :set_invites
   skip_before_filter :set_locale
+  skip_before_filter :which_action_and_user
 
   def show
-    @post = Post.first(:id => params[:id], :public => true)
+    @post = Post.where(:id => params[:id], :public => true).includes(:person, :comments => :person).first
 
     if @post
       @landing_page = true
@@ -24,6 +25,6 @@ class PostsController < ApplicationController
     else
       flash[:error] = "that post does not exsist!"
       redirect_to root_url
-    end    
+    end
   end
 end

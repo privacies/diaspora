@@ -5,9 +5,9 @@
 require 'spec_helper'
 
 describe User do
-  let(:user) { make_user }
+  let(:user) { alice }
   let(:aspect) { user.aspects.create(:name => 'heroes') }
-  let(:user2) { make_user }
+  let(:user2) { eve }
   let(:aspect2) { user2.aspects.create(:name => 'stuff') }
 
   it 'should have a key' do
@@ -16,10 +16,9 @@ describe User do
 
   describe 'overwriting people' do
     it 'does not overwrite old users with factory' do
-      pending "Why do you want to set ids directly? MONGOMAPPERRRRR!!!"
-      new_user = Factory.create(:user, :id => user.id)
-      new_user.persisted?.should be_true
-      new_user.id.should_not == user.id
+      lambda {
+        new_user = Factory.create(:user, :id => user.id)
+      }.should raise_error ActiveRecord::RecordNotUnique
     end
     it 'does not overwrite old users with create' do
           params = {:username => "ohai",
@@ -209,7 +208,7 @@ describe User do
                   :password => "password",
                   :password_confirmation => "password",
                   :person =>
-                    {:_id => person.id,
+                    {:id => person.id,
                       :profile =>
                       {:first_name => "O",
                        :last_name => "Hai"}
@@ -249,7 +248,9 @@ describe User do
     end
     it 'sends a profile to their contacts' do
       connect_users(user, aspect, user2, aspect2)
-      user.should_receive(:push_to_person).once
+      mailman = Postzord::Dispatch.new(user, Profile.new)
+      Postzord::Dispatch.should_receive(:new).and_return(mailman)
+      mailman.should_receive(:deliver_to_local)
       user.update_profile(@params).should be_true
     end
     it 'updates names' do
@@ -262,13 +263,16 @@ describe User do
       user.update_profile(params).should be_true
       user.reload.profile.image_url.should == "http://clown.com"
     end
+
     it "only pushes to non-pending contacts" do
       connect_users(user, aspect, user2, aspect2)
-      user.contacts.count.should == 1
-      user.send_contact_request_to(make_user.person, aspect)
-      user.contacts.count.should == 2
+      lambda {
+        user.send_contact_request_to(Factory(:user).person, aspect)
+      }.should change(Contact.unscoped.where(:user_id => user.id), :count).by(1)
 
-      user.should_receive(:push_to_person).once
+      m = mock()
+      m.should_receive(:post)
+      Postzord::Dispatch.should_receive(:new).and_return(m)
       user.update_profile(@params).should be_true
     end
     context 'passing in a photo' do
@@ -276,16 +280,16 @@ describe User do
         fixture_filename  = 'button.png'
         fixture_name = File.join(File.dirname(__FILE__), '..', 'fixtures', fixture_filename)
         image = File.open(fixture_name)
-        @photo = Photo.instantiate(
+        @photo = Photo.diaspora_initialize(
                   :person => user.person, :user_file => image)
         @photo.save!
         @params = {:photo => @photo}
       end
       it 'updates image_url' do
         user.update_profile(@params).should be_true
-        user.reload.profile.image_url.should == @photo.absolute_url(:thumb_large)
-        user.profile.image_url_medium.should == @photo.absolute_url(:thumb_medium)
-        user.profile.image_url_small.should == @photo.absolute_url(:thumb_small)
+        user.reload.profile.image_url.should == @photo.url(:thumb_large)
+        user.profile.image_url_medium.should == @photo.url(:thumb_medium)
+        user.profile.image_url_small.should == @photo.url(:thumb_small)
       end
       it 'unpends the photo' do
         @photo.pending = true
@@ -300,7 +304,7 @@ describe User do
   context 'aspects' do
     it 'should delete an empty aspect' do
       user.drop_aspect(aspect)
-      user.aspects.include?(aspect).should == false
+      user.aspects(true).include?(aspect).should == false
     end
 
     it 'should not delete an aspect with contacts' do
@@ -313,9 +317,10 @@ describe User do
 
   describe '#update_post' do
     it 'sends a notification to aspects' do
-      user.should_receive(:push_to_aspects).twice
-      photo = user.post(:photo, :user_file => uploaded_photo, :caption => "hello", :to => aspect.id)
-
+      m = mock()
+      m.should_receive(:post)
+      Postzord::Dispatch.should_receive(:new).and_return(m)
+      photo = user.build_post(:photo, :user_file => uploaded_photo, :caption => "hello", :to => aspect.id)
       user.update_post(photo, :caption => 'hellp')
     end
   end
@@ -333,7 +338,9 @@ describe User do
 
     it 'should remove all aspects' do
       aspect
-      lambda {user.destroy}.should change{user.aspects.reload.count}.by(-1)
+      lambda {
+        user.destroy
+      }.should change{ user.aspects(true).count }.by(-2)
     end
 
     describe '#remove_person' do
@@ -348,14 +355,17 @@ describe User do
         message = user.post(:status_message, :message => "hi", :to => aspect.id)
         user.reload
         user.destroy
-        proc { message.reload }.should raise_error /does not exist/
+        proc { message.reload }.should raise_error ActiveRecord::RecordNotFound
       end
     end
 
     describe '#disconnect_everyone' do
 
       it 'should send retractions to remote poeple' do
+        person = user2.person
         user2.delete
+        person.owner_id = nil
+        person.save
         user.activate_contact(user2.person, aspect)
 
         user.should_receive(:disconnect).once
@@ -364,7 +374,9 @@ describe User do
 
       it 'should disconnect local people' do
         connect_users(user, aspect, user2, aspect2)
-        lambda {user.destroy}.should change{user2.reload.contacts.count}.by(-1)
+        lambda {
+          user.destroy
+        }.should change{user2.reload.contacts.count}.by(-1)
       end
     end
   end
@@ -375,8 +387,8 @@ describe User do
       user.save
       user.reload
 
-      Resque.should_receive(:enqueue).with(Jobs::MailRequestReceived, user.id, 'contactrequestid').once
-      user.mail(Jobs::MailRequestReceived, user.id, 'contactrequestid')
+      Resque.should_receive(:enqueue).with(Job::MailRequestReceived, user.id, 'contactrequestid').once
+      user.mail(Job::MailRequestReceived, user.id, 'contactrequestid')
     end
 
     it 'does not enqueue a mail job' do
@@ -385,7 +397,7 @@ describe User do
       user.reload
 
       Resque.should_not_receive(:enqueue)
-      user.mail(Jobs::MailRequestReceived, user.id, 'contactrequestid')
+      user.mail(Job::MailRequestReceived, user.id, 'contactrequestid')
     end
   end
 

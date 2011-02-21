@@ -12,14 +12,18 @@ describe Profile do
         profile.should be_valid
         profile.first_name.should == "Shelly"
       end
-      
+
       it "can be 32 characters long" do
         profile = Factory.build(:profile, :first_name => "Hexagoooooooooooooooooooooooooon")
         profile.should be_valid
       end
-      
+
       it "cannot be 33 characters" do
         profile = Factory.build(:profile, :first_name => "Hexagooooooooooooooooooooooooooon")
+        profile.should_not be_valid
+      end
+      it 'cannot have ;' do
+        profile = Factory.build(:profile, :first_name => "Hex;agon")
         profile.should_not be_valid
       end
     end
@@ -29,14 +33,23 @@ describe Profile do
         profile.should be_valid
         profile.last_name.should == "Ohba"
       end
-      
+
       it "can be 32 characters long" do
         profile = Factory.build(:profile, :last_name => "Hexagoooooooooooooooooooooooooon")
         profile.should be_valid
       end
-      
+
       it "cannot be 33 characters" do
         profile = Factory.build(:profile, :last_name => "Hexagooooooooooooooooooooooooooon")
+        profile.should_not be_valid
+      end
+
+      it 'cannot have ;' do
+        profile = Factory.build(:profile, :last_name => "Hex;agon")
+        profile.should_not be_valid
+      end
+      it 'disallows ; with a newline in the string' do
+        profile = Factory.build(:profile, :last_name => "H\nex;agon")
         profile.should_not be_valid
       end
     end
@@ -44,10 +57,7 @@ describe Profile do
 
   describe '#image_url=' do
     before do
-      @user = make_user
-      @profile = @user.person.profile
-      fixture_name = File.dirname(__FILE__) + '/../fixtures/button.png'
-      @photo = @user.post(:photo, :user_file => File.open(fixture_name), :to => 'all')
+      @profile = Factory.build(:profile)
       @profile.image_url = "http://tom.joindiaspora.com/images/user/tom.jpg"
       @pod_url = (AppConfig[:pod_url][-1,1] == '/' ? AppConfig[:pod_url].chop : AppConfig[:pod_url])
     end
@@ -55,27 +65,57 @@ describe Profile do
       lambda {@profile.image_url = ""}.should_not change(@profile, :image_url)
     end
     it 'makes relative urls absolute' do
-      @profile.image_url = @photo.url(:thumb_large)
-      @profile.image_url.should == "#{@pod_url}#{@photo.url(:thumb_large)}"
+      @profile.image_url = "/relative/url"
+      @profile.image_url.should == "#{@pod_url}/relative/url"
     end
-    it 'accepts absolute urls' do
-      @profile.image_url = "#{@pod_url}#{@photo.url(:thumb_large)}"
-      @profile.image_url.should == "#{@pod_url}#{@photo.url(:thumb_large)}"
+    it "doesn't change absolute urls" do
+      @profile.image_url = "http://not/a/relative/url"
+      @profile.image_url.should == "http://not/a/relative/url"
     end
   end
   describe 'serialization' do
-    let(:person) {Factory.create(:person)} 
-   
-    it 'should include persons diaspora handle' do
-      xml = person.profile.to_diaspora_xml 
+    let(:person) {Factory.create(:person,:diaspora_handle => "foobar" )}
 
-      xml.should include person.diaspora_handle
-      xml.should_not include person.id.to_s
+    it 'should include persons diaspora handle' do
+      xml = person.profile.to_diaspora_xml
+      xml.should include "foobar"
+    end
+  end
+
+  describe '#image_url' do
+    before do
+      @profile = Factory.build(:profile)
+    end
+    it 'returns a default rather than nil' do
+      @profile.image_url = nil
+      @profile.image_url.should_not be_nil
+    end
+    it 'falls back to the large thumbnail if the small thumbnail is nil' do
+      #Backwards compatibility
+      @profile[:image_url] = 'large'
+      @profile[:image_url_small] = nil
+      @profile[:image_url_medium] = nil
+      @profile.image_url(:thumb_small).should == 'large'
+      @profile.image_url(:thumb_medium).should == 'large'
+    end
+  end
+
+  describe '#subscribers' do
+    it 'returns all non-pending contacts for a user' do
+      user = Factory(:user)
+      aspect = user.aspects.create(:name => "zord")
+      person = Factory.create(:person)
+      user.activate_contact(person, Aspect.where(:id => aspect.id).first)
+
+      person2 = Factory.create(:person)
+      user.activate_contact(person2, Aspect.where(:id => aspect.id).first)
+
+      user.profile.subscribers(user).map{|s| s.id}.should =~ [person, person2].map{|s| s.id}
     end
   end
 
   describe 'date=' do
-    let(:profile) { make_user.profile }
+    let(:profile) { Factory.build(:profile) }
 
     it 'accepts form data' do
       profile.birthday.should == nil
@@ -106,4 +146,16 @@ describe Profile do
     end
   end
 
+  describe '#receive' do
+    
+    it 'updates the profile in place' do
+      local_luke, local_leia, remote_raphael = set_up_friends
+      new_profile = Factory.build :profile
+      lambda{
+        new_profile.receive(local_leia, remote_raphael)
+      }.should_not change(Profile, :count)
+      remote_raphael.last_name.should == new_profile.last_name
+    end
+
+  end
 end

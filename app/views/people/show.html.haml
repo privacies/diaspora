@@ -5,59 +5,66 @@
 - content_for :page_title do
   = @person.name
 
-.span-24.last
-  #author_info
-    .from{:style=>"padding-left:0;display:block;"}
-      %h2{:style=>"display:block;"}
-        = @person.name
-        .right{:style => "top:0;"}
-          %span.description
-            = @person.diaspora_handle
-
-      #person_nav_links
-        = link_to t('layouts.header.view_profile'), person_path(@person)
-        = link_to t('_photos'), person_photos_path(@person)
-
 .span-8.append-1.last
   = render :partial => 'people/profile_sidebar', :locals => {:person => @person, :contact => @contact }
 
-  - if @contact && @similar_people.count > 0
+  - if @contact.persisted? && @contacts_of_contact.count > 0
     .span-8.last
       %hr{:style=>"width:300px;"}
       .section.contact_pictures
         %h4
+          = @contacts_of_contact.length
           = t('.similar_contacts')
-        - for person in @similar_people
+        - for person in @contacts_of_contact
           = person_image_link person
 
 .span-15.last
-  - unless @contact || current_user.person == @person
-    - if @incoming_request
-      .floating
-        %h3
-          = t('.incoming_request')
-        %h4
-          = link_to t('.return_to_aspects'), aspects_manage_path
-          = t('.to_accept_or_ignore')
+  #author_info
+    - unless @contact.persisted? || current_user.person == @person
+      .right
+        - if @incoming_request
+          = link_to t('.incoming_request', :name => truncate(@person.name, :length => 20, :separator => ' ', :omission => '')),
+            {:controller => "contacts",
+            :action => "new",
+            :person_id => @person.id},
+            :class => 'share_with button',
+            :rel => 'facebox'
+        -else
+          = link_to t('.start_sharing'),
+            {:controller => "contacts",
+            :action => "new",
+            :person_id => @person.id},
+            :class => 'share_with button',
+            :rel => 'facebox'
+        - if @share_with
+          = javascript_tag "$(document).ready(function() {jQuery.facebox({ ajax: '#{new_contact_path(:person_id => @person.id)}' });});"
+
+
+    - else
+      .right
+        - if @post_type == :photos
+          = link_to t('layouts.header.view_profile'), person_path(@person)
+        - else
+          = link_to t('_photos'), person_photos_path(@person)
+
+    %h3
+      = @person.name
+      .description
+        = @person.diaspora_handle
+  %hr
 
   - if @posts.count > 0
     -if @post_type == :photos
-      %h4
-        = t('_photos')
       = render 'photos/index', :photos => @posts
     - else
-      %h4
-        - if @contact
-          = t('.recent_posts')
-        - else
-          = t('.recent_public_posts')
-
-      %ul{:class => 'stream', :id => 'main_stream'}
-        = render 'shared/stream', :posts => @post_hashes
+      #main_stream.stream
+        = render 'shared/stream', :posts => @fakes, :commenting_disabled => @commenting_disabled
+        %a.paginate
+          = t("more")
     = will_paginate @posts
 
   - else
-    %ul#stream
-      %li
-        %h3= t('.no_posts')
+    #stream
+      %li{:style=>"text-align:center;"}
+        .dull= t('.no_posts')
 

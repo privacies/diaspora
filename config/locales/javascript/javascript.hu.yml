@@ -1,0 +1,31 @@
+#   Copyright (c) 2010, Diaspora Inc.  This file is
+#   licensed under the Affero General Public License version 3 or later.  See
+#   the COPYRIGHT file.
+
+
+hu: 
+  javascripts: 
+    confirm_dialog: "Biztos vagy benne?"
+    search_for: "{{name}} keresése."
+    shared: 
+      contact_list: 
+        cannot_remove: "Nem tudod eltávolítani a személyt az utolsó csoportból. (előbb törölnöd kell a kapcsolatot)."
+    timeago: 
+      day: "egy nappal"
+      days: "%d nappal"
+      hour: "körülbelül egy órával"
+      hours: "körülbelül %d órával"
+      minute: "körülbelül egy perccel"
+      minutes: "%d perccel"
+      month: "körülbelül egy hónappal"
+      months: "%d hónappal"
+      prefixAgo: ""
+      prefixFromNow: ""
+      seconds: "kevesebb mint egy perccel"
+      suffixAgo: "ezelőtt"
+      suffixFromNow: "mostantól"
+      year: "körülbelül egy évvel"
+      years: "%d évvel"
+    videos: 
+      unknown: "Ismeretlen videó tipus"
+      watch: "Videó megtekintése itt: {{provider}}"

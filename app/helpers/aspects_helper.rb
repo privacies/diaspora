@@ -1,13 +1,17 @@
-#   Copyright (c) 2010, Diaspora Inc.  This file is
+#/   Copyright (c) 2010, Diaspora Inc.  This file is
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
 
 module AspectsHelper
-  def link_for_aspect( aspect )
-    link_to aspect.name, aspect
+  def link_for_aspect(aspect, opts={})
+    opts[:params] ||= {}
+    params ||= {}
+    opts[:params] = opts[:params].merge("a_ids[]" => aspect.id, :created_at => params[:created_at])
+
+    link_to aspect.name, aspects_path( opts[:params] ), opts
   end
 
-  def remove_link( aspect )
+  def remove_link(aspect)
     if aspect.contacts.size == 0
       link_to I18n.t('aspects.helper.remove'), aspect, :method => :delete, :confirm => I18n.t('aspects.helper.are_you_sure')
     else
@@ -15,48 +19,63 @@ module AspectsHelper
     end
   end
 
-  def add_to_aspect_button(aspect_id, person_id)
+  def add_to_aspect_button(aspect_id, person_id, kontroller)
     link_to image_tag('icons/monotone_plus_add_round.png'),
-      {:controller => "aspects",
-        :action => 'add_to_aspect',
+      {:controller => kontroller,
+        :action => 'create',
         :aspect_id => aspect_id,
         :person_id => person_id},
       :remote => true,
+      :method => 'post',
       :class => 'add button'
   end
 
   def remove_from_aspect_button(aspect_id, person_id)
     link_to image_tag('icons/monotone_check_yes.png'),
-      {:controller => "aspects",
-        :action => 'remove_from_aspect',
+      {:controller => "aspect_memberships",
+        :action => 'destroy',
+        :id => 42,
         :aspect_id => aspect_id,
         :person_id => person_id},
       :remote => true,
+      :method => 'delete',
       :class => 'added button'
   end
 
-  def aspect_membership_button(aspect_id, contact, person)
-    if contact.nil? || !contact.aspect_ids.include?(aspect_id)
-      add_to_aspect_button(aspect_id, person.id)
+  def contact_or_membership(contact)
+    (contact.persisted?) ? 'aspect_memberships' : 'contacts'
+  end
+
+  def aspect_membership_button(aspect, contact, person)
+    if contact.nil? || !aspect.contacts.include?(contact)
+      add_to_aspect_button(aspect.id, person.id, contact_or_membership(contact))
     else
-      remove_from_aspect_button(aspect_id, person.id)
+      remove_from_aspect_button(aspect.id, person.id)
     end
   end
-  
+
   def get_aspect_contacts(aspect_id)
-    
+
     if (aspect_id == "all")
       target_aspects=current_user.aspects.collect{|x| x.id}
     else
       target_aspects=[aspect_id]
     end
-    
-    target_contacts = Contact.all(:aspect_ids.in => target_aspects, :pending => false)
-    
+
+    target_contacts = Contact.joins(:aspect_memberships).where(:aspect_memberships => {:aspect_id => target_aspects}, :pending => false)
+
     target_handles = target_contacts.collect do |contact|
       contact.person.diaspora_handle
     end
   end
-  
-end
 
+  def publisher_description(aspect_count)
+    str = "#{t('.share_with')} #{aspect_count} "
+    if aspect_count == 1
+      str += t('_aspect').downcase
+    else
+      str += t('_aspects').downcase
+    end
+    ("<span>#{str}</span>").html_safe
+  end
+end

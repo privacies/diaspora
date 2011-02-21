@@ -1,0 +1,31 @@
+#   Copyright (c) 2010, Diaspora Inc.  This file is
+#   licensed under the Affero General Public License version 3 or later.  See
+#   the COPYRIGHT file.
+
+
+sk: 
+  javascripts: 
+    confirm_dialog: "Ste si istý?"
+    search_for: "Hľadať {{name}}"
+    shared: 
+      contact_list: 
+        cannot_remove: "Cannot remove person from last aspect. (If you want to disconnect from this person you must remove contact.)"
+    timeago: 
+      day: "včera"
+      days: "%d dni"
+      hour: "hodinou"
+      hours: "%d hodinami"
+      minute: "minútou"
+      minutes: "%d minútami"
+      month: "mesiacom"
+      months: "%d mesiacmi"
+      prefixAgo: "pred"
+      prefixFromNow: ""
+      seconds: "menej než minúta"
+      suffixAgo: ""
+      suffixFromNow: ""
+      year: "rokom"
+      years: "%d roky"
+    videos: 
+      unknown: "Neznámy typ videa"
+      watch: "Pozrite sa na toto video na {{provider}}"

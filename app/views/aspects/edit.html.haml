@@ -1,0 +1,30 @@
+-#   Copyright (c) 2010, Diaspora Inc.  This file is
+-#   licensed under the Affero General Public License version 3 or later.  See
+-#   the COPYRIGHT file.
+
+- content_for :head do
+  = include_javascripts :aspects
+
+#aspect_edit_pane
+  #facebox_header
+    %h4
+      = @aspect
+      .description
+        = t('contacts', :count =>@aspect_contacts_count)
+
+  - if @contacts.count > 0
+    = render 'shared/contact_list', :aspect => @aspect, :contacts => @contacts
+
+  #aspect_edit_controls
+    = link_to t('delete'), @aspect, :method => "delete", :confirm => t('.confirm_remove_aspect')
+
+  #rename_aspect
+    = form_for @aspect do |asp|
+      = asp.text_field :name
+      %p.checkbox_select{:style => 'font-size:14px'}
+        = asp.label :contacts_visible, t('.make_aspect_list_visible')
+        = asp.check_box :contacts_visible
+      %br
+      %div{:style => "text-align:right;"}
+        = asp.submit t('.save'), :class => 'button'
+

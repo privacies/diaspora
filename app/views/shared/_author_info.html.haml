@@ -1,17 +1,8 @@
-#author_info
+#author_info.show
   = person_image_link(person)
   .from
-    %h4
+    %h5
       = person.name
-
-      - if post.public?
-        %span.arrow ➔
-        %span.aspect_badge.public
-          =t('the_world')
-
-      - elsif current_user.owns?(post)
-        %span.arrow ➔
-        =aspect_badge(aspects_with_post(post.aspects, post))
 
     #person_nav_links
       = link_to t('layouts.header.view_profile'), person_path(person)

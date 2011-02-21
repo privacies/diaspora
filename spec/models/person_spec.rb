@@ -5,12 +5,10 @@
 require 'spec_helper'
 
 describe Person do
+
   before do
-    @user = make_user
-    @user2 = make_user
-    @person = Factory.create(:person)
-    @aspect = @user.aspects.create(:name => "Dudes")
-    @aspect2 = @user2.aspects.create(:name => "Abscence of Babes")
+    @user = bob
+    @person  = Factory.create(:person)
   end
 
   describe "delegating" do
@@ -57,7 +55,7 @@ describe Person do
   end
 
   context '#name' do
-    let!(:user) { make_user }
+    let!(:user) { Factory(:user) }
     let!(:person) { user.person }
     let!(:profile) { person.profile }
 
@@ -100,108 +98,195 @@ describe Person do
     person_two.owns?(person_message).should be false
   end
 
-  it "deletes all of a person's posts upon person deletion" do
-    person = Factory.create(:person)
+  describe '#remove_all_traces' do
+    before do
+      @deleter = Factory(:person)
+      @status = Factory.create(:status_message, :person => @deleter)
+      @other_status = Factory.create(:status_message, :person => @person)
+    end
 
-    status = Factory.create(:status_message, :person => person)
-    Factory.create(:status_message, :person => @person)
+    it "deletes all notifications from a person's actions" do
+      note = Factory(:notification, :actors => [@deleter], :recipient => @user)
+      @deleter.destroy
+      Notification.where(:id => note.id).first.should be_nil
+    end
 
-    lambda {person.destroy}.should change(Post, :count).by(-1)
-  end
+    it "deletes all contacts pointing towards a person" do
+      @user.activate_contact(@deleter, @user.aspects.first)
+      @deleter.destroy
+      @user.contact_for(@deleter).should be_nil
+    end
 
-  it "does not delete a person's comments on person deletion" do
-    person = Factory.create(:person)
+    it "deletes all of a person's posts upon person deletion" do
+      lambda {@deleter.destroy}.should change(Post, :count).by(-1)
+    end
 
-    status_message = Factory.create(:status_message, :person => @person)
+    it "deletes a person's comments on person deletion" do
+      Factory.create(:comment, :person_id => @deleter.id, :diaspora_handle => @deleter.diaspora_handle, :text => "i love you",     :post => @other_status)
+      Factory.create(:comment, :person_id => @person.id,:diaspora_handle => @person.diaspora_handle,  :text => "you are creepy", :post => @other_status)
 
-    Factory.create(:comment, :person_id => person.id, :diaspora_handle => person.diaspora_handle, :text => "i love you",     :post => status_message)
-    Factory.create(:comment, :person_id => @person.id,:diaspora_handle => @person.diaspora_handle,  :text => "you are creepy", :post => status_message)
-
-    lambda {person.destroy}.should_not change(Comment, :count)
+      lambda {@deleter.destroy}.should change(Comment, :count).by(-1)
+    end
   end
 
   describe "disconnecting" do
+    before do
+      @user2   = Factory(:user)
+      @aspect  = @user.aspects.create(:name => "Dudes")
+      @aspect2 = @user2.aspects.create(:name => "Abscence of Babes")
+    end
     it 'should not delete an orphaned contact' do
       @user.activate_contact(@person, @aspect)
 
-      lambda {@user.disconnect(@person)}.should_not change(Person, :count)
+      lambda {@user.disconnect(@user.contact_for(@person))}.should_not change(Person, :count)
     end
 
     it 'should not delete an un-orphaned contact' do
       @user.activate_contact(@person, @aspect)
       @user2.activate_contact(@person, @aspect2)
 
-      lambda {@user.disconnect(@person)}.should_not change(Person, :count)
+      lambda {@user.disconnect(@user.contact_for(@person))}.should_not change(Person, :count)
     end
   end
 
   describe '.search' do
     before do
-      @connected_person_one   = Factory.create(:person)
-      @connected_person_two   = Factory.create(:person)
-      @connected_person_three = Factory.create(:person)
-      @connected_person_four  = Factory.create(:person)
+      Person.delete_all
+      @user = Factory.create(:user_with_aspect)
+      user_profile = @user.person.profile
+      user_profile.first_name = "aiofj"
+      user_profile.last_name = "asdji"
+      user_profile.save
 
-      @connected_person_one.profile.first_name = "Robert"
-      @connected_person_one.profile.last_name  = "Grimm"
-      @connected_person_one.profile.save
+      @robert_grimm = Factory.create(:searchable_person)
+      @eugene_weinstein = Factory.create(:searchable_person)
+      @yevgeniy_dodis = Factory.create(:searchable_person)
+      @casey_grippi = Factory.create(:searchable_person)
 
-      @connected_person_two.profile.first_name = "Eugene"
-      @connected_person_two.profile.last_name  = "Weinstein"
-      @connected_person_two.save
+      @robert_grimm.profile.first_name = "Robert"
+      @robert_grimm.profile.last_name  = "Grimm"
+      @robert_grimm.profile.save
+      @robert_grimm.reload
 
-      @connected_person_three.profile.first_name = "Yevgeniy"
-      @connected_person_three.profile.last_name  = "Dodis"
-      @connected_person_three.save
+      @eugene_weinstein.profile.first_name = "Eugene"
+      @eugene_weinstein.profile.last_name  = "Weinstein"
+      @eugene_weinstein.profile.save
+      @eugene_weinstein.reload
 
-      @connected_person_four.profile.first_name = "Casey"
-      @connected_person_four.profile.last_name  = "Grippi"
-      @connected_person_four.save
+      @yevgeniy_dodis.profile.first_name = "Yevgeniy"
+      @yevgeniy_dodis.profile.last_name  = "Dodis"
+      @yevgeniy_dodis.profile.save
+      @yevgeniy_dodis.reload
+
+      @casey_grippi.profile.first_name = "Casey"
+      @casey_grippi.profile.last_name  = "Grippi"
+      @casey_grippi.profile.save
+      @casey_grippi.reload
+    end
+    it 'is ordered by last name' do
+      @robert_grimm.profile.first_name = "AAA"
+      @robert_grimm.profile.save
+
+      @eugene_weinstein.profile.first_name = "AAA"
+      @eugene_weinstein.profile.save
+
+      @yevgeniy_dodis.profile.first_name = "AAA"
+      @yevgeniy_dodis.profile.save
+
+      @casey_grippi.profile.first_name = "AAA"
+      @casey_grippi.profile.save
+
+      people = Person.search("AAA", @user)
+      people.map{|p| p.name}.should == [@yevgeniy_dodis, @robert_grimm, @casey_grippi, @eugene_weinstein].map{|p|p.name}
     end
 
-    it 'should return nothing on an emprty query' do
-      people = Person.search("")
+    it 'should return nothing on an empty query' do
+      people = Person.search("", @user)
+      people.empty?.should be true
+    end
+
+    it 'should return nothing on a two character query' do
+      people = Person.search("in", @user)
       people.empty?.should be true
     end
 
     it 'should yield search results on partial names' do
-      people = Person.search("Eu")
-      people.include?(@connected_person_two).should   == true
-      people.include?(@connected_person_one).should   == false
-      people.include?(@connected_person_three).should == false
-      people.include?(@connected_person_four).should  == false
+      people = Person.search("Eug", @user)
+      people.count.should == 1
+      people.first.should == @eugene_weinstein
 
-      people = Person.search("wEi")
-      people.include?(@connected_person_two).should   == true
-      people.include?(@connected_person_one).should   == false
-      people.include?(@connected_person_three).should == false
-      people.include?(@connected_person_four).should  == false
+      people = Person.search("wEi", @user)
+      people.count.should == 1
+      people.first.should == @eugene_weinstein
 
-      people = Person.search("gri")
-      people.include?(@connected_person_one).should   == true
-      people.include?(@connected_person_four).should  == true
-      people.include?(@connected_person_two).should   == false
-      people.include?(@connected_person_three).should == false
+      people = Person.search("gri", @user)
+      people.count.should == 2
+      people.first.should == @robert_grimm
+      people.second.should == @casey_grippi
     end
 
-    it 'should yield results on full names' do
-      people = Person.search("Casey Grippi")
-      people.should == [@connected_person_four]
+    it 'gives results on full names' do
+      people = Person.search("Casey Grippi", @user)
+      people.count.should == 1
+      people.first.should == @casey_grippi
     end
 
-    it 'should only display searchable people' do
-      invisible_person = Factory(:person, :profile => {:searchable => false, :first_name => "johnson"})
-      Person.search("johnson").should_not include invisible_person
-      Person.search("").should_not include invisible_person
+    it 'only displays searchable people' do
+      invisible_person = Factory(:person, :profile => Factory.build(:profile,:searchable => false, :first_name => "johnson"))
+      Person.search("johnson", @user).should_not include invisible_person
+      Person.search("", @user).should_not include invisible_person
     end
 
-    it 'should search on handles' do
-      Person.search(@connected_person_one.diaspora_handle).should include @connected_person_one
+    it 'searches on handles' do
+      people = Person.search(@robert_grimm.diaspora_handle, @user)
+      people.should == [@robert_grimm]
+    end
+
+    it "puts the searching user's contacts first" do
+      @robert_grimm.profile.first_name = "AAA"
+      @robert_grimm.profile.save
+
+      @eugene_weinstein.profile.first_name = "AAA"
+      @eugene_weinstein.profile.save
+
+      @yevgeniy_dodis.profile.first_name = "AAA"
+      @yevgeniy_dodis.profile.save
+
+      @casey_grippi.profile.first_name = "AAA"
+      @casey_grippi.profile.save
+
+      @user.activate_contact(@casey_grippi, @user.aspects.first)
+
+      people = Person.search("AAA", @user)
+      people.map{|p| p.name}.should == [@casey_grippi, @yevgeniy_dodis, @robert_grimm, @eugene_weinstein].map{|p|p.name}
+    end
+    it "puts the searching user's incoming requests first" do
+      requestor = Factory(:user_with_aspect)
+      profile = requestor.person.profile
+      profile.first_name = "AAA"
+      profile.last_name = "Something"
+      profile.save
+
+      @robert_grimm.profile.first_name = "AAA"
+      @robert_grimm.profile.save
+
+      @eugene_weinstein.profile.first_name = "AAA"
+      @eugene_weinstein.profile.save
+
+      @yevgeniy_dodis.profile.first_name = "AAA"
+      @yevgeniy_dodis.profile.save
+
+      @casey_grippi.profile.first_name = "AAA"
+      @casey_grippi.profile.save
+
+      requestor.send_contact_request_to(@user.person, requestor.aspects.first)
+      people = Person.search("AAA", @user)
+      people.map{|p| p.name}.should == [requestor.person, @yevgeniy_dodis, @robert_grimm, @casey_grippi, @eugene_weinstein].map{|p|p.name}
     end
   end
 
   context 'people finders for webfinger' do
-    let(:user) {make_user}
+    let(:user) {Factory(:user)}
     let(:person) {Factory(:person)}
 
     describe '.by_account_identifier' do

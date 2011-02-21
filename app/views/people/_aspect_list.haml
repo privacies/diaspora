@@ -4,47 +4,27 @@
 
 - content_for :head do
   =javascript_include_tag 'contact-list'
-
-  :javascript
-    $(document).ready(function() {
-      $("#edit_contact_aspects").click(function(evt){
-        evt.preventDefault();
-        $(".badges").fadeOut(200, function(){
-          $(".edit").fadeIn(200);
-        });
-      });
-
-      $("#done_contact_aspects").click(function(evt){
-        evt.preventDefault();
-        $(".edit").fadeOut(200, function(){
-          $(".badges").fadeIn(200);
-        });
-      });
-    });
-
 .aspects
-  - if !contact
+  - if !contact || !contact.persisted?
     %h4
-      = t('people.show.not_connected', :name => person.first_name)
+      = link_to truncate(t('people.show.not_connected', :name => person.name), :length => 49, :separator => ' ', :omission => ''),
+        {:controller => "contacts",
+        :action => "new",
+        :person_id => person.id},
+        :class => 'share_with button',
+        :rel => 'facebox'
   - elsif contact.pending
     %h4
       = t('people.person.pending_request')
 
-  .badges{:class => ("hidden" if !contact)}
-    - for aspect in aspects_with_person
-      = render :partial => 'aspects/aspect_badge', :locals => {:aspect => aspect}
-    .right
-      = link_to t('.edit_membership'), "#", :id=> "edit_contact_aspects"
-
-  .edit{:class => ("hidden" if contact)}
-
-    = render :partial => 'people/share_with_pane',
-        :locals => {:person => person,
-          :contact => contact,
-          :aspects_with_person => aspects_with_person,
-          :aspects_without_person => aspects_without_person}
-
-    - if contact
-      .right
-        = link_to t('aspects.aspect_contacts.done_editing'), "#", :id => "done_contact_aspects"
-      = link_to t('people.profile_sidebar.remove_contact'), person, :confirm => t('are_you_sure'), :method => :delete
+  - else
+    .badges{:class => ("hidden" if !contact.persisted?)}
+      = aspect_badges(aspects_with_person)
+      %p
+      = link_to t('.edit_membership'),
+              {:controller => "contacts",
+              :action => "edit",
+              :id => contact.id,
+              :person_id => person.id},
+              :class => 'button',
+              :rel => 'facebox'

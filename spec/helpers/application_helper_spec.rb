@@ -6,7 +6,7 @@ require 'spec_helper'
 
 describe ApplicationHelper do
   before do
-    @user = make_user
+    @user = alice
     @person = Factory.create(:person)
   end
 
@@ -35,13 +35,13 @@ describe ApplicationHelper do
       person_image_link(nil).should == ""
     end
     it "returns a link containing the person's photo" do
-      person_image_link(@person).should include(image_or_default(@person))
+      person_image_link(@person).should include(@person.profile.image_url)
     end
     it "returns a link to the person's profile" do
       person_image_link(@person).should include(person_path(@person))
     end
   end
-  
+
   describe "#person_image_tag" do
     it "should not allow basic XSS/HTML" do
       @person.profile.first_name = "I'm <h1>Evil"
@@ -93,6 +93,7 @@ describe ApplicationHelper do
           video_id = "0x__dDWdf23"
           url = "http://www.youtube.com/watch?v=" + video_id + "&a=GxdCwVVULXdvEBKmx_f5ywvZ0zZHHHDU&list=ML&playnext=1"
           res = markdownify(url)
+          res.should =~ /Youtube:/
           res.should =~ /data-host="youtube.com"/
           res.should =~ /data-video-id="#{video_id}"/
         end
@@ -101,6 +102,7 @@ describe ApplicationHelper do
           video_id = "ABYnqp-bxvg"
           url = "http://www.youtube.com/watch?v=" + video_id + "&a=GxdCwVVULXdvEBKmx_f5ywvZ0zZHHHDU&list=ML&playnext=1"
           res = markdownify(url)
+          res.should =~ /Youtube:/
           res.should =~ /data-host="youtube.com"/
           res.should =~ /data-video-id="#{video_id}"/
         end
@@ -174,7 +176,7 @@ describe ApplicationHelper do
         message = '[link text](http://someurl.com "some title") [link text](http://someurl.com "some title")'
         markdownify(message).should == '<a target="_blank" href="http://someurl.com" title="some title">link text</a> <a target="_blank" href="http://someurl.com" title="some title">link text</a>'
       end
-         
+
       it "should have a robust link parsing" do
         message = "This [*text*](http://en.wikipedia.org/wiki/Text_(literary_theory)) with many [links](google.com) tests [_http_](http://google.com/search?q=with_multiple__underscores*and**asterisks), [___FTP___](ftp://ftp.uni-kl.de/CCC/26C3/mp4/26c3-3540-en-a_hackers_utopia.mp4 \"File Transfer Protocol\"), [**any protocol**](foo://bar.example.org/yes_it*makes*no_sense)"
         markdownify(message).should == 'This <a target="_blank" href="http://en.wikipedia.org/wiki/Text_(literary_theory)"><em>text</em></a> with many <a target="_blank" href="http://google.com">links</a> tests <a target="_blank" href="http://google.com/search?q=with_multiple__underscores*and**asterisks"><em>http</em></a>, <a target="_blank" href="ftp://ftp.uni-kl.de/CCC/26C3/mp4/26c3-3540-en-a_hackers_utopia.mp4" title="File Transfer Protocol"><em><strong>FTP</strong></em></a>, <a target="_blank" href="foo://bar.example.org/yes_it*makes*no_sense"><strong>any protocol</strong></a>'
@@ -197,7 +199,7 @@ describe ApplicationHelper do
       it 'skips inserting newlines if you pass the newlines option' do
         message = "These\nare\n\some\nnew\lines"
         res = markdownify(message, :newlines => false)
-        res.should == message        
+        res.should == message
       end
 
       it 'generates breaklines' do
@@ -205,7 +207,7 @@ describe ApplicationHelper do
         res = markdownify(message)
         res.should == "These<br /\>are<br /\>some<br /\>new<br /\>lines"
       end
-      
+
       it 'should render newlines and basic http links correctly' do
         message = "Some text, then a line break and a link\nhttp://joindiaspora.com\nsome more text"
         res = markdownify(message)
@@ -227,19 +229,19 @@ describe ApplicationHelper do
 
         person_link(@person).should include @person.diaspora_handle
       end
-    
+
       it 'uses diaspora handle if first name and first name are rails#blank?' do
-        @person.profile.first_name = " " 
+        @person.profile.first_name = " "
         @person.profile.last_name = " "
 
         person_link(@person).should include @person.diaspora_handle
       end
-      
+
       it "should not allow basic XSS/HTML" do
         @person.profile.first_name = "I'm <h1>Evil"
         @person.profile.last_name = "I'm <h1>Evil"
         person_link(@person).should_not include("<h1>")
-      end      
+      end
     end
     context 'performance' do
       before do

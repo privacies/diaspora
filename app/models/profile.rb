@@ -2,63 +2,61 @@
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
 
-class Profile
-  include MongoMapper::EmbeddedDocument
+class Profile < ActiveRecord::Base
   require File.join(Rails.root, 'lib/diaspora/webhooks')
   include Diaspora::Webhooks
   include ROXML
 
-  xml_reader :diaspora_handle
-  xml_reader :first_name
-  xml_reader :last_name
-  xml_reader :image_url
-  xml_reader :image_url_small
-  xml_reader :image_url_medium
-  xml_reader :birthday
-  xml_reader :gender
-  xml_reader :bio
-  xml_reader :searchable
-
-  key :diaspora_handle, String
-  key :first_name, String
-  key :last_name,  String
-  key :image_url,  String
-  key :image_url_small,  String
-  key :image_url_medium,  String
-  key :birthday,   Date
-  key :gender,     String
-  key :bio,        String
-  key :searchable, Boolean, :default => true
-
-  after_validation :strip_names
-  validates_length_of :first_name, :maximum => 32
-  validates_length_of :last_name,  :maximum => 32
-
+  xml_attr :diaspora_handle
+  xml_attr :first_name
+  xml_attr :last_name
+  xml_attr :image_url
+  xml_attr :image_url_small
+  xml_attr :image_url_medium
+  xml_attr :birthday
+  xml_attr :gender
+  xml_attr :bio
+  xml_attr :searchable
 
   before_save :strip_names
+  after_validation :strip_names
+
+  validates_length_of :first_name, :maximum => 32
+  validates_length_of :last_name,  :maximum => 32
+  validates_format_of :first_name, :with => /\A[^;]+\z/, :allow_blank => true
+  validates_format_of :last_name, :with => /\A[^;]+\z/, :allow_blank => true
 
   attr_accessible :first_name, :last_name, :image_url, :image_url_medium,
     :image_url_small, :birthday, :gender, :bio, :searchable, :date
 
-  def person
-    self._parent_document
+  belongs_to :person
+
+  def subscribers(user)
+    Person.joins(:contacts).where(:contacts => {:user_id => user.id})
+  end
+
+  def receive(user, person)
+    Rails.logger.info("event=receive payload_type=profile sender=#{person} to=#{user}")
+    person.profile.update_attributes self.attributes
+
+    person.profile
   end
 
   def diaspora_handle
     #get the parent diaspora handle, unless we want to access a profile without a person
-    (self._parent_document) ? self.person.diaspora_handle : self[:diaspora_handle]
+    (self.person) ? self.person.diaspora_handle : self[:diaspora_handle]
   end
 
   def image_url(size = :thumb_large)
-    if size == :thumb_medium
-      self[:image_url_medium]
-    elsif size == :thumb_small
-      self[:image_url_small]
-    else
-      self[:image_url]
-    end
+    result = if size == :thumb_medium && self[:image_url_medium]
+               self[:image_url_medium]
+             elsif size == :thumb_small && self[:image_url_small]
+               self[:image_url_small]
+             else
+               self[:image_url]
+             end
+    result || '/images/user/default.png'
   end
-
 
   def image_url= url
     return image_url if url == ''
@@ -93,7 +91,7 @@ class Profile
       date = Date.new(params['year'].to_i, params['month'].to_i, params['day'].to_i)
       self.birthday = date
     elsif [ 'year', 'month', 'day'].all? { |key| params[key].blank? }
-      self.birthday = nil 
+      self.birthday = nil
     end
   end
 

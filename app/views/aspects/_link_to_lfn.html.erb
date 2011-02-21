@@ -1,9 +1,9 @@
-<!-- 
+<!--
 ###########################################################################
 # Privacies Code
 This generates the button LFN
 It basically loads XAP file with the arguments passed to this aspect.
-###########################################################################  
+###########################################################################
 -->
 
 
@@ -11,6 +11,6 @@ It basically loads XAP file with the arguments passed to this aspect.
   <% lfn_string= "&siteOwner=bob&currentUser=bob&siteName=RRbob312201044&token=d3d12e0e-7968-458e-92a5-f7ba583cb053&lfnid=Ym9iIyQjVElDS0VUX2YxZTRjZjIxMGRhNzExMWNkYzI4OTk1ZjEyYTliNjllY2Q4ZjFjYjYjJCNib2JAMTIz" %>
   <%= link_to "Lfn", aspects_lfn_path.to_s+"?userId="+current_user.person.diaspora_handle.to_s+
                       "&aspectId="+aspect_id.to_s+
-                      "&aspectContacts="+get_aspect_contacts(aspect_id).join(",").to_s+ 
-                      lfn_string %>                     
+                      "&aspectContacts="+get_aspect_contacts(aspect_id).join(",").to_s+
+                      lfn_string %>
 </div>

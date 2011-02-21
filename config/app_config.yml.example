@@ -37,14 +37,14 @@ default:
   # Diaspora is only tested against this default pubsub server.
   pubsub_server: 'https://pubsubhubbub.appspot.com/'
 
-  # Host/port for running mongodb server. See also mongodb.conf
-  mongo_host: 'localhost'
-  mongo_port: 27017
-
   # Setting this to true enables diaspora's "send email" functionality
   # requiring meaningful smtp_* settings. These are options for RoR's
   # ActionMailer class.
   mailer_on: false
+
+  # This chooses which mailer should be used. 'smtp' for a smtp
+  # connection or 'sendmail' to use the sendmail binary.
+  mailer_method: 'smtp'
 
   # Address/port to smtp server handing outgoing mail.
   smtp_address: 'smtp.example.com'
@@ -66,6 +66,9 @@ default:
   smtp_username: 'smtp_username'
   smtp_password: 'secret'
 
+  # The path to the sendmail binary.
+  sendmail_location: '/usr/sbin/sendmail'
+
   #google analytics key, if false, it won't include the javascript
   google_a_site: false
   
@@ -80,6 +83,16 @@ default:
   cloudfiles_api_key:  'abc123'
   invites_off: false
 
+  #list of users who have admin privilages
+  admins:
+    - 'example_user1dsioaioedfhgoiesajdigtoearogjaidofgjo'
+
+  #s3 config, if set, carrierwave will store your photos on s3
+  #s3_key: 'key'
+  #s3_secret: 'secret'
+  #s3_bucket: 'my_photos'
+
+  
 development:
 
 test:

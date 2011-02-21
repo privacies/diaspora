@@ -4,16 +4,19 @@
 */
 
 var Mobile = {
-  initialize : function(){
-    $('#aspect_picker').change(Mobile.changeAspect);
+  initialize: function() {
+    $('#main_stream + .pagination').hide();
+    $('a').live('tap',function(){
+      $(this).addClass('tapped');
+    })
   },
-  
-  changeAspect : function() {
-    Mobile.windowLocation('/aspects/' + $('#aspect_picker option:selected').val());
-  },
-  
-  windowLocation : function(url) {
+
+  windowLocation: function(url) {
     window.location = url;
-  },
+  }
 };
+
+$(document).ready(function() {
+  Mobile.initialize();
+ });
 

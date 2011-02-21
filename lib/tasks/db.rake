@@ -3,6 +3,9 @@
 #   the COPYRIGHT file.
 
 namespace :db do
+  desc "rebuild and prepare test db"
+  task :rebuild => [:drop, :create, :migrate, 'db:test:prepare']
+
   desc 'Seed the current RAILS_ENV database from db/seeds.rb'
   namespace :seed do
     task :tom do
@@ -21,7 +24,7 @@ namespace :db do
       create
     end
 
-    task :first_user, :username, :password do |t, args|
+    task :first_user, :username, :password, :email do |t, args|
       puts "Setting up first user in #{Rails.env} database"
       ARGS = args
       require File.dirname(__FILE__) + '/../../db/seeds/add_user'
@@ -31,7 +34,7 @@ namespace :db do
 
   desc 'Delete the collections in the current RAILS_ENV database'
   task :purge do
-    require File.dirname(__FILE__) + '/../../config/environment'
+    require File.join(File.dirname(__FILE__), '..', '..', 'config', 'environment')
 
     puts "Purging the database for #{Rails.env}..."
 
@@ -60,9 +63,9 @@ namespace :db do
   end
 
   desc "Purge database and then add the first user"
-  task :first_user, :username, :password do |t, args|
+  task :first_user, :username, :password, :email do |t, args|
     Rake::Task['db:purge'].invoke
-    Rake::Task['db:seed:first_user'].invoke(args[:username], args[:password])
+    Rake::Task['db:seed:first_user'].invoke(args[:username], args[:password], args[:email])
   end
   task :first_user => :environment
 
@@ -75,7 +78,7 @@ namespace :db do
 
   task :fix_diaspora_handle do
     puts "fixing the people in this seed"
-    require File.dirname(__FILE__) + '/../../config/environment'
+    require File.join(File.dirname(__FILE__), '..', '..', 'config', 'environment')
     Person.where(:url => 'example.org').all.each{|person|
       if person.owner
         person.url = AppConfig[:pod_url]
@@ -87,7 +90,7 @@ namespace :db do
   end
 
   task :move_private_key do
-    require File.dirname(__FILE__) + '/../../config/environment'
+    require File.join(File.dirname(__FILE__), '..', '..', 'config', 'environment')
     User.all.each do |user|
       if user.serialized_private_key.nil?
         user.serialized_private_key = user.person.serialized_key

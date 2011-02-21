@@ -24,7 +24,7 @@ module Diaspora
 
     def self.push_to_user(uid, data)
       Rails.logger.debug "event=socket-push uid=#{uid}"
-      @channels[uid.to_id][0].push(data) if @channels[uid.to_id]
+      @channels[uid][0].push(data) if @channels[uid]
     end
 
     def self.subscribe(uid, ws)
@@ -49,12 +49,12 @@ module Diaspora
   end
 
   module Socketable
-    def socket_to_uid(id, opts={})
-      SocketsController.new.outgoing(id, self, opts)
+    def socket_to_user(user, opts={})
+      SocketsController.new.outgoing(user, self, opts)
     end
 
-    def unsocket_from_uid(id, opts={})
-      SocketsController.new.outgoing(id, Retraction.for(self), opts)
+    def unsocket_from_user(user, opts={})
+      SocketsController.new.outgoing(user, Retraction.for(self), opts)
     end
   end
 end

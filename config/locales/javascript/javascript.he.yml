@@ -1,0 +1,31 @@
+#   Copyright (c) 2010, Diaspora Inc.  This file is
+#   licensed under the Affero General Public License version 3 or later.  See
+#   the COPYRIGHT file.
+
+
+he: 
+  javascripts: 
+    confirm_dialog: "בבטחה?"
+    search_for: "חיפוש אחר {{name}}"
+    shared: 
+      contact_list: 
+        cannot_remove: "לא ניתן להסיר את איש הקשר מההיבט החארון. (אם ברצונך להינתק מאדם זה עליך להסיר את איש הקשר.)"
+    timeago: 
+      day: "יום"
+      days: "%d ימים"
+      hour: "בערך שעה"
+      hours: "בערך %d שעות"
+      minute: "בערך דקה"
+      minutes: "%d דקות"
+      month: "בערך חודש"
+      months: "%d חודשים"
+      prefixAgo: "לפני"
+      prefixFromNow: "מעכשיו"
+      seconds: "פחות מדקה"
+      suffixAgo: "לפני"
+      suffixFromNow: "מעכשיו"
+      year: "בערך שנה"
+      years: "%d שנים"
+    videos: 
+      unknown: "סוג הווידאו אינו ידוע"
+      watch: "צפייה בסרטון וידאו זה באתר {{provider}}"

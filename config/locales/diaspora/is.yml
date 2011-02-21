@@ -1,0 +1,509 @@
+#   Copyright (c) 2010, Diaspora Inc.  This file is
+#   licensed under the Affero General Public License version 3 or later.  See
+#   the COPYRIGHT file.
+
+
+is: 
+  _aspect: "Ásýnd"
+  _aspects: "Ásýndir"
+  _comment: "Athugasemd"
+  _comments: "Athugasemdir"
+  _contact: "Tengiliður"
+  _contacts: "Tengiliðir"
+  _home: "Forsíða"
+  _more: "Meira"
+  _photos: "Myndir"
+  _services: "Þjónusta"
+  account: "Notandastillingar"
+  activerecord: 
+    errors: 
+      models: 
+        contact: 
+          attributes: 
+            person_id: 
+              taken: "verður að vera einstakt meðal tengiliða þessa notanda."
+        person: 
+          attributes: 
+            diaspora_handle: 
+              taken: "er þegar frátekið."
+        request: 
+          attributes: 
+            from_id: 
+              taken: "er afrit af fyrirliggjandi beiðni."
+        user: 
+          attributes: 
+            email: 
+              taken: "er þegar í notkun."
+            person: 
+              invalid: "er ógilt."
+            username: 
+              taken: "er þegar í notkun."
+  ago: "%{time} síðan"
+  application: 
+    helper: 
+      aspect_badge: 
+        all_aspects: "Allar ásýndir"
+      unknown_person: "unknown person"
+      video_title: 
+        unknown: "Óþekktur vídeótitill"
+  are_you_sure: "Ertu viss?"
+  aspect_memberships: 
+    destroy: 
+      failure: "Ekki tókst að fjarlægja persónu af ásýnd"
+      no_membership: "Valda manneskjan fannst ekki í þeirri ásýnd"
+      success: "Það heppnaðist að fjarlægja persónu af ásýnd"
+  aspects: 
+    add_to_aspect: 
+      failure: "Ekki tókst að bæta tengilið við ásýnd."
+      success: "Það heppnaðist að bæta tengilið við ásýnd."
+    aspect_contacts: 
+      done_editing: "búið að breyta"
+    aspect_stream: 
+      activity: "activity"
+      post_time: "færslutími"
+      sort_by: "raða eftir:"
+    contacts_not_visible: "Tengiliðir í þessari ásýnd geta ekki séð hvern annan."
+    contacts_visible: "Tengiliðir í þessari ásýnd geta séð hvern annan."
+    create: 
+      failure: "Ekki tókst að búa til ásýnd."
+      success: "Nýja ásýndin þín %{name} var búin til"
+    destroy: 
+      success: "það heppnaðist að fjarlægja %{name}."
+    edit: 
+      add_existing: "Bæta við tengilið sem er þegar til"
+      confirm_remove_aspect: "Ertu viss um að þú viljir eyða þessari ásýnd?"
+      make_aspect_list_visible: "make aspect list visible to others in aspect"
+      remove_aspect: "Eyða þessari ásýnd"
+      rename: "breyta nafni"
+      save: "Vista"
+    helper: 
+      are_you_sure: "Ertu viss um að þú viljir eyða þessari ásýnd?"
+      aspect_not_empty: "Ásýnd er ekki tóm"
+      remove: "fjarlægja"
+    index: 
+      handle_explanation: "Þetta er netfangið þitt hjá Díaspora. Eins og með venjulegt netfang, geturðu gefið fólki það svo þau geti haft samband við þig. "
+      no_contacts: "Engir tengiliðir"
+    manage: 
+      add_a_new_aspect: "Add a new aspect"
+      add_a_new_contact: "Bæta nýjum tengilið við"
+      drag_to_add: "Dragðu til að bæta fólki við"
+      manage_aspects: "Manage aspects"
+      no_requests: "Engar nýjar beiðnir"
+      requests: "Beiðnir"
+    move_contact: 
+      error: "Villa við að breyta tengiliði: %{inspect}"
+      failure: "virkaði ekki %{inspect}"
+      success: "Person moved to new aspect"
+    new_aspect: 
+      create: "Búa til"
+      name: "Nafn"
+    no_contacts_message: 
+      add_contact: "Bæta tengilið við"
+      add_contact_to: "Bæta einhverjum við %{aspect_name}"
+      invite: "Bjóddu einhverjum að tengjast Diaspora!"
+      nobody: "Bring the people that matter in your life to Diaspora!"
+      nobody_in_aspect: "Ásýndin þín '%{aspect_name}' er auð."
+    no_posts_message: 
+      start_talking: "Enginn hefur sagt neitt enn.  Byrjaðu umræðurnar!"
+    seed: 
+      family: "Fjölskylda"
+      work: "Vinna"
+    show: 
+      edit_aspect: "edit aspect"
+    update: 
+      failure: "Your aspect, %{name}, had too long name to be saved."
+      success: "Your aspect, %{name}, has been successfully edited."
+  back: "Til baka"
+  cancel: "Hætta við"
+  comments: 
+    new_comment: 
+      comment: "Athugasemd"
+      commenting: "Athugasemd gerð..."
+  contacts: 
+    create: 
+      failure: "Failed to create contact"
+    destroy: 
+      failure: "Failed to disconnect from %{name}"
+      success: "Successfully disconnected from %{name}"
+    few: "%{count} contacts"
+    one: "1 contact"
+    other: "%{count} contacts"
+    share_with_pane: 
+      accepts: "Once %{name} accepts, you'll start seeing each other's posts on Diaspora"
+      add_new_aspect: "add to new aspect"
+      share_with: "Start sharing with %{name}"
+    zero: "no contacts"
+  date: 
+    formats: 
+      birthday: "%B %d"
+      birthday_with_year: "%d %B %Y"
+      fullmonth_day: "%d %B"
+  delete: "Eyða"
+  email: "Netfang"
+  error_messages: 
+    helper: 
+      correct_the_following_errors_and_try_again: "Það þarf að lagfæra eftirfarandi villur og reyna síðan aftur. "
+      invalid_fields: "Invalid Fields"
+  fill_me_out: "Fylla út"
+  home: 
+    show: 
+      already_account: "nú þegar með notandastillingar?"
+      choice: "Valkostur"
+      choice_explanation: "Diaspora gerir þér kleift að raða tengingum í hópa sem kallast ásýndir. Einungis í Diaspora tryggja ásýndir að myndir þínar, sögur og brandarar séu einungis samnýtt með þeim sem þú ætlar. "
+      learn_about_host: "Lærðu hvernig á að hýsa sinn eigin Diaspora miðlara."
+      login_here: "innskráning hér"
+      ownership: "Eignarréttur"
+      ownership_explanation: "Þú átt þínar myndir og þú ættir ekki að þurfa að gefa þær frá þér þótt þú deilir þeim. Þú heldur eign þinni á öllu því sem þú deilir um Diaspora, sem gefur þér fulla stjórn á því hvernig því er dreift."
+      share_what_you_want: "Deildu því sem þú vilt, með þeim sem þú vilt."
+      simplicity: "Einfaldleiki"
+      simplicity_explanation: "Diaspora gerir samnýtingu hreina og auðvelda - og það gildir líka fyrir friðhelgi. Þar sem Diaspora er í eðli sínu persónulegt, þarftu ekki að vaða í gegnum síður með stillingum og möguleikum til að halda síðunni þinni öruggri."
+      tagline_first_half: "Deildu því sem þú vilt,"
+      tagline_second_half: "með þeim sem þú vilt."
+  invitations: 
+    check_token: 
+      not_found: "Invitation token not found"
+    create: 
+      already_contacts: "Þú tengist þessari manneskju nú þegar"
+      already_sent: "Þessari manneskju hefur þegar verið boðið."
+      no_more: "Ekki eru til fleiri boðsmiðar."
+      rejected: "Eftirfarandi netföng ollu vandræðum: "
+      sent: "Boðsmiðar hafa verið sendir til:"
+    edit: 
+      sign_up: "inn_skráning"
+    new: 
+      already_invited: "Nu þegar boðið"
+      aspect: "Ásýnd"
+      comma_seperated_plz: "Þú getur sett inn mörg netföng með því að aðskilja þau með kommu. "
+      if_they_accept_info: "ef þau þiggja boðið, verður þeim bætt við þá ásýnd sem þú bauðst þeim á."
+      invite_someone_to_join: "Bjóddu einhverjum að tengjast Díaspora!"
+      personal_message: "Persónuleg skilaboð"
+      resend: "Endursenda"
+      send_an_invitation: "Sendu boðsmiða"
+      send_invitation: "Senda boðsmiða"
+      to: "Til"
+  layouts: 
+    application: 
+      have_a_problem: "Have a problem? Find an answer here"
+      logged_in_as: "innskráð/ur sem% {Nafn}"
+      powered_by: "DÍASPORA* STJÓRNAR HÉR"
+      toggle: "toggle mobile site"
+      whats_new: "hvað er að frétta?"
+      your_aspects: "þínar ásýndir"
+    header: 
+      account_settings: "stillingar"
+      blog: "blogg"
+      code: "code"
+      edit_profile: "edit profile"
+      login: "Innskráning"
+      logout: "Útskrá"
+      view_profile: "skoða síðuna mína"
+  more: "Meira"
+  new_notifications: "%{count} nýjar tilkynningar"
+  new_requests: 
+    few: "%{count} nýjar beiðnir!"
+    one: "nýjar beiðnir!"
+    other: "%{count} nýjar beiðnir!"
+    zero: "engar nýjar beiðnir"
+  next: "næsta"
+  no_new_notifications: "engar nýjar tilkynningar"
+  notifications: 
+    also_commented: "gerðu einnig athugasemdir við "
+    comment_on_post: "gerði athugasemd við þitt"
+    deleted: "eytt"
+    index: 
+      mark_all_as_read: "Merkja allt sem lesið"
+      notifications: "Tilkynningar"
+    mentioned: "hefur getið þín í þeirra"
+    new_request: "bauð þér samnýtingu."
+    post: "setja inn"
+    request_accepted: "accepted your share request."
+  notifier: 
+    also_commented: 
+      commented: "hefur einnig gert athugasemd við færslu notandans %{post_author}:"
+      sign_in: "Skráðu þig inn til að skoða það."
+      subject: "%{name} hefur einnig gert athugasemd við færslu tengiliðar þíns. "
+    comment_on_post: 
+      commented: "hefur gert athugasemd við færsluna þína!"
+      sign_in: "Skráðu þig inn til að sjá það."
+      subject: "%{name} hefur gert atugasemd við þína færslu."
+    diaspora: "the diaspora email robot"
+    hello: "Halló %{name}!"
+    love: "ást,"
+    mentioned: 
+      mentioned: "gat þín í pósti:"
+      sign_in: "Skráðu þig inn til að sjá það."
+      subject: "% {Nafn} hefur getið þín á Diaspora*"
+    new_request: 
+      just_sent_you: "var að senda þér vinabeiðni á Díaspora*"
+      sign_in: "innskráning hér"
+      subject: "ný Diaspora* vinabeiðni frá %{from}"
+      try_it_out: "Þú ættir virkilega að skoða það."
+    request_accepted: 
+      accepted: "hefur samþykkt vinabeiðni þína!"
+      sign_in: "Innskráning hér"
+      subject: "%{name} hefur samþykkt vinabeiðni þína á Díaspora*"
+    single_admin: 
+      admin: "Your Diaspora administrator"
+      subject: "Skilaboð um notandastillingar þínar í Diaspora:"
+    thanks: "Takk,"
+  ok: "OK"
+  or: "eða"
+  pagination: 
+    next: "Næsta"
+    previous: "Fyrra"
+  password: "Lykilorð"
+  password_confirmation: "Staðfesting lykilorðs"
+  people: 
+    aspect_list: 
+      edit_membership: "breyta aðild að ásýnd"
+    helper: 
+      people_on_pod_are_aware_of: " people on pod are aware of"
+      results_for: " niðurstöður fyrir %{params}"
+    index: 
+      couldnt_find_them_send_invite: "Þau fundust ekki?  Senda boðsmiða!"
+      no_one_found: "...og enginn fannst."
+      no_results: "Hey! Þú þarft að leita að einhverju."
+      results_for: "leitarniðurstöður fyrir"
+    person: 
+      add_contact: "bæta tengilið við"
+      already_connected: "Already connected"
+      pending_request: "pending request"
+      thats_you: "thats you!"
+    profile_sidebar: 
+      bio: "bio"
+      born: "afmælisdagur"
+      cannot_remove: "Cannot remove %{name} from last aspect. (If you want to disconnect from this person you must remove contact.)"
+      edit_my_profile: "Breyta síðunni minni"
+      gender: "kyn"
+      in_aspects: "in aspects"
+      remove_contact: "fjarlægja tengilið"
+      remove_from: "Fjarlægja %{name} úr %{aspect}?"
+    show: 
+      does_not_exist: "Manneskjan er ekki til!"
+      incoming_request: "%{name} vill samnýta með þér"
+      no_posts: "no posts to display!"
+      not_connected: "Þú samnýtir ekki með %{name}"
+      recent_posts: "Nýlegar færslur"
+      recent_public_posts: "Recent Public Posts"
+      return_to_aspects: "Return to your aspects page"
+      similar_contacts: "svipaðir tengiliðir"
+      start_sharing: "Byrja að samnýta"
+      to_accept_or_ignore: "að samþykkja eða hunsa það."
+    webfinger: 
+      fail: "Því miður, %{handle} fannst ekki."
+  photos: 
+    create: 
+      integrity_error: "Innhlöðunn myndar mistókst. Ertu viss um að þetta hafi verið mynd?"
+      runtime_error: "Innsetning á mynd mistóḱst.  Ertu viss um að sætisbeltin séu spennt?"
+      type_error: "Innsetning á mynd mistóḱst. Ertu viss um að mynd hafi verið bætt við?"
+    destroy: 
+      notice: "Mynd eytt."
+    edit: 
+      editing: "Breyti"
+    new: 
+      back_to_list: "Til baka í listann"
+      new_photo: "New Photo"
+      post_it: "færa inn!"
+    new_photo: 
+      empty: "{file} skráin er tóm, veldu vinsamlegast skrárnar aftur en slepptu henni."
+      invalid_ext: "{file} hefur ógilt viðskeyti. Aðeins {extensions} eru leyfð."
+      size_error: "{file} skráin er of stór, mesta stærð er {sizeLimit}."
+    new_profile_photo: 
+      or_select_one: "eða veldu eitthvað úr núverandi "
+      upload: "Setja upp nýja mynd!"
+    photo: 
+      view_all: "skoða allar myndir hjá notandanum %{name}'"
+    show: 
+      collection_permalink: "collection permalink"
+      delete_photo: "Eyða mynd"
+      edit: "breyta"
+      edit_delete_photo: "Breyta lýsingu við mynd / eyða mynd"
+      make_profile_photo: "setja mynd á síðuna mína"
+      original_post: "Upphaflegur póstur."
+      permalink: "permalink"
+      update_photo: "Uppfæra mynd"
+      view: "sýn"
+    update: 
+      error: "Ekki tókst að breyta mynd."
+      notice: "Velheppnuð uppfærsla á mynd. "
+  previous: "fyrra"
+  profile: "Síðan mín"
+  profiles: 
+    edit: 
+      allow_search: "Allow for people to search for you within Diaspora"
+      edit_profile: "Breyta síðunni minni"
+      first_name: "Fornafn"
+      info_available_to: "Þetta verður sýnilegt hverjum þeim sem þú tengist við í gegnum Díaspora."
+      last_name: "Kenninafn/Eftirnafn"
+      update_profile: "Uppfæra síðuna mína"
+      your_bio: "Your bio"
+      your_birthday: "Fæðingardagur þinn"
+      your_gender: "Kyn þitt"
+      your_name: "Nafn þitt"
+      your_photo: "Mynd þín"
+      your_profile: "Síðan mín"
+    update: 
+      failed: "Ekki tókst að uppfæra síðuna mína"
+      updated: "Síðan mín uppfærð"
+  registrations: 
+    closed: "Innskráningar eru lokaðar á þessum Diaspora pod."
+    create: 
+      success: "Nú hefurðu tengst Diaspora!"
+    edit: 
+      cancel_my_account: "Aflýsa mínum notandastillingum"
+      edit: "Breyta %{name}"
+      leave_blank: "(Skildu eftir autt ef þú vilt ekki gera breytingu)"
+      password_to_confirm: "(Við þurfum núverandi lykilorðið þitt til að staðfesta breytingar þínar)"
+      unhappy: "Óhamingjusamur?"
+      update: "Uppfæra"
+    new: 
+      enter_email: "Gefðu upp netfang"
+      enter_password: "Skrifaðu lykilorð"
+      enter_password_again: "Skrifaðu sama lykilorð og áður"
+      enter_username: "Veldu notandanafn (aðeins bókstafi, tölur, og undirstrikun)"
+      sign_up: "Skráðu þig"
+      sign_up_for_diaspora: "Skráðu þig á Diaspora"
+  requests: 
+    create: 
+      sending: "Sendi"
+      sent: "%{name} hefur verið beðin(n) um að tengjast þér.  Þau ættu að sjá það þegar þau logga næst inn í Díaspora."
+    destroy: 
+      error: "Þú þarft að velja ásýnd!"
+      ignore: "Hundsaði vinabeiðni. "
+      success: "Nú er vinátta á milli ykkar."
+    manage_aspect_contacts: 
+      existing: "Núverandi tengiliðir"
+      manage_within: "Umsjón tengiliða innan"
+    new_request_to_person: 
+      sent: "sent!"
+  search: "Leita"
+  services: 
+    create: 
+      success: "Auðkenning tókst."
+    destroy: 
+      success: "Successfully deleted authentication."
+    failure: 
+      error: "villa kom upp við að tengjast þeirri þjónustu"
+    finder: 
+      friends: 
+        few: "%{count} vinir"
+        one: "1 vinur"
+        other: "%{count} vinir"
+        zero: "engir vinir"
+      invite_your_friends_from: "Bjóddu vinum þínum frá %{service}"
+      not_connected: "ekki tengt"
+    index: 
+      connect_to_facebook: "Tengja við facebook"
+      connect_to_twitter: "Tengja við twitter"
+      disconnect: "aftengja"
+      edit_services: "Breyta þjónustum"
+      logged_in_as: "innskráning þín sem "
+      really_disconnect: "aftengja %{service}?"
+    inviter: 
+      click_link_to_accept_invitation: "Smelltu á þessa krækju til að þiggja boðið"
+      join_me_on_diaspora: "Tengstu mér á DIASPORA*"
+    remote_friend: 
+      invite: "bjóða"
+      resend: "endursenda"
+  settings: "Stillingar"
+  shared: 
+    add_contact: 
+      create_request: "Finna fólk eftir Díaspora netfangi"
+      diaspora_handle: "diaspora@handle.org"
+      enter_a_diaspora_username: "Skrifaðu notandanafn hjá Diaspora:"
+      know_email: "Veistu netföngin þeirra? Þú ættir að senda þeim boðsmiða"
+      your_diaspora_username_is: "Þitt Diaspora notandanafn er: %{diaspora_handle}"
+    contact_list: 
+      all_contacts: "Allir tengiliðir"
+      cannot_remove: "Cannot remove person from last aspect. (If you want to disconnect from this person you must remove contact.)"
+    invitations: 
+      by_email: "með tölvupósti"
+      dont_have_now: "Þú átt enga boðsmiða núna, en þeir koma fljótlega!"
+      from_facebook: "Frá Facebook"
+      invitations_left: "(%{count} eftir)"
+      invite_someone: "Bjóddu einhverjum"
+      invite_your_friends: "Bjóddu vinafólki þínu"
+      invites: "Boðsmiðar"
+      invites_closed: "Invites are currently closed on this Diaspora pod"
+    notification: 
+      new: "Nýtt %{type} frá %{from}"
+    public_explain: 
+      logged_in: "logged in to %{service}"
+      manage: "manage connected services"
+      outside: "Almennt aðgengileg skilaboð verða sýnileg öðrum utan Diaspora."
+      title: "Þú ert að fara að setja þetta á almannafæri!"
+    publisher: 
+      add_photos: "bæta myndum við"
+      all: "allt"
+      all_contacts: "Allir tengiliðir"
+      make_public: "gera almennt"
+      mention_helper_text: "to mention someone, press '@' and start typing their name"
+      post_a_message_to: "Post a message to %{aspect}"
+      posting: "Posting..."
+      share: "Share"
+      share_with: "share with"
+      whats_on_your_mind: "what's on your mind?"
+    reshare: 
+      reshare: "Reshare"
+  status_messages: 
+    destroy: 
+      failure: "Ekki tókst að eyða færslu"
+    helper: 
+      no_message_to_display: "Engin skilaboð að sýna!"
+    new_status_message: 
+      oh_yeah: "nú jæja!"
+      tell_me_something_good: "segðu mér eitthvað skemmtiegt"
+    show: 
+      destroy: "Eyða"
+      permalink: "permalink"
+  stream_helper: 
+    hide_comments: "fela athugasemdir"
+    show_comments: "show all comments"
+  the_world: "veröldin"
+  username: "Notandanafn"
+  users: 
+    destroy: "Notandastillingar voru afskráðar."
+    edit: 
+      change: "Breyting"
+      change_language: "Breyta um tungumál"
+      change_password: "Breyta lykilorði"
+      close_account: "Loka notendastillingum."
+      current_password: "Núverandi lykilorð"
+      download_photos: "download my photos"
+      download_xml: "download my xml"
+      edit_account: "Breyta notandastillingum"
+      email_notifications: "Tilkynningar með tölvupósti"
+      export_data: "Export Data"
+      new_password: "Nýtt lykilorð"
+      receive_email_notifications: "Fá tilkynningar í tölvupósti?"
+      your_email: "Netfangið þitt"
+      your_handle: "Díaspora netfangið þitt."
+    getting_started: 
+      connect_on_diaspora: "Tengjast á Diaspora"
+      connect_services: "Tengjast öðrum þjónustum þínum"
+      edit_profile: "Edit your profile"
+      finished: "Búið!"
+      save_and_continue: "Vista og halda áfram"
+      signup_steps: "Kláraðu innskráningu þína með því að ljúka þessum þremur skrefum:"
+      skip: "sleppa að byrja"
+      step_2: 
+        find_your_friends_on_diaspora: "Viltu finna Facebook vini þína á Diaspora?"
+        skip: "Sleppa"
+      step_3: 
+        finish: "Búið"
+        people_already_on_diaspora: "People already on Diaspora"
+      welcome: "Velkomin(n) í Diaspora!"
+    public: 
+      does_not_exist: "Notandinn %{username} er ekki til!"
+    update: 
+      email_notifications_changed: "Tilkynningum í tölvupósti var breytt."
+      language_changed: "breytt var um tungumál"
+      language_not_changed: "ekki tókst að breyta um tungumál"
+      password_changed: "Lykilorði var breytt"
+      password_not_changed: "Breyting á lykilorði mistókst"
+  webfinger: 
+    fetch_failed: "failed to fetch webfinger profile for %{profile_url}"
+    hcard_fetch_failed: "there was a problem fetching the hcard for %{account}"
+    no_person_constructed: "No person could be constructed from this hcard."
+    not_enabled: "webfinger does not seem to be enabled for %{account}'s host"
+    xrd_fetch_failed: "there was an error getting the xrd from account %{account}"

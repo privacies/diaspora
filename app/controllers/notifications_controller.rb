@@ -4,11 +4,11 @@
 
 class NotificationsController < ApplicationController
   before_filter :authenticate_user!
-  respond_to :html
+  respond_to :html, :json
 
 
   def update
-    note = Notification.find_by_user_id_and_id(current_user.id, params[:id])
+    note = Notification.where(:recipient_id => current_user.id, :id => params[:id]).first
     if note
       note.update_attributes(:unread => false)
       render :nothing => true
@@ -18,9 +18,14 @@ class NotificationsController < ApplicationController
   end
 
   def index
-    @notifications = Notification.for(current_user).limit(25)
-    @group_days = @notifications.group_by{|note| note.created_at.strftime("%B %d") } 
+    @notifications = Notification.find(:all, :conditions => {:recipient_id => current_user.id},
+                                       :order => 'created_at desc', :include => [:target, {:actors => :profile}]).paginate :page => params[:page], :per_page => 25
+    @group_days = @notifications.group_by{|note| I18n.l(note.updated_at, :format => I18n.t('date.formats.fullmonth_day')) }
     respond_with @notifications
   end
 
+  def read_all
+    Notification.where(:recipient_id => current_user.id).update_all(:unread => false)
+    redirect_to aspects_path
+  end
 end

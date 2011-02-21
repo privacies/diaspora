@@ -6,14 +6,14 @@ require 'spec_helper'
 
 describe 'user encryption' do
   before do
-    @user = make_user
-    @aspect = @user.aspects.create(:name => 'dudes')
+    @user = alice
+    @aspect = @user.aspects.first
   end
 
   describe 'encryption' do
     it 'should encrypt a string' do
       string = "Secretsauce"
-      ciphertext = @user.encrypt string
+      ciphertext = @user.person.encrypt string
       ciphertext.include?(string).should be false
       @user.decrypt(ciphertext).should == string
     end

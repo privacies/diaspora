@@ -1,21 +1,7 @@
 module HelperMethods
-
-  def stub_comment_signature_verification
-    Comment.any_instance.stubs(:verify_signature).returns(true)
+  def connect_users_with_aspects(u1,u2)
+    connect_users(u1, u1.aspects.first, u2, u2.aspects.first)
   end
-
-  def unstub_mocha_stubs
-    Mocha::Mockery.instance.stubba.unstub_all
-  end
-
-  def fantasy_resque
-    former_value = $process_queue
-    $process_queue = true
-    result = yield
-    $process_queue = former_value
-    result
-  end
-
   def connect_users(user1, aspect1, user2, aspect2)
     Contact.create!(:user => user1,
                     :person => user2.person,
@@ -72,55 +58,9 @@ module HelperMethods
     File.open(File.dirname(__FILE__) + '/fixtures/evan_hcard').read
   end
 
-  def make_user
-    UserFixer.fixed_user
-  end
-
   def uploaded_photo
     fixture_filename = 'button.png'
     fixture_name = File.join(File.dirname(__FILE__), 'fixtures', fixture_filename)
     File.open(fixture_name)
-  end
-
-  class UserFixer
-    def self.regenerate_user_fixtures
-      users = {:users => build_user_fixtures}
-      File.open(File.join(Rails.root,"spec/fixtures/users.yaml"),'w') do |file|
-        file.write(users.to_yaml)
-      end
-    end
-
-    def self.build_user_fixtures
-      arr = []
-      10.times do
-        user = Factory :user
-        person = user.person
-        arr << { :user => user.to_mongo, :person => person.to_mongo}
-      end
-      arr
-    end
-
-    def self.load_user_fixtures
-      yaml_users = YAML.load_file(File.join(Rails.root,"spec/fixtures/users.yaml"))
-      @@user_hashes = []
-      @@user_number = 0
-      yaml_users[:users].each do |yaml_user|
-        user_id = yaml_user[:user]["_id"].to_id
-        @@user_hashes << {:id => user_id, :data => yaml_user}
-      end
-    end
-
-    def self.fixed_user
-      db = MongoMapper.database
-      people = db.collection("people")
-      users = db.collection("users")
-      user_hash = @@user_hashes[@@user_number]
-      @@user_number += 1
-      @@user_number = 0 if @@user_number >= @@user_hashes.length
-      users.insert(user_hash[:data][:user])
-      people.insert(user_hash[:data][:person])
-
-      User.find(user_hash[:id])
-    end
   end
 end

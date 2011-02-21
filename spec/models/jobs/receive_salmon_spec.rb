@@ -1,8 +1,8 @@
 require 'spec_helper'
 
-describe Jobs::ReceiveSalmon do
+describe Job::ReceiveSalmon do
   before do
-    @user = make_user
+    @user = alice
     @xml = '<xml></xml>'
     User.stub(:find){ |id|
       if id == @user.id
@@ -13,7 +13,10 @@ describe Jobs::ReceiveSalmon do
     }
   end
   it 'calls receive_salmon' do
-    @user.should_receive(:receive_salmon).with(@xml).once
-    Jobs::ReceiveSalmon.perform(@user.id, @xml)
+    salmon_mock = mock()
+
+    salmon_mock.should_receive(:perform)
+    Postzord::Receiver.should_receive(:new).and_return(salmon_mock)
+    Job::ReceiveSalmon.perform(@user.id, @xml)
   end
 end

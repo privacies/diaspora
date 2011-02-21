@@ -4,151 +4,65 @@
 
 # This file is copied to ~/spec when you run 'ruby script/generate rspec'
 # from the project root directory.
-
 ENV["RAILS_ENV"] ||= 'test'
-require File.dirname(__FILE__) + "/../config/environment" unless defined?(Rails)
+require File.join(File.dirname(__FILE__), '..', 'config', 'environment') unless defined?(Rails)
 require 'helper_methods'
 require 'rspec/rails'
-require 'database_cleaner'
 require 'webmock/rspec'
+require 'factory_girl'
 
 include Devise::TestHelpers
 include WebMock::API
 include HelperMethods
-#
+
+# Force fixture rebuild
+FileUtils.rm_f(File.join(Rails.root, 'tmp', 'fixture_builder.yml'))
+
 # Requires supporting files with custom matchers and macros, etc,
 # in ./support/ and its subdirectories.
-Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
+fixture_builder_file = "#{File.dirname(__FILE__)}/support/fixture_builder.rb"
+support_files = Dir["#{File.dirname(__FILE__)}/support/**/*.rb"] - [fixture_builder_file]
+support_files.each {|f| require f }
+require fixture_builder_file
 
 RSpec.configure do |config|
-  config.mock_with :mocha
   config.mock_with :rspec
 
-  DatabaseCleaner.strategy = :truncation
-  DatabaseCleaner.orm = "mongo_mapper"
+  config.use_transactional_fixtures = true
 
   config.before(:each) do
     I18n.locale = :en
-    EventMachine::HttpRequest.stub!(:new).and_return(FakeHttpRequest.new(:success))
     RestClient.stub!(:post).and_return(FakeHttpRequest.new(:success))
 
-    DatabaseCleaner.clean
-    UserFixer.load_user_fixtures
     $process_queue = false
   end
 end
 
-module Diaspora::WebSocket
-  def self.redis
-    FakeRedis.new
-  end
-end
-class FakeRedis
-  def rpop(*args)
-    true
-  end
-  def llen(*args)
-    true
-  end
-  def lpush(*args)
-    true
-  end
-end
-module Resque
-  def enqueue(klass, *args)
-    if $process_queue
-      klass.send(:perform, *args)
-    else
-      true
-    end
-  end
-end
-
 ImageUploader.enable_processing = false
-class User
-  def send_contact_request_to(desired_contact, aspect)
-    fantasy_resque do
-      contact = Contact.new(:person => desired_contact,
-                            :user => self,
-                            :pending => true)
-      contact.aspects << aspect
 
-      if contact.save!
-        contact.dispatch_request
-      else
-        nil
-      end
-    end
-  end
+def set_up_friends
+  local_luke = Factory(:user_with_aspect, :username => "luke")
+  local_leia = Factory(:user_with_aspect, :username => "leia")
+  remote_raphael = Factory(:person, :diaspora_handle => "raphael@remote.net")
+  connect_users_with_aspects(local_luke, local_leia)
+  local_leia.activate_contact(remote_raphael, local_leia.aspects.first)
+  local_luke.activate_contact(remote_raphael, local_luke.aspects.first)
 
-  def post(class_name, opts = {})
-    fantasy_resque do
-      p = build_post(class_name, opts)
-      if p.save!
-        raise 'MongoMapper failed to catch a failed save' unless p.id
-
-        self.aspects.reload
-
-        add_to_streams(p, opts[:to])
-        dispatch_post(p, :to => opts[:to])
-      end
-      p
-    end
-  end
-
-  def comment(text, options = {})
-    fantasy_resque do
-      c = build_comment(text, options)
-      if c.save!
-        raise 'MongoMapper failed to catch a failed save' unless c.id
-        dispatch_comment(c)
-      end
-      c
-    end
-  end
+  [local_luke, local_leia, remote_raphael]
 end
 
-
-
-class FakeHttpRequest
-  def initialize(callback_wanted)
-    @callback = callback_wanted
-    @callbacks = []
-  end
-
-  def callbacks=(rs)
-    @callbacks += rs.reverse
-  end
-
-  def response
-    @callbacks.pop unless @callbacks.nil? || @callbacks.empty?
-  end
-
-  def response_header
-    self
-  end
-
-  def method_missing(method)
-    self
-  end
-
-  def post(opts = nil);
-    self
-  end
-
-  def get(opts = nil)
-    self
-  end
-
-  def publish(opts = nil)
-    self
-  end
-
-  def callback(&b)
-    b.call if @callback == :success
-  end
-
-  def errback(&b)
-    b.call if @callback == :failure
-  end
+def alice
+  #users(:alice)
+  User.where(:username => 'alice').first
 end
+
+def bob
+  #users(:bob)
+  User.where(:username => 'bob').first
+end
+
+def eve
+  #users(:eve)
+  User.where(:username => 'eve').first
+end
+

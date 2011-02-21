@@ -26,7 +26,7 @@ var AspectEdit = {
     AspectEdit.animateImage($(this).find("img").first());
     $(".draggable_info").fadeIn(100);
   },
-  
+
   animateImage: function(image) {
     image.animate({'height':80, 'width':80, 'opacity':0.8}, 200);
     image.tipsy("hide");
@@ -37,7 +37,7 @@ var AspectEdit = {
   },
 
   stopDrag: function(event, ui) {
-    $(this).find("img").first().animate({'height':70, 'width':70, 'opacity':1}, 200);
+    $(this).find("img").first().animate({'height':50, 'width':50, 'opacity':1}, 200);
     $(".draggable_info").fadeOut(100);
   },
 
@@ -49,8 +49,13 @@ var AspectEdit = {
       $.ajax({
         type: "DELETE",
         url: "/requests/" + person.attr('data-guid'),
-        data: {"accept" : true, "aspect_id" : dropzone.attr('data-aspect_id') },
-        success: function() { AspectEdit.onDeleteRequestSuccess(person, dropzone); }
+        data: {
+          "accept": true,
+          "aspect_id": dropzone.attr('data-aspect_id')
+        },
+        success: function() {
+          AspectEdit.onDeleteRequestSuccess(person, dropzone);
+        }
       });
     }
 
@@ -59,11 +64,16 @@ var AspectEdit = {
       $.ajax({
         url: "/aspects/move_contact/",
         data: {
-          "person_id" : person.attr('data-guid'),
-          "from"      : person.attr('data-aspect_id'),
-          "to"        : { "to" : dropzone.attr('data-aspect_id') }
+          "person_id": person.attr('data-guid'),
+          "from": person.attr('data-aspect_id'),
+          "to": {
+            "to": dropzone.attr('data-aspect_id')
+          }
         },
-        success: function() { AspectEdit.onMovePersonSuccess(person, dropzone); }
+        success: function(data) {
+          AspectEdit.onMovePersonSuccess(person, dropzone);
+          View.flashes.render($.parseJSON(data));
+        }
       });
     }
 
@@ -75,26 +85,26 @@ var AspectEdit = {
     person.attr('data-aspect_id', dropzone.attr('data-aspect_id'));
     person.removeAttr('data-person_id');
   },
-  
+
   onMovePersonSuccess: function(person, dropzone) {
     person.attr('data-aspect_id', dropzone.attr('data-aspect_id'));
   },
-        
+
   deletePersonFromAspect: function(person) {
     var person_id = person.attr('data-guid');
 
     if( $(".person[data-guid='"+ person_id +"']").length == 1) {
-      AspectEdit.alertUser("You cannot remove the person from the last aspect");
-    } 
-    else {
+      Diaspora.widgets.alert.alert("Error removing contact", "You cannot remove the person from the last aspect");
+    } else {
       if (!person.hasClass('request')) {
 
         $.ajax({
           type: "POST",
           url: "/aspects/remove_from_aspect",
-          data:{
-            'person_id' : person_id,
-            'aspect_id' : person.attr('data-aspect_id') }
+          data: {
+            'person_id': person_id,
+            'aspect_id': person.attr('data-aspect_id')
+          }
         });
       }
       person.fadeOut(400, function() {
@@ -104,11 +114,12 @@ var AspectEdit = {
   },
 
   changeName:  function() {
-    var $this = $(this);
-    var id = $this.closest(".aspect").attr("data-guid");
-    var link = "/aspects/" + id;
+    var $this = $(this),
+      id = $this.closest(".aspect").attr("data-guid"),
+      link = "/aspects/" + id;
 
-    $this.keypress(function(e) {
+
+    $this.keyup(function() {
       if (e.which == 13) {
         e.preventDefault();
         $this.blur();
@@ -117,13 +128,16 @@ var AspectEdit = {
         $.ajax({
           type: "PUT",
           url: link,
-          data: {"aspect" : {"name" : $this.text() }}
+          data: {
+            "aspect": {
+              "name" : $this.text()
+            }
+          }
         });
       }
+
       //update all other aspect links
-      $this.keyup(function(e) {
-        $("#aspect_nav a[href='" + link + "']").text($this.text());
-      });
+      $("#aspect_nav li[data-guid='" + id + "'] a").text($this.text());
     });
   },
 
@@ -149,10 +163,6 @@ var AspectEdit = {
         AspectEdit.deletePersonFromAspect(person);
       }
     }
-  },
-
-  alertUser: function(message) {
-    alert(message);
   }
 };
 

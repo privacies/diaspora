@@ -7,14 +7,11 @@ require 'spec_helper'
 describe UsersController do
   render_views
 
-  let(:user)    { make_user }
-  let!(:aspect) { user.aspects.create(:name => "lame-os") }
-
-  let!(:old_password) { user.encrypted_password }
-  let!(:old_language) { user.language }
-
   before do
-    sign_in :user, user
+    @user = alice
+    @aspect = @user.aspects.first
+    @aspect1 = @user.aspects.create(:name => "super!!")
+    sign_in :user, @user
   end
 
   describe '#export' do
@@ -25,60 +22,76 @@ describe UsersController do
   end
 
   describe '#update' do
-    it "doesn't overwrite random attributes" do
-      params  = { :id => user.id,
+    before do
+      @params  = { :id => @user.id,
                   :user => { :diaspora_handle => "notreal@stuff.com" } }
+
+    end
+    it "doesn't overwrite random attributes" do
       lambda {
-        put :update, params
-      }.should_not change(user, :diaspora_handle)
+        put :update, @params
+      }.should_not change(@user, :diaspora_handle)
+    end
+
+    it 'redirects to the user edit page' do
+      put :update, @params
+      response.should redirect_to edit_user_path(@user)
+    end
+
+    it 'responds with a 204 on a js request' do
+      put :update, @params.merge(:format => :js)
+      response.status.should == 204
+    end
+
+    context "open aspects" do
+      before do
+        @index_params = {:id => @user.id, :user => {:a_ids => [@aspect.id.to_s, @aspect1.id.to_s]} }
+      end
+
+      it "stores the aspect params in the user" do
+        put :update,  @index_params
+        @user.reload.aspects.where(:open => true).all.to_set.should == [@aspect, @aspect1].to_set
+      end
+
+      it "correctly resets the home state" do
+        @index_params[:user][:a_ids] = ["home"]
+
+        put :update, @index_params
+        @user.aspects.where(:open => true).should == []
+      end
     end
 
     context 'password updates' do
-      it 'allows a user to change his password' do
-        put(:update, :id => user.id, :user =>
-            { :password => "foobaz",
-              :password_confirmation => "foobaz" }
-           )
-        user.reload
-        user.encrypted_password.should_not == old_password
+      before do
+        @password_params = {:current_password => 'bluepin7',
+                            :password => "foobaz",
+                            :password_confirmation => "foobaz"}
       end
 
-      it 'requires a matching password confirmation' do
-        put(:update, :id => user.id, :user =>
-            { :password => "foobarz",
-              :password_confirmation => "not_the_same"}
-           )
-        user.reload
-        user.encrypted_password.should == old_password
-      end
-
-      it 'does not update if the password fields are left blank' do
-        put(:update, :id => user.id, :user =>
-            { :password => "",
-              :password_confirmation => ""}
-           )
-        user.reload
-        user.encrypted_password.should == old_password
+      it "uses devise's update with password" do
+        @user.should_receive(:update_with_password).with(hash_including(@password_params))
+        @controller.stub!(:current_user).and_return(@user)
+        put :update, :id => @user.id, :user => @password_params
       end
     end
 
     describe 'language' do
       it 'allow the user to change his language' do
         old_language = 'en'
-        user.language = old_language
-        user.save
-        put(:update, :id => user.id, :user =>
+        @user.language = old_language
+        @user.save
+        put(:update, :id => @user.id, :user =>
             { :language => "fr"}
            )
-        user.reload
-        user.language.should_not == old_language
+        @user.reload
+        @user.language.should_not == old_language
       end
     end
   end
 
   describe '#edit' do
     it "returns a 200" do
-      get 'edit', :id => user.id
+      get 'edit', :id => @user.id
       response.status.should == 200
     end
   end

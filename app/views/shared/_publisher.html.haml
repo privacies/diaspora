@@ -1,0 +1,63 @@
+-#   Copyright (c) 2010, Diaspora Inc.  This file is
+-#   licensed under the Affero General Public License version 3 or later.  See
+-#   the COPYRIGHT file.
+
+
+#publisher
+
+  #click_to_share
+    = image_tag 'icons/doc_edit.png'
+    %span= t('.whats_on_your_mind')
+
+    - if @aspect_ids.length == 1
+      = "(#{@aspect_ids.length} #{t('_aspect').downcase})"
+    - else
+      = "(#{@aspect_ids.length} #{t('_aspects').downcase})"
+
+  .content_creation
+    = form_for(StatusMessage.new, :remote => true) do |status|
+      = status.error_messages
+      #file-upload
+        = image_tag 'icons/photos.png'
+        %br
+        = t('.add_photos')
+
+      %p
+        %params
+          #publisher_textarea_wrapper
+            %ul#photodropzone
+            = status.text_area :fake_message, :rows => 2, :value => h(params[:prefill])
+            = status.hidden_field :message, :value => '', :class => 'clear_on_submit'
+
+      - for aspect_id in @aspect_ids
+        = hidden_field_tag 'aspect_ids[]', aspect_id.to_s
+
+      .options_and_submit
+        %div
+          %i= t('.mention_helper_text')
+
+        .right
+          #fileInfo
+          = image_tag 'ajax-loader.gif', :class => 'hidden', :id => "publisher_spinner"
+          = status.submit t('.share'), :disable_with => t('.posting'), :class => 'button'
+
+        - if aspect == :all
+          .public_toggle
+            %p.checkbox_select
+              = status.check_box( :public, {:title => t('.make_public')}, true, false)
+
+              %span#publisher_service_icons.dim
+                = link_to (image_tag "social_media_logos/feed-16x16.png", :title => "RSS"), current_user.public_url
+                - if current_user.services
+                  - for service in current_user.services
+                    = image_tag "social_media_logos/#{service.provider}-16x16.png", :title => service.provider
+
+            = link_to '(?)', "#question_mark_pane", :class => 'question_mark', :style=>"display:none;", :rel => 'facebox'
+
+            .facebox_content
+              #question_mark_pane
+                = render 'shared/public_explain'
+
+    #publisher_photo_upload
+      = render 'photos/new_photo', :aspect_ids => @aspect_ids.join(',')
+

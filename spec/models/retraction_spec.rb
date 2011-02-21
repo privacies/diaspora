@@ -6,7 +6,7 @@ require 'spec_helper'
 
 describe Retraction do
 
-  let(:user) { make_user }
+  let(:user) { alice }
   let(:person) { Factory(:person) }
   let(:aspect) { user.aspects.create(:name => "Bruisers") }
   let!(:activation) { user.activate_contact(person, aspect) }
@@ -16,16 +16,42 @@ describe Retraction do
     it 'should have a post id after serialization' do
       retraction = Retraction.for(post)
       xml = retraction.to_xml.to_s
-      xml.include?(post.id.to_s).should == true
+      xml.include?(post.guid.to_s).should == true
+    end
+  end
+
+  describe '#subscribers' do
+    it 'returns the subscribers to the post for all objects other than person' do
+      retraction = Retraction.for(post)
+      obj = retraction.instance_variable_get(:@object)
+      wanted_subscribers = obj.subscribers(user)
+      obj.should_receive(:subscribers).with(user).and_return(wanted_subscribers)
+      retraction.subscribers(user).map{|s| s.id}.should =~ wanted_subscribers.map{|s| s.id}
+    end
+
+    context 'hax' do
+      it 'barfs if the type is a person, and subscribers instance varabile is not set' do
+        retraction = Retraction.for(user)
+        obj = retraction.instance_variable_get(:@object)
+
+        proc{retraction.subscribers(user)}.should raise_error
+      end
+
+      it 'returns manually set subscribers' do
+        retraction = Retraction.for(user)
+        retraction.subscribers = "fooey"
+        retraction.subscribers(user).should == 'fooey'
+      end
     end
   end
 
   describe 'dispatching' do
-    it 'should dispatch a message on delete' do
+    it 'should dispatch a retraction on delete' do
       Factory.create(:person)
-      MessageHandler.should_receive :add_post_request
+      m = mock()
+      m.should_receive(:post)
+      Postzord::Dispatch.should_receive(:new).with(instance_of(User), instance_of(Retraction)).and_return(m)
       post.destroy
     end
   end
-
 end

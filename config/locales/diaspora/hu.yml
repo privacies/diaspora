@@ -4,18 +4,24 @@
 
 
 hu: 
+  _aspect: "Csoport"
+  _aspects: "Csoportok"
+  _comment: "Hozzászólás"
   _comments: "Hozzászólások"
+  _contact: "Kapcsolat"
+  _contacts: "Ismerősök"
   _home: "Kezdőlap"
+  _more: "Bővebben"
   _photos: "Képek"
   _services: "Szolgáltatások"
   account: "Felhasználói fiók"
-  activemodel: 
+  activerecord: 
     errors: 
       models: 
         contact: 
           attributes: 
             person_id: 
-              taken: "egyedinek kell lenni a felhasználó kapcsolatai közt"
+              taken: "egyedinek kell lennie."
         person: 
           attributes: 
             diaspora_handle: 
@@ -23,7 +29,7 @@ hu:
         request: 
           attributes: 
             from_id: 
-              taken: "egy példányban a már meglévő kérés."
+              taken: "már létező kérés."
         user: 
           attributes: 
             email: 
@@ -41,32 +47,42 @@ hu:
       video_title: 
         unknown: "Ismeretlen videó cím"
   are_you_sure: "Biztos vagy benne?"
+  aspect_memberships: 
+    destroy: 
+      failure: "Személy törlése a csoportból sikertelen"
+      no_membership: "Nem található a személy ebben a csoportban"
+      success: "Sikeresen törölted a személyt a csoportból"
   aspects: 
     add_to_aspect: 
       failure: "A kapcsolatot nem sikerült felvenni a csoportba."
       success: "A kapcsolat hozzáadva a csoporthoz."
-    all_aspects_contacts: 
-      all_contacts: "Összes ismerős"
-      aspects: "Csoportok"
-      manage_aspects: "manage aspects"
-      no_contacts: "Még nincs ismerősöd felvéve. Itt keresheted meg őket"
     aspect_contacts: 
       done_editing: "szerkesztés kész"
+    aspect_stream: 
+      activity: "tevékenység"
+      post_time: "időpont"
+      sort_by: "rendezés:"
+    contacts_not_visible: "A csoporttagok nem láthatják egymást."
+    contacts_visible: "A csoport tagjai láthatják egymást."
     create: 
       failure: "Csoport létrehozása sikertelen."
       success: "Új csoport létrehozva: %{name}"
     destroy: 
       success: "%{name} csoport sikeresen törölve."
-    edit_aspect_pane: 
+    edit: 
       add_existing: "Létező kapcsolat hozzáadása"
-      confirm_remove_aspect: "Törlöd ezt a csoportot?"
-      remove_aspect: "csoport törlése"
+      confirm_remove_aspect: "Biztos, hogy törölni akarod a csoportot?"
+      make_aspect_list_visible: "a csoporttagok láthassák egymást"
+      remove_aspect: "Csoport törlése"
+      rename: "átnevezés"
+      save: "Mentés"
     helper: 
       are_you_sure: "Biztos, hogy törlöd a csoportot?"
       aspect_not_empty: "A csoport nem üres"
       remove: "eltávolítás"
     index: 
       handle_explanation: "Ez a Te Diaspora felhasználóneved. Megadhatod elérhetőségként, mint egy email címet."
+      no_contacts: "Nincs ismerős"
     manage: 
       add_a_new_aspect: "Új csoport hozzáadása"
       add_a_new_contact: "Új ismerős hozzáadása"
@@ -88,10 +104,7 @@ hu:
       nobody: "Hozd a Diaspora-ra azokat, akik számítanak az életedben!"
       nobody_in_aspect: "A '%{aspect_name}' csoportod üres."
     no_posts_message: 
-      start_talking: "Senki nem szólt egy szót sem. Kezd el te!"
-    remove_from_aspect: 
-      failure: "Nem sikerült eltávolítani személyt a csoportból"
-      success: "A személyt sikeresen eltávolítottad a csoportból."
+      start_talking: "Mindenki hallgat. Kezd el te a beszélgetést."
     seed: 
       family: "Család"
       work: "Munka"
@@ -106,14 +119,25 @@ hu:
     new_comment: 
       comment: "Hozzászólás"
       commenting: "Hozzászólok.."
-      enter: "enter"
-      press: "press"
-      to_comment: "to comment"
   contacts: 
+    create: 
+      failure: "Kapcsolat létrehozása sikertelen"
+    destroy: 
+      failure: "Sikertelen a kapcsolat megszakítása vele: %{name}"
+      success: "Kapcsolat megszakítva vele: %{name}"
     few: "%{count} ismerős"
     one: "1 ismerős"
     other: "%{count} ismerős"
+    share_with_pane: 
+      accepts: "Ha %{name} elfogadja a felkérésed, akkor látjátok majd egymás bejegyzéseit."
+      add_new_aspect: "hozzáadás új csoporthoz"
+      share_with: "Megosztás indítása vele: %{name}"
     zero: "nincs ismerős"
+  date: 
+    formats: 
+      birthday: "%B %d"
+      birthday_with_year: "%Y %B %d"
+      fullmonth_day: "%B %d"
   delete: "Törlés"
   email: "Email"
   error_messages: 
@@ -124,17 +148,17 @@ hu:
   home: 
     show: 
       already_account: "már van fiókod?"
-      choice: "Választás"
+      choice: "Csoportok"
       choice_explanation: "A Diaspora* közösségi oldalon különböző szempontok alapján Csoportokba rendezheted a kapcsolataidat. Ezek segítségével mindig a megfelelő emberekkel oszthatod meg a történeteidet, vicceidet, képeidet."
       learn_about_host: "Így indíthatod el saját Diaspora* szervered."
-      login_here: "Jelentkezz be itt"
-      ownership: "Tulajdonos"
-      ownership_explanation: "A képeidet te birtoklod, és ezt nem kell feladnod, hogy megoszthasd őket másokkal. Minden megosztás felett teljes irányításod van a Diaspora* közösségi oldalon."
-      share_what_you_want: "Ossz meg amit akarsz, azzal akivel akarod!"
+      login_here: "Jelentkezz be"
+      ownership: "Sajátod"
+      ownership_explanation: "A képeid a sajátjaid, és ezt nem kell feladnod, hogy megoszthasd őket másokkal. Minden megosztás felett teljes irányításod van a Diaspora* közösségi oldalon."
+      share_what_you_want: "Oszd meg... akivel akarod!"
       simplicity: "Egyszerűség"
       simplicity_explanation: "A Diaspora könnyűvé és érthetővé teszi a megosztást - és ez a biztonságra is vonatkozik. Nem kell hosszú beállító oldalakon átvergődnöd, hogy biztonságban tudd a profilodat."
-      tagline_first_half: "Ossz meg amit akarsz,"
-      tagline_second_half: "azzal akivel akarod."
+      tagline_first_half: "Oszd meg..."
+      tagline_second_half: "akivel akarod!"
   invitations: 
     check_token: 
       not_found: "Meghívó token nem található"
@@ -153,13 +177,18 @@ hu:
       if_they_accept_info: "Ha elfogadják felkérésed, akkor belekerülnek abba a csoportba amelyikbe meghívtad őket."
       invite_someone_to_join: "Hívj meg valakit, hogy csatlakozzon a Diaspora-hoz!"
       personal_message: "Személyes üzenet"
+      resend: "Újraküld"
       send_an_invitation: "Küldj egy meghívót"
       send_invitation: "Meghívás küldése"
       to: "Címzett"
   layouts: 
     application: 
+      have_a_problem: "Problémád van?"
+      logged_in_as: "bejelentkezve, mint %{name}"
       powered_by: "DIASPORA* fordította ADAMEX"
-      whats_new: "what's new?"
+      toggle: "mobil változat"
+      whats_new: "Újdonságok"
+      your_aspects: "csoportjaid"
     header: 
       account_settings: "Fiók beállítások"
       blog: "blog"
@@ -168,33 +197,50 @@ hu:
       login: "belépés"
       logout: "kilépés"
       view_profile: "profil megtekintése"
-  new_notifications: "%{count} new notifications"
+  more: "Bővebben"
+  new_notifications: "%{count} új értesítés"
   new_requests: 
-    few: "%{count} új felkérés!"
+    few: "%{count} darab új felkérés!"
     one: "új felkérés!"
-    other: "%{count} új felkérések!"
+    other: "%{count} darab új felkérés!"
     zero: "nincsenek új felkérések"
-  next: "next"
-  no_new_notifications: "no new notifications"
+  next: "következő"
+  no_new_notifications: "nincs új értesítés"
   notifications: 
-    comment_on_post: "commented on your"
-    deleted: "deleted"
+    also_commented: "hozzászólt még ehhez"
+    comment_on_post: "hozzászólt a"
+    deleted: "törölve"
     index: 
-      notifications: "Notifications"
-    new_request: "offered to share with you."
-    post: "post"
-    request_accepted: "accepted your share request."
+      mark_all_as_read: "Mind megjelölése olvasottként"
+      notifications: "Értesítések"
+    mentioned: "megemlítettek téged a"
+    new_request: "megosztást ajánlott neked."
+    post: "bejegyzés"
+    request_accepted: "elfogadta a megosztási kérésed."
   notifier: 
+    also_commented: 
+      commented: "hozzászólt még %{post_author} bejegyzéséhez is:"
+      sign_in: "Jelentkezz be, hogy megnézhesd."
+      subject: "%{name} is hozzászólt az ismerősöd bejegyzéséhez."
+    comment_on_post: 
+      commented: "hozzászólt a bejegyzésedhez:"
+      sign_in: "Jelentkezz be, hogy megnézd."
+      subject: "%{name} hozzászólt a bejegyzésedhez."
     diaspora: "A diaspora email robot"
     hello: "Szia %{name}!"
     love: "Szeretettel,"
+    mentioned: 
+      mentioned: "megemlített téged egy bejegyzésében:"
+      sign_in: "Jelentkezz be, hogy megnézhesd."
+      subject: "%{name} megemlített téged a Diaspora* közösségi oldalon."
     new_request: 
       just_sent_you: "ismerősnek jelölt a Diaspora* közösségi oldalon."
-      sign_in: "jelentkezz be"
+      sign_in: "Jelentkezz be"
       subject: "új Diaspora* ismerősnek jelölt: %{from}"
       try_it_out: "Tényleg ki kellene próbálnod."
     request_accepted: 
       accepted: "elfogadta a jelölésed."
+      sign_in: "Jelentkezz be"
       subject: "%{name} elfogadta a felkérésed."
     single_admin: 
       admin: "A Te Diaspora* rendszergazdád"
@@ -209,20 +255,7 @@ hu:
   password_confirmation: "Jelszó megerősítése"
   people: 
     aspect_list: 
-      edit_membership: "edit aspect membership"
-    edit: 
-      allow_search: "Megengedem, hogy megtalálható legyek a Diaspora keresési találatokban."
-      edit_profile: "Profil szerkesztése"
-      first_name: "Keresztnév"
-      info_available_to: "Ez az információ elérhető lesz Diaspora ismerőseidnek."
-      last_name: "Vezetéknév"
-      update_profile: "Profil frissítése"
-      your_bio: "Rólam"
-      your_birthday: "Születésnapom"
-      your_gender: "Nem"
-      your_name: "Neved"
-      your_photo: "Fényképed"
-      your_profile: "Profilod"
+      edit_membership: "csoport tagság szerkesztése"
     helper: 
       people_on_pod_are_aware_of: "az emberek tisztában vannak"
       results_for: "eredmények %{params}"
@@ -239,28 +272,23 @@ hu:
     profile_sidebar: 
       bio: "Személyes"
       born: "született"
-      cannot_remove: "Nem tudjod törölni %{name}-t az utolsó csoportodból. (Ha nem kívánsz az ismerőse lenni, törölnöd kell a kapcsolatot.)"
+      cannot_remove: "Nem tudod törölni %{name}-t az utolsó csoportodból. (Ha nem kívánsz az ismerőse lenni, törölnöd kell a kapcsolatot.)"
       edit_my_profile: "Profilom szerkesztése"
       gender: "nem"
       in_aspects: "csoportokban"
       remove_contact: "kapcsolat törlése"
       remove_from: "Törlöd %{name}-t a %{aspect} csoportból?"
-    share_with: 
-      accepts: "Once %{name} accepts, you'll start seeing each other's posts on Diaspora"
-      share_with: "Start sharing with %{name}"
     show: 
       does_not_exist: "Személy nem létezik!"
-      incoming_request: "Felkérésed érkezett ettől a személytől"
-      no_posts: "nincs hozzászólás!"
-      not_connected: "Ez a személy nem ismerősöd"
-      recent_posts: "Legutóbbi hozzászólások"
-      recent_public_posts: "Legutóbbi nyilvános hozzászólások"
+      incoming_request: "%{name} megosztást kezdeményezett veled."
+      no_posts: "nincs bejegyzés!"
+      not_connected: "Nem ismerősöd"
+      recent_posts: "Legutóbbi bejegyzések"
+      recent_public_posts: "Legutóbbi nyilvános bejegyzések"
       return_to_aspects: "Menj vissza a csoportokhoz"
-      similar_contacts: "similar contacts"
+      similar_contacts: "hasonló kapcsolatok"
+      start_sharing: "Megosztás indítása"
       to_accept_or_ignore: "hogy elfogadd vagy elutasítsd."
-    update: 
-      failed: "Profil frissítése sikertelen"
-      updated: "Profil frissítve"
     webfinger: 
       fail: "Sajnáljuk, de nem találjuk őt: %{handle}."
   photos: 
@@ -275,7 +303,7 @@ hu:
     new: 
       back_to_list: "Vissza a listához"
       new_photo: "Új kép"
-      post_it: "Tedd ki!"
+      post_it: "Posztolom!"
     new_photo: 
       empty: "{file} egy üres fájl, hagyd ki a feltöltésből."
       invalid_ext: "{file} érvénytelen kiterjesztés. Csak {extensions} kiterjesztések megengedettek."
@@ -286,37 +314,55 @@ hu:
     photo: 
       view_all: "%{name} összes képének megtekintése"
     show: 
+      collection_permalink: "Galéria permalink"
       delete_photo: "Kép törlése"
       edit: "szerkesztés"
       edit_delete_photo: "Kép leírás szerkesztése / kép törlése"
       make_profile_photo: "beállítás profilképnek"
+      original_post: "Eredeti bejegyzés"
       permalink: "permalink"
       update_photo: "Kép frissítése"
       view: "nézet"
-      view_original_post: "view original post"
     update: 
       error: "Nem sikerült szerkeszteni a képet."
       notice: "Kép szerkesztése sikerült."
-  previous: "previous"
+  previous: "előző"
   profile: "Profil"
+  profiles: 
+    edit: 
+      allow_search: "Megtalálható legyek a Diaspora keresőben"
+      edit_profile: "Profil szerkesztése"
+      first_name: "Keresztnév"
+      info_available_to: "Ez az információ elérhető lesz a Diaspora ismerőseid számára."
+      last_name: "Vezetéknév"
+      update_profile: "Profil frissítése"
+      your_bio: "Rólam"
+      your_birthday: "Szülinapom"
+      your_gender: "Nem"
+      your_name: "Nevem"
+      your_photo: "Fényképem"
+      your_profile: "Profilom"
+    update: 
+      failed: "Profil frissítése sikertelen"
+      updated: "Profil frissítve"
   registrations: 
     closed: "A regisztráció zárva ezen a Diaspora kiszolgálón."
     create: 
-      success: "Csatlakoztás a Diaspora-hoz!"
+      success: "Csatlakoztál a Diaspora-hoz!"
     edit: 
       cancel_my_account: "Fiókom törlése"
       edit: "%{name} szerkesztése"
       leave_blank: "(Hagyd üresen, ha nem akarod megváltoztatni)"
       password_to_confirm: "(Szükségünk van a jelenlegi jelszavadra, hogy jóváhagyd a változást)"
-      unhappy: "Boldogtalan vagy?"
+      unhappy: "Elégedetlen vagy?"
       update: "Frissítés"
     new: 
       enter_email: "Írd be az e-mail címed"
       enter_password: "Írj be egy jelszót"
       enter_password_again: "Ugyanazt a jelszót írd amit az előbb"
-      enter_username: "Válassz egy felhasználónevet (csak betű, szám és aláhúzás engedett)"
-      sign_up: "Regisztrálj"
-      sign_up_for_diaspora: "Regisztrálj a Diaspora-ra"
+      enter_username: "Válassz egy felhasználónevet (csak angol betű, szám és aláhúzás engedett)"
+      sign_up: "Regisztráció"
+      sign_up_for_diaspora: "Regisztrálj a Diaspora*-ra"
   requests: 
     create: 
       sending: "Küldés"
@@ -335,16 +381,30 @@ hu:
     create: 
       success: "A hitelesítés sikeres."
     destroy: 
-      success: "Sikeresen megsemmisítetted hitelesítést."
+      success: "Sikeresen megsemmisítetted a kapcsolódást."
     failure: 
       error: "Hiba történt a szolgáltatáshoz kapcsolódás közben"
+    finder: 
+      friends: 
+        few: "%{count} barát"
+        one: "1 barát"
+        other: "%{count} barát"
+        zero: "itt nincs barátod"
+      invite_your_friends_from: "Hívd meg a barátaidat innen: %{service}"
+      not_connected: "nem kapcsolódik"
     index: 
       connect_to_facebook: "Csatlakozás Facebook-hoz"
       connect_to_twitter: "Csatlakozás Twitter-hez"
-      disconnect: "szétkapcsol"
+      disconnect: "Megszakít"
       edit_services: "Szolgáltatások szerkesztése"
-      logged_in_as: "bejelentkezett, mint"
-      really_disconnect: "Lecsatlakozik: %{service}?"
+      logged_in_as: "Bejelentkezve, mint"
+      really_disconnect: "Megszakítod a kapcsolatot ezzel: %{service}?"
+    inviter: 
+      click_link_to_accept_invitation: "Kattints a linkre, hogy elfogadd a meghívást."
+      join_me_on_diaspora: "Találkozzunk a DIASPORA*-n"
+    remote_friend: 
+      invite: "meghív"
+      resend: "újraküld"
   settings: "Beállítások"
   shared: 
     add_contact: 
@@ -357,9 +417,12 @@ hu:
       all_contacts: "Összes kapcsolat"
       cannot_remove: "Nem törölheted az utolsó csoportot. (Ha nem akarsz a személy ismerőse lenni, töröld a kapcsolatot.)"
     invitations: 
+      by_email: "emailben"
       dont_have_now: "Nincs több meghívód, de hamarosan kapsz még!"
+      from_facebook: "Facebook-ról"
       invitations_left: "(%{count} maradt)"
       invite_someone: "Hívj meg valakit"
+      invite_your_friends: "Hívd meg a barátaidat"
       invites: "Meghívók"
       invites_closed: "A meghívás jelenleg szünetel erre a Diaspora* kiszolgálóra."
     notification: 
@@ -374,19 +437,22 @@ hu:
       all: "összes"
       all_contacts: "összes kapcsolat"
       make_public: "nyilvánossá tesz"
-      post_a_message_to: "Üzenet küldése ennek a csoportnak: %{aspect}"
+      mention_helper_text: "valaki megemlítéséhez írj '@' jelet, és kezd el írni a nevet"
+      post_a_message_to: "Bejegyzés küldése ennek a csoportnak: %{aspect}"
       posting: "Küldés..."
       share: "Megosztás"
-      share_with: "Megosztás ezzel a csoporttal: %{aspect}"
-      share_with_all: "megosztás az összes csoportommal"
+      share_with: "Megosztás vele: %{aspect}"
+      whats_on_your_mind: "Mi jár a fejedben?"
     reshare: 
       reshare: "Újraosztás"
   status_messages: 
+    destroy: 
+      failure: "Bejegyzés törlése sikertelen"
     helper: 
       no_message_to_display: "Nincs üzenet."
     new_status_message: 
       oh_yeah: "Ez az!"
-      tell_me_something_good: "Mondj valami jót!"
+      tell_me_something_good: "Mondj valamit!"
     show: 
       destroy: "Töröl"
       permalink: "permalink"
@@ -402,6 +468,7 @@ hu:
       change_language: "Nyelv megváltoztatása"
       change_password: "Jelszó módosítása"
       close_account: "Fiók bezárása"
+      current_password: "Jelenlegi jelszó"
       download_photos: "Képeim letöltése"
       download_xml: "Saját XML letöltése"
       edit_account: "Fiók szerkesztése"
@@ -412,37 +479,24 @@ hu:
       your_email: "E-mail címed"
       your_handle: "Diaspora felhasználóneved"
     getting_started: 
-      connect_services: "Csatlakoztassa a többi szolgáltatását is ide"
-      define_aspects: "Csoport leírása"
+      connect_on_diaspora: "Kapcsolat a Diaspora-n"
+      connect_services: "Csatold a többi szolgáltatásod is ide"
       edit_profile: "Profil szerkesztése"
       finished: "Kész!"
       save_and_continue: "Mentés és folytatás"
-      signup_steps: "Regisztráció utolsó 3 lépése:"
+      signup_steps: "Utolsó 3 lépés:"
       skip: "ugrás a kezdetekhez"
       step_2: 
-        add: "Hozzáadás"
-        aspect_name: "Csoport neve"
-        description: "Mondd el a Diaspora-nak, hogy milyen szempontok alapján csoportosítod ismerőseid. Később is magadhatod a jobb felső sarokban lévő Fiók menüben. A csoportjaid csak Te láthatod, mások nem."
-        drag_to_add: "Tedd bele őket a megfelelő csoportba"
-        no_requests: "Nincs felkérésed"
-        your_aspects: "Csoportjaid"
-        your_inviter: "Itt azok az emberek, akik várnak rád:"
+        find_your_friends_on_diaspora: "Meg szeretnéd találni a Facebook ismerőseidet a Diaspora-n?"
+        skip: "Átugrom"
       step_3: 
-        description: "Csatlakoztathatod más közösségi hálózatodat is a Diaspora fiókodhoz. Lehetőséged van nyilvános üzenet írására is. Ehhez a Kezdőoldalon ki kell választanod a \"nyílvánossá tesz\" opciót."
-        your_services: "Szolgáltatásai"
-      step_4: 
-        change_profile: "Bármikor módosíthatod a profilját, és kezelheted a kapcsolódó szolgáltatásokat"
-        continue: "A kezdőlapon láthatod a csoportjaid."
         finish: "Befejezés"
-        manage_aspects: "Bármelyik csoportnál felvehetsz új ismerősöket."
-        ready_to_share: "Most már készen állsz a megosztásra"
-        set_up: "Készen is vagyunk, %{name}!"
-        user_menu: "a menü a bal felső sarokban van"
+        people_already_on_diaspora: "Már Diaspora tagok"
       welcome: "Üdv a Diaspora*-n!"
     public: 
       does_not_exist: "%{username} nem létezik!"
     update: 
-      email_notifications_changed: "Nyelv váltása sikertelen"
+      email_notifications_changed: "E-mail értesítések módosítva"
       language_changed: "Nyelv megváltozott"
       language_not_changed: "Nyelv megváltoztatása nem sikerült"
       password_changed: "A jelszó megváltozott"

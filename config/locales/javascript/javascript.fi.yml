@@ -1,0 +1,31 @@
+#   Copyright (c) 2010, Diaspora Inc.  This file is
+#   licensed under the Affero General Public License version 3 or later.  See
+#   the COPYRIGHT file.
+
+
+fi: 
+  javascripts: 
+    confirm_dialog: "Oletko varma?"
+    search_for: "Etsi nimellä {{name}}"
+    shared: 
+      contact_list: 
+        cannot_remove: "Et voi poistaa henkilöä viimeisestä näkymästä. (Jos haluat katkaista yhteytesi tähän henkilöön, sinun täytyy poistaa kontakti.)"
+    timeago: 
+      day: "päivä"
+      days: "%d päivää"
+      hour: "noin tunti"
+      hours: "noin %d tuntia"
+      minute: "noin minuutti"
+      minutes: "%d minuuttia"
+      month: "noin kuukausi"
+      months: "%d kuukautta"
+      prefixAgo: ""
+      prefixFromNow: ""
+      seconds: "alle minuutti"
+      suffixAgo: "sitten"
+      suffixFromNow: "tästä alkaen"
+      year: "noin vuosi"
+      years: "%d vuotta"
+    videos: 
+      unknown: "Tuntematon videomuoto"
+      watch: "Katso video {{provider}} :ssa"

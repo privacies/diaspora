@@ -2,57 +2,53 @@
 #   licensed under the Affero General Public License version 3 or later.  See
 #   the COPYRIGHT file.
 
-class Post
+class Post < ActiveRecord::Base
   require File.join(Rails.root, 'lib/encryptable')
   require File.join(Rails.root, 'lib/diaspora/web_socket')
-  include MongoMapper::Document
   include ApplicationHelper
   include ROXML
   include Diaspora::Webhooks
+  include Diaspora::Guid
 
-  xml_reader :_id
-  xml_reader :diaspora_handle
-  xml_reader :public
-  xml_reader :created_at
+  xml_attr :diaspora_handle
+  xml_attr :public
+  xml_attr :created_at
 
-
-  key :public, Boolean, :default => false
-
-  key :diaspora_handle, String
-  key :user_refs, Integer, :default => 0
-  key :pending, Boolean, :default => false
-  key :aspect_ids, Array, :typecast => 'ObjectId'
-
-  many :comments, :class_name => 'Comment', :foreign_key => :post_id, :order => 'created_at ASC'
-  many :aspects, :in => :aspect_ids, :class_name => 'Aspect'
-  belongs_to :person, :class_name => 'Person'
-
-  timestamps!
+  has_many :comments, :order => 'created_at ASC', :dependent => :destroy
+  has_many :post_visibilities
+  has_many :aspects, :through => :post_visibilities
+  has_many :mentions, :dependent => :destroy
+  belongs_to :person
 
   cattr_reader :per_page
   @@per_page = 10
 
   before_destroy :propogate_retraction
-  after_destroy :destroy_comments
 
-  attr_accessible :user_refs
-  
-  def self.instantiate params
+  def user_refs
+    self.post_visibilities.count
+  end
+
+  def diaspora_handle= nd
+    self.person = Person.where(:diaspora_handle => nd).first
+    write_attribute(:diaspora_handle, nd)
+  end
+
+  def self.diaspora_initialize params
     new_post = self.new params.to_hash
     new_post.person = params[:person]
-    new_post.aspect_ids = params[:aspect_ids]
-    new_post.public = params[:public]
-    new_post.pending = params[:pending]
+    new_post.public = params[:public] if params[:public]
+    new_post.pending = params[:pending] if params[:pending]
     new_post.diaspora_handle = new_post.person.diaspora_handle
     new_post
   end
 
   def as_json(opts={})
     {
-      :post => {
-        :id     => self.id,
-        :person => self.person.as_json,
-      }
+        :post => {
+            :id     => self.id,
+            :person => self.person.as_json,
+        }
     }
   end
 
@@ -60,13 +56,44 @@ class Post
     false
   end
 
-  protected
-  def destroy_comments
-    comments.each{|c| c.destroy}
+  def subscribers(user)
+    user.people_in_aspects(user.aspects_with_post(self.id))
   end
 
+  def receive(user, person)
+    #exists locally, but you dont know about it
+    #does not exsist locally, and you dont know about it
+    #exists_locally?
+    #you know about it, and it is mutable
+    #you know about it, and it is not mutable
+
+    local_post = Post.where(:guid => self.guid).first
+    if local_post && local_post.person_id == self.person_id
+      known_post = user.visible_posts(:guid => self.guid).first
+      if known_post
+        if known_post.mutable?
+          known_post.update_attributes(self.attributes)
+        else
+          Rails.logger.info("event=receive payload_type=#{self.class} update=true status=abort sender=#{self.diaspora_handle} reason=immutable existing_post=#{known_post.id}")
+        end
+      else
+        user.add_post_to_aspects(local_post)
+        Rails.logger.info("event=receive payload_type=#{self.class} update=true status=complete sender=#{self.diaspora_handle} existing_post=#{local_post.id}")
+        return local_post
+      end
+    elsif !local_post
+      self.save
+      user.add_post_to_aspects(self)
+      Rails.logger.info("event=receive payload_type=#{self.class} update=false status=complete sender=#{self.diaspora_handle}")
+      return self
+    else
+      Rails.logger.info("event=receive payload_type=#{self.class} update=true status=abort sender=#{self.diaspora_handle} reason='update not from post owner' existing_post=#{self.id}")
+    end
+  end
+
+  protected
   def propogate_retraction
-    self.person.owner.retract(self)
+    self.person.owner.retract(self) if self.person.owner
   end
 end
 

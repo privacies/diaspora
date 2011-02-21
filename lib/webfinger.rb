@@ -8,28 +8,32 @@ class Webfinger
   OPTS = {:timeout => TIMEOUT, :redirects => REDIRECTS}
   def initialize(account)
     @account = account.strip.gsub('acct:','').to_s
-    @ssl = true 
+    @ssl = true
     Rails.logger.info("event=webfinger status=initialized target=#{account}")
-  end 
+  end
 
   def fetch
-    person = Person.by_account_identifier(@account)
-    if person
-      Rails.logger.info("event=webfinger status=success route=local target=#{@account}")
-      return person
-    end
+    begin
+      person = Person.by_account_identifier(@account)
+      if person
+        Rails.logger.info("event=webfinger status=success route=local target=#{@account}")
+        return person
+      end
 
-    profile_url = get_xrd
-    webfinger_profile = get_webfinger_profile(profile_url) 
-    fingered_person = make_person_from_webfinger(webfinger_profile) 
-    if fingered_person
-      Rails.logger.info("event=webfinger status=success route=remote target=#{@account}")
-      fingered_person
-    else
-      Rails.logger.info("event=webfinger status=failure route=remote target=#{@account}")
-      raise WebfingerFailedError.new(@account)
+      profile_url = get_xrd
+      webfinger_profile = get_webfinger_profile(profile_url)
+      fingered_person = make_person_from_webfinger(webfinger_profile)
+      if fingered_person
+        Rails.logger.info("event=webfinger status=success route=remote target=#{@account}")
+        fingered_person
+      else
+        Rails.logger.info("event=webfinger status=failure route=remote target=#{@account}")
+        raise WebfingerFailedError.new(@account)
+      end
+    rescue Exception => e
+      Rails.logger.info("event=receive status=abort recipient=#{@account} reason='#{e.message}'")
+      nil
     end
-    
   end
 
   private
@@ -51,7 +55,7 @@ class Webfinger
         raise e
         raise I18n.t('webfinger.xrd_fetch_failed', :account => @account)
       end
-    end 
+    end
   end
 
 
@@ -59,8 +63,8 @@ class Webfinger
     begin
       http = RestClient.get(profile_url, OPTS)
 
-    rescue 
-      raise I18n.t('webfinger.fetch_failed', :profile_url => profile_url) 
+    rescue
+      raise I18n.t('webfinger.fetch_failed', :profile_url => profile_url)
     end
     return http.body
   end
@@ -77,7 +81,7 @@ class Webfinger
       end
 
       card = HCard.build hcard.body
-      p = Person.build_from_webfinger(wf_profile, card)
+      p = Person.create_from_webfinger(wf_profile, card)
     end
   end
 
@@ -86,8 +90,8 @@ class Webfinger
   private
 
   def webfinger_profile_url(xrd_response)
-    doc = Nokogiri::XML::Document.parse(xrd_response)  
-    return nil if doc.namespaces["xmlns"] != "http://docs.oasis-open.org/ns/xri/xrd-1.0" 
+    doc = Nokogiri::XML::Document.parse(xrd_response)
+    return nil if doc.namespaces["xmlns"] != "http://docs.oasis-open.org/ns/xri/xrd-1.0"
     swizzle doc.at('Link[rel=lrdd]').attribute('template').value
   end
 
