@@ -84,11 +84,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  def salmon(post)
-    created_salmon = Salmon::SalmonSlap.create(self, post.to_diaspora_xml)
-    created_salmon
-  end
-
   def add_contact_to_aspect(contact, aspect)
     return true if contact.aspect_memberships.where(:aspect_id => aspect.id).count > 0
     contact.aspect_memberships.create!(:aspect => aspect)
@@ -134,6 +129,11 @@ class User < ActiveRecord::Base
     else
       aspects.where(:id => aspect_ids)
     end
+  end
+
+  def salmon(post)
+    created_salmon = Salmon::SalmonSlap.create(self, post.to_diaspora_xml)
+    created_salmon
   end
 
   ######## Commenting  ########

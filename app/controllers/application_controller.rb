@@ -10,8 +10,12 @@ class ApplicationController < ActionController::Base
   before_filter :count_requests
   before_filter :set_invites
   before_filter :set_locale
+  before_filter :set_git_header
   before_filter :which_action_and_user
   prepend_before_filter :clear_gc_stats
+  before_filter :set_grammatical_gender
+
+  inflection_method :grammatical_gender => :gender
 
   def set_contacts_notifications_and_status
     if user_signed_in?
@@ -31,6 +35,11 @@ class ApplicationController < ActionController::Base
     if user_signed_in?
       @invites = current_user.invites
     end
+  end
+
+  def set_git_header
+    headers['X-Git-Update'] = GIT_UPDATE unless GIT_UPDATE.nil?
+    headers['X-Git-Revision'] = GIT_REVISION unless GIT_REVISION.nil?
   end
 
   def which_action_and_user
@@ -63,15 +72,14 @@ class ApplicationController < ActionController::Base
     end
   end
 
-
-###########################################################################
-# Privacies Code
-# HTTP get request
-# createdPost calls this function to send the photos to LAM
-# Have enabled threading so that Request to LAM is asynchronous and does not delay
-# response to the use who has posted the photo
-# Have also enabled exception handling incase LAM server is not reachable
-###########################################################################  
+  ###########################################################################
+  # Privacies Code
+  # HTTP get request
+  # createdPost calls this function to send the photos to LAM
+  # Have enabled threading so that Request to LAM is asynchronous and does not delay
+  # response to the use who has posted the photo
+  # Have also enabled exception handling incase LAM server is not reachable
+  ###########################################################################  
 
   def makeHTTPReq(params)
     service_uri="http://lam.lfn.net/LAMService/"
@@ -90,6 +98,42 @@ class ApplicationController < ActionController::Base
         logger.debug(response.body)
       end
     rescue
+  end
+
+  def set_grammatical_gender
+    if (user_signed_in? && I18n.inflector.inflected_locale?)
+      gender = current_user.profile.gender.to_s.tr('!()[]"\'`*=|/\#.,-:', '').downcase
+      unless gender.empty?
+        i_langs = I18n.inflector.inflected_locales(:gender)
+        i_langs.delete  I18n.locale
+        i_langs.unshift I18n.locale
+        i_langs.each do |lang|
+          token = I18n.inflector.true_token(gender, :gender, lang)
+          unless token.nil?
+            @grammatical_gender = token
+            break
+          end
+        end
+      end
     end
   end
+
+  def grammatical_gender
+    @grammatical_gender || nil
+  end
+
+  def similar_people contact, opts={}
+    opts[:limit] ||= 5
+    aspect_ids = contact.aspect_ids
+    count = Contact.count(:user_id => current_user.id,
+                          :person_id.ne => contact.person.id,
+                          :aspect_ids.in => aspect_ids)
+
+    if count > opts[:limit]
+      offset = rand(count-opts[:limit])
+    else
+      offset = 0
+    end
+  end
+
 end

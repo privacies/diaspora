@@ -223,10 +223,11 @@ en:
       request_accepted: "accepted your share request."
       new_request: "offered to share with you."
       comment_on_post: "commented on your"
-      also_commented: "also commented on your contact's"
+      also_commented: "also commented on %{post_author}'s"
       mentioned: "has mentioned you in their"
       post: "post"
       deleted: "deleted"
+      also_commented_deleted: "commented on a deleted post"
       index:
         notifications: "Notifications"
         mark_all_as_read: "Mark All as Read"
@@ -479,7 +480,7 @@ en:
           commented: "has commented on your post:"
           sign_in: "Sign in to view it."
       also_commented:
-          subject: "%{name} has also commented on your contact's post."
+          subject: "%{name} has also commented on your %{post_author}'s post."
           commented: "has also commented on %{post_author}'s post:"
           sign_in: "Sign in to view it."
       mentioned:
