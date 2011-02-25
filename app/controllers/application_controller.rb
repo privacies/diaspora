@@ -98,6 +98,7 @@ class ApplicationController < ActionController::Base
         logger.debug(response.body)
       end
     rescue
+    end
   end
 
   def set_grammatical_gender
