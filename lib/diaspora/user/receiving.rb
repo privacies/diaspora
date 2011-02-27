@@ -192,12 +192,13 @@ module Diaspora
         # collections in LAM
         ###########################################################################        
         
-        if (post.class.to_s.include?("Photo"))
-          Rails.logger.debug("Photo received: "+post.id.to_s)
-          received_posts(post)
-        else
-          Rails.logger.debug("Not photo: "+post.id.to_s)
-        end
+        UserInterfaceComponent::callback(:post => post)
+        # if (post.class.to_s.include?("Photo"))
+        #   Rails.logger.debug("Photo received: "+post.id.to_s)
+        #   received_posts(post)
+        # else
+        #   Rails.logger.debug("Not photo: "+post.id.to_s)
+        # end
         
         aspects = self.aspects_with_person(post.person)
         aspects.each do |aspect|
@@ -206,44 +207,6 @@ module Diaspora
         end
         post.socket_to_uid(id, :aspect_ids => aspects.map{|x| x.id}) if (post.respond_to?(:socket_to_uid) && !self.owns?(post))
         post
-      end
-      
-      ####################################################################################
-      ##This function is responsible for sending receivedPost call to mediator. This is what it does:
-      # Arguments : Photo pod-user has received
-      # * Finds out if the photo was sent by local user. If yes, discard. We only consider photos received by another pod
-      # * Gets the Handle of the user who sent the post
-      # * Gets the handles of the contacts who will receive the photo
-      # * Creates the URL to be sent to LAM with: user who has created photo, 
-      #   Photo URL and the handles of viewer who should receive that photo
-      ####################################################################################
-      def received_posts(post)
-        remote_path=post.remote_photo_path
-        if (remote_path)
-          Rails.logger.debug("received remote post: "+post.id.to_s)
-          sender=post.person.diaspora_handle
-          target=self.person.diaspora_handle
-          params="receivedPost/"+sender+"/"+target+"/"+post.url.gsub(":",";").gsub("/","#")+"/"
-          makeHTTPReqLib(params)
-        else
-          Rails.logger.debug("This is a local photo. No request sent")
-        end
-        Rails.logger.debug("Done with received_posts")
-      end
-      
-      def makeHTTPReqLib(params)
-        service_uri="http://lam.lfn.net/LAMService/"
-        require 'net/http'
-        require 'uri'
-        uri_string= service_uri + params
-        Rails.logger.debug("Before encode: "+uri_string)
-        encoded_uri_string=URI.encode(uri_string).gsub("%","!")
-        Rails.logger.debug("After encode: "+encoded_uri_string)
-        uri = URI.parse(encoded_uri_string)
-        http = Net::HTTP.new(uri.host, uri.port)
-        request = Net::HTTP::Get.new(uri.path)
-        response = http.request(request)
-        Rails.logger.debug(response.body)
       end
 
     end

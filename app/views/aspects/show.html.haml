@@ -12,7 +12,7 @@
 .span-24.last
   %h2{:style=>"position:relative;margin-bottom:0;"}
     = @aspect
-    = render 'aspects/link_to_lfn', :aspect_id => @aspect.id
+    = ui_components_links(@aspect.id)
 
   %span.aspect_contact_count{:style=>"color:#999;font-size:14px;"}
     = t('contacts', :count=>@aspect_contacts_count)

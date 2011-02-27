@@ -9,6 +9,11 @@ class AspectsController < ApplicationController
   respond_to :json, :only => [:show, :create]
   respond_to :js
 
+  helper :user_interface_components
+  after_filter :index do
+    @ui_components = UserInterfaceComponent::load_components
+  end
+
   def index
     if params[:a_ids]
       @aspects = current_user.aspects.where(:id => params[:a_ids]).includes(:contacts => {:person => :profile})
@@ -40,9 +45,9 @@ class AspectsController < ApplicationController
 
       @aspect = :all unless params[:a_ids]
       @aspect ||= @aspects.first #used in mobile
-
     end
   end
+
   def create
     @aspect = current_user.aspects.create(params[:aspect])
     #hack, we don't know why mass assignment is not working
@@ -157,7 +162,5 @@ class AspectsController < ApplicationController
 
     render :text => response_hash.to_json
   end
-  
-  def lfn
-  end
+
 end

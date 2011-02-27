@@ -21,6 +21,8 @@ module Diaspora
     # Add additional load paths for your own custom dirs
      #config.autoload_paths += %W(#{config.root}/lib)
      config.autoload_paths += %W(#{config.root}/lib)
+     config.autoload_paths += Dir["#{config.root}/app/user_interface_components/**"]
+     config.autoload_paths += ["#{config.root}/lib/user_interface_components"]
 
     # Only load the plugins named here, in the order given (default is alphabetical).
     # :all can be used as a placeholder for all plugins not explicitly named

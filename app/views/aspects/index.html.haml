@@ -22,7 +22,7 @@
     = owner_image_link
     %h3{:style => "position:relative;"}
       = current_user.name
-      = render 'aspects/link_to_lfn', :aspect_id => "all"
+      = ui_components_links
       .description
         = link_to current_user.diaspora_handle, person_path(current_user.person)
 

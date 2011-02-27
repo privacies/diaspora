@@ -3,7 +3,7 @@
 #   the COPYRIGHT file.
 
 Diaspora::Application.routes.draw do
-  get "handler/get_posts"
+  get "handler/getPosts", :to => 'handler#get_post'
 
   resources :status_messages, :only => [:create, :destroy, :show]
   resources :comments,        :only => [:create]
@@ -69,7 +69,10 @@ Diaspora::Application.routes.draw do
   match 'receive/users/:guid',    :to => 'publics#receive'
   match 'hub',                  :to => 'publics#hub'
 
-  match'localize', :to => "localize#show"
+  # route for uicomponnents
+  match 'uic/:action/:ui_component', :to => 'user_interface_components#:action', :as => :uic
+
+  match 'localize', :to => "localize#show"
   match 'mobile/toggle', :to => 'home#toggle_mobile', :as => 'toggle_mobile'
   #root
   root :to => 'home#show'

@@ -35,6 +35,7 @@ class StatusMessagesController < ApplicationController
       receiving_services = params[:services].map{|s| current_user.services.where(
                                   :type => "Services::"+s.titleize).first} if params[:services]
       current_user.dispatch_post(@status_message, :url => post_url(@status_message), :services => receiving_services)
+
       if !photos.empty?
         for photo in photos
           was_pending = photo.pending
@@ -44,7 +45,7 @@ class StatusMessagesController < ApplicationController
           if was_pending
             current_user.add_to_streams(photo, aspects)
             current_user.dispatch_post(photo)
-            created_posts(photo, target_aspects)
+            created_post(photo, target_aspects)
           end
         end
       end
@@ -65,7 +66,7 @@ class StatusMessagesController < ApplicationController
         },
                            :status => 201 }
         format.html { redirect_to :back}
-        format.mobile{ redirect_to :back}
+        format.mobile { redirect_to :back}
       end
 
     else
@@ -73,6 +74,70 @@ class StatusMessagesController < ApplicationController
         format.js { render :json =>{:errors =>   @status_message.errors.full_messages}, :status => 406 }
         format.html {redirect_to :back} 
       end
+    end
+  end
+
+  ####################################################################################
+  # Privacies Code
+  ##This function is responsible for sending createdPost call to mediator. This is what it does:
+  # Arguments : Photo Shared and Aspects in which photo is shared
+  # * Finds out the contacts associated with the aspects
+  # * Gets the Handles of the contacts
+  # * Throws away the handles of the contacts who are in different pod
+  # * Creates the URL to be sent to LAM with: user who has created photo, Aspects in which he has shared the phtoo
+  # , Photo URL and the handles of viewers who should receive that photo
+  ####################################################################################
+  def created_post(photo, target_aspects)
+    target_contacts = Contact.joins(:aspects).where(:aspects => {:id => target_aspects}, :pending => false)
+    diaspora_host=photo.diaspora_handle.split("@")[1]
+
+    target_handles = target_contacts.collect do |contact|
+      contact.person.diaspora_handle
+    end
+
+    local_target_handles = target_handles.select do |handle|
+      handle.split("@")[1].eql?(diaspora_host)
+    end
+
+    if local_target_handles.empty?
+      local_target_handles="NONE"
+    else
+      local_target_handles=local_target_handles.join(",").to_s
+    end
+
+    photo_url="http;//"+diaspora_host+photo.url
+
+    params='createdPost/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join(",").to_s+
+    '/'+photo_url.gsub("/","#")+'/'+local_target_handles+'/'
+    makeHTTPReq(params)
+  end
+
+  ###########################################################################
+  # Privacies Code
+  # HTTP get request
+  # createdPost calls this function to send the photos to LAM
+  # Have enabled threading so that Request to LAM is asynchronous and does not delay
+  # response to the use who has posted the photo
+  # Have also enabled exception handling incase LAM server is not reachable
+  ###########################################################################  
+
+  def makeHTTPReq(params)
+    service_uri="http://lam.lfn.net/LAMService/"
+    require 'net/http'
+    require 'uri'
+    uri_string= service_uri + params
+    logger.debug("Before encode: "+uri_string)
+    begin
+      Thread.new do
+        encoded_uri_string=URI.encode(uri_string).gsub("%","!")
+        logger.debug("After encode: "+encoded_uri_string)
+        uri = URI.parse(encoded_uri_string)
+        http = Net::HTTP.new(uri.host, uri.port)
+        request = Net::HTTP::Get.new(uri.path)
+        response = http.request(request)
+        logger.debug(response.body)
+      end
+    rescue
     end
   end
 
@@ -102,41 +167,6 @@ class StatusMessagesController < ApplicationController
     else
       redirect_to :back
     end
-  end
-
-  ####################################################################################
-  # Privacies Code
-  ##This function is responsible for sending createdPost call to mediator. This is what it does:
-  # Arguments : Photo Shared and Aspects in which photo is shared
-  # * Finds out the contacts associated with the aspects
-  # * Gets the Handles of the contacts
-  # * Throws away the handles of the contacts who are in different pod
-  # * Creates the URL to be sent to LAM with: user who has created photo, Aspects in which he has shared the phtoo
-  # , Photo URL and the handles of viewers who should receive that photo
-  ####################################################################################
-  def created_posts (photo, target_aspects)
-    target_contacts = Contact.joins(:aspects).where(:aspects => {:id => target_aspects}, :pending => false)
-    diaspora_host=photo.diaspora_handle.split("@")[1]
-
-    target_handles = target_contacts.collect do |contact|
-      contact.person.diaspora_handle
-    end
-
-    local_target_handles = target_handles.select do |handle|
-      handle.split("@")[1].eql?(diaspora_host)
-    end
-
-    if local_target_handles.empty?
-      local_target_handles="NONE"
-    else
-      local_target_handles=local_target_handles.join(",").to_s
-    end
-
-    photo_url="http;//"+diaspora_host+photo.url
-
-    params='createdPost/'+current_user.person.diaspora_handle.to_s+'/'+target_aspects.join(",").to_s+
-              '/'+photo_url.gsub("/","#")+'/'+local_target_handles+'/'
-    makeHTTPReq(params)
   end
 
 end

@@ -72,35 +72,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  ###########################################################################
-  # Privacies Code
-  # HTTP get request
-  # createdPost calls this function to send the photos to LAM
-  # Have enabled threading so that Request to LAM is asynchronous and does not delay
-  # response to the use who has posted the photo
-  # Have also enabled exception handling incase LAM server is not reachable
-  ###########################################################################  
-
-  def makeHTTPReq(params)
-    service_uri="http://lam.lfn.net/LAMService/"
-    require 'net/http'
-    require 'uri'
-    uri_string= service_uri + params
-    logger.debug("Before encode: "+uri_string)
-    begin
-      Thread.new do
-        encoded_uri_string=URI.encode(uri_string).gsub("%","!")
-        logger.debug("After encode: "+encoded_uri_string)
-        uri = URI.parse(encoded_uri_string)
-        http = Net::HTTP.new(uri.host, uri.port)
-        request = Net::HTTP::Get.new(uri.path)
-        response = http.request(request)
-        logger.debug(response.body)
-      end
-    rescue
-    end
-  end
-
   def set_grammatical_gender
     if (user_signed_in? && I18n.inflector.inflected_locale?)
       gender = current_user.profile.gender.to_s.tr('!()[]"\'`*=|/\#.,-:', '').downcase

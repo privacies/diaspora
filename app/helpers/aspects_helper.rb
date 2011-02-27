@@ -54,21 +54,6 @@ module AspectsHelper
     end
   end
 
-  def get_aspect_contacts(aspect_id)
-
-    if (aspect_id == "all")
-      target_aspects=current_user.aspects.collect{|x| x.id}
-    else
-      target_aspects=[aspect_id]
-    end
-
-    target_contacts = Contact.joins(:aspect_memberships).where(:aspect_memberships => {:aspect_id => target_aspects}, :pending => false)
-
-    target_handles = target_contacts.collect do |contact|
-      contact.person.diaspora_handle
-    end
-  end
-
   def publisher_description(aspect_count)
     str = "#{t('.share_with')} #{aspect_count} "
     if aspect_count == 1

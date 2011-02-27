@@ -363,7 +363,7 @@ GEM
     treetop (1.4.9)
       polyglot (>= 0.3.1)
     typhoeus (0.2.0)
-    tzinfo (0.3.23)
+    tzinfo (0.3.24)
     uuidtools (2.1.1)
     vegas (0.1.8)
       rack (>= 1.0.0)

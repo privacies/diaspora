@@ -1,10 +1,11 @@
 class HandlerController < ApplicationController
+
   def get_posts
     @userId         = params[:userId].to_s
     @aspectId       = params[:aspectId].to_s
     @aspectContacts = params[:aspectContacts].to_s
 
-    params='get_posts/'+@userId+'/'+@aspectId+'/'+@aspectContacts+'/'
+    params='getPosts/'+@userId+'/'+@aspectId+'/'+@aspectContacts+'/'
     logger.debug(params)
 
 
@@ -25,6 +26,7 @@ class HandlerController < ApplicationController
       encoded_uri_string=URI.encode(cxml_uri)
       xml_val=URI.encode(@return_xml)
       params = {'xml' => xml_val }
+      logger.debug(params)
       response=Net::HTTP.post_form(URI.parse(encoded_uri_string), {'xml'=>xml_val})
       #uri = URI.parse(encoded_uri_string)
       #http = Net::HTTP.new(uri.host, uri.port)

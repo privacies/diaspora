@@ -166,7 +166,7 @@ class Person < ActiveRecord::Base
   protected
 
   def clean_url
-    self.url ||= "http://localhost:3000/" if self.class == User
+    self.url ||= "http://localhost:3002/" if self.class == User
     if self.url
       self.url = 'http://' + self.url unless self.url.match(/https?:\/\//)
       self.url = self.url + '/' if self.url[-1, 1] != '/'
