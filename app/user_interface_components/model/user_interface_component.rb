@@ -1,15 +1,11 @@
 class UserInterfaceComponent
-  @@components = {}
-  @@callbacks  = {}
-
   #Preload all ui components
   def self.load_components(force_reload = false)
     @@components = UI_COMPONENTS.each_with_object({}) do |c, h|
-      h[c] = Object.const_get(c.to_s.classify).new if Object.const_get(c.to_s.classify)
+      h[c] = Object.const_get(c.to_s.classify) if Object.const_get(c.to_s.classify)
     end
   end
 
-  #get the ui component
   def self.get(component)
     self.load_components
     return @@components[component.to_sym] if @@components[component.to_sym]
@@ -30,19 +26,15 @@ class UserInterfaceComponent
     end
   end
 
-  def self.set_callback(method)
-    
-  end
-  
-  def self.run_callback
-    
-  end
-
-  def link
-    ""
+  def self.run(action, params = {})
+    self.load_components
+    @@components.each_value do |c|
+      c::send(action, params) if c::respond_to?(action)
+    end
   end
 
   def view_file
     self.class.downcase
   end
+
 end

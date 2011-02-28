@@ -186,19 +186,7 @@ module Diaspora
         self.raw_visible_posts << post
         self.save
         
-        ###########################################################################
-        # Privacies Code
-        # Call to received_post function if received is not a status message. We only want to add photo
-        # collections in LAM
-        ###########################################################################        
-        
-        UserInterfaceComponent::callback(:post => post)
-        # if (post.class.to_s.include?("Photo"))
-        #   Rails.logger.debug("Photo received: "+post.id.to_s)
-        #   received_posts(post)
-        # else
-        #   Rails.logger.debug("Not photo: "+post.id.to_s)
-        # end
+        UserInterfaceComponent::run(:received_posts, :post => post)
         
         aspects = self.aspects_with_person(post.person)
         aspects.each do |aspect|

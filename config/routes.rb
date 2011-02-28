@@ -3,7 +3,7 @@
 #   the COPYRIGHT file.
 
 Diaspora::Application.routes.draw do
-  get "handler/getPosts", :to => 'handler#get_post'
+  get "handler/:request", :to => 'handler#call', :defaults => { :format => 'xml' }
 
   resources :status_messages, :only => [:create, :destroy, :show]
   resources :comments,        :only => [:create]
