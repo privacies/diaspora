@@ -7,11 +7,11 @@
 var Publisher = {
   close: function(){
     Publisher.form().addClass('closed');
-    Publisher.form().find("textarea").css('min-height', '');
+    Publisher.form().find("textarea.ac_input").css('min-height', '');
   },
   open: function(){
     Publisher.form().removeClass('closed');
-    Publisher.form().find("textarea").css('min-height', '42px');
+    Publisher.form().find("textarea.ac_input").css('min-height', '42px');
     Publisher.determineSubmitAvailability();
   },
   cachedForm : false,
@@ -281,7 +281,7 @@ var Publisher = {
   clear: function(){
     this.autocompletion.mentionList.clear();
     $("#photodropzone").find('li').remove();
-    $("#publisher textarea").removeClass("with_attachments");
+    $("#publisher textarea").removeClass("with_attachments").css('paddingBottom', '');
   },
   bindServiceIcons: function(){
     $(".service_icon").bind("click", function(evt){
@@ -311,7 +311,7 @@ var Publisher = {
     Publisher.cachedInput = false;
     Publisher.cachedHiddenInput = false;
     Publisher.cachedSubmit = false;
-    
+
     Publisher.bindServiceIcons();
     Publisher.bindPublicIcon();
 
