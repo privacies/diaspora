@@ -14,26 +14,25 @@ class Lfn < UserInterfaceComponent
     # , Photo URL and the handles of viewers who should receive that photo
     ####################################################################################
 
-    def created_post(params)
-      photo                 = params[:photo]
-      target_aspects        = params[:target_aspects]
-      user                  = params[:user]
-
-      target_contacts       = Contact.joins(:aspects).where(:aspects => {:id => target_aspects}, :pending => false)
-      diaspora_host         = photo.diaspora_handle.split("@")[1]
-      target_handles        = target_contacts.collect do |contact|
-        contact.person.diaspora_handle
-      end
-
-      local_target_handles = target_handles.select do |handle|
-        handle.split("@")[1].eql?(diaspora_host)
-      end
-
-      local_target_handles = (local_target_handles.empty? ? "NONE" : local_target_handles.join(",").to_s)
-
-      params = 'createdPost/' + user.person.diaspora_handle.to_s + '/' + target_aspects.join(",").to_s +
-      '/'+ photo.url.gsub("/","#") + '/' + local_target_handles + '/'
-
+    def create_post(params)
+      image_url         = params[:photo] ? params[:photo].url.gsub("/","#") : self::EMPTY_VALUE
+      message           = params[:post].message.blank? ? self::EMPTY_VALUE : params[:post].message
+      target_aspect_ids = params[:target_aspect_ids].present? ? params[:target_aspect_ids] : params[:aspect_ids]
+      user              = params[:user]
+      
+      # local_target_handles = target_handles.select do |handle|
+      #   handle.split("@")[1].eql?(diaspora_host)
+      # end
+      # 
+      # local_target_handles = (local_target_handles.empty? ? EMPTY_VALUE : local_target_handles.join(",").to_s)
+      params               = "createPost/%{userId}/%{aspectIds}/%{aspectContacts}/%{message}/%{postUrl}/" % {
+       :userId             => user.person.diaspora_handle.to_s,
+       :aspectIds          => target_aspect_ids.join(",").to_s,
+       :aspectContacts     => get_aspect_contacts_from_ids(target_aspect_ids, user),
+       :message            => message,
+       :postUrl            => image_url
+      }
+      Rails.logger.info("LFN: CREATE POST : #{params.to_yaml}")
       call_service(params)
     end
 
@@ -42,7 +41,6 @@ class Lfn < UserInterfaceComponent
       user            = params[:user]
       aspect_id       = params[:aspect_id]
       aspect_contacts = get_aspect_contacts(aspect_id, user).join(",").to_s
-      aspect_contacts = 'None' if aspect_contacts.blank?
       
       url_params = {:siteOwner => 'bob',
                     :userId => user.person.diaspora_handle.to_s,
@@ -63,31 +61,17 @@ class Lfn < UserInterfaceComponent
     # * Creates the URL to be sent to LAM with: user who has created photo, 
     #   Photo URL and the handles of viewer who should receive that photo
     ####################################################################################
-    def received_posts(params)
-
+    def receive_posts(params)
       post   = params[:post]
       target = params[:target]
-
-      ###########################################################################
-      # Privacies Code
-      # Call to received_post function if received is not a status message. We only want to add photo
-      # collections in LAM
-      ###########################################################################        
-      return unless post.is_a? Photo
-      remote_path = post.remote_photo_path
-      if (remote_path)
-        Rails.logger.debug("received remote post: "+ post.id.to_s)
-        params           = 'receivePost/{userId}/{aspectContact}/%{message}/%{postUrl}/' % {
-          :userId        => post.person.diaspora_handle,
-          :aspectContact => target.person.diaspora_handle,
-          :message       => post.message,
-          :postUrl       => post.url.gsub("/","#")
-        }
-        call_service(params)
-      else
-        Rails.logger.debug("This is a local photo. No request sent")
-      end
-      Rails.logger.debug("Done with received_posts")
+      params           = 'receivePost/{userId}/{aspectContact}/%{message}/%{postUrl}/' % {
+        :userId        => post.person.diaspora_handle,
+        :aspectContact => target.person.diaspora_handle,
+        :message       => post.message.blank? ? self::EMPTY_VALUE : post.message,
+        :postUrl       => post.url.blank? ? self::EMPTY_VALUE : post.url.gsub("/","#")
+      }
+      Rails.logger.info("LFN: RECEIVE POST : #{params.to_yaml}")
+      call_service(params)
     end
 
     ###########################################################################

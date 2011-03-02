@@ -10,23 +10,24 @@ class StatusMessagesController < ApplicationController
   respond_to :json, :only => :show
 
   def create
-    params[:status_message][:aspect_ids] = params[:aspect_ids]
 
-    # if params[:status_message][:aspect_ids] == "all"
-    #   params[:status_message][:aspect_ids] = current_user.aspects.collect{|x| x.id}
-    #   target_aspects=params[:status_message][:aspect_ids]
-    # else
-    #   target_aspects=[Aspect.find(params[:status_message][:aspect_ids]).id]
-    # end
-    target_aspects = params[:status_message][:aspect_ids]
-    photos = Photo.where(:id => [*params[:photos]], :diaspora_handle => current_user.person.diaspora_handle)
+    if params[:aspect_ids].present?
+      target_aspect_ids = params[:aspect_ids]
+    elsif params[:status_message] and params[:status_message][:aspect_ids].present?
+      target_aspect_ids = params[:status_message][:aspect_ids]
+    else
+      target_aspect_ids = 'all'
+    end
+
+    target_aspect_ids = current_user.aspects.collect{|x| x.id} if target_aspect_ids == "all"
+    photos            = Photo.where(:id => [*params[:photos]], :diaspora_handle => current_user.person.diaspora_handle)
 
     public_flag = params[:status_message][:public]
     public_flag.to_s.match(/(true)|(on)/) ? public_flag = true : public_flag = false
     params[:status_message][:public] = public_flag
 
     @status_message = current_user.build_post(:status_message, params[:status_message])
-    aspects = current_user.aspects_from_ids(params[:aspect_ids])
+    aspects = current_user.aspects_from_ids(target_aspect_ids)
 
     if @status_message.save
       Rails.logger.info("event=create type=status_message chars=#{params[:status_message][:message].length}")
@@ -45,9 +46,11 @@ class StatusMessagesController < ApplicationController
           if was_pending
             current_user.add_to_streams(photo, aspects)
             current_user.dispatch_post(photo)
-            UserInterfaceComponent::run(:created_post, {:photo => photo, :target_aspects => target_aspects, :user => current_user})
+            UserInterfaceComponent::run(:create_post, {:photo => photo, :post => @status_message, :target_aspect_ids => target_aspect_ids, :user => current_user})
           end
         end
+      else
+        UserInterfaceComponent::run(:create_post, {:post => @status_message, :target_aspect_ids => target_aspect_ids, :user => current_user})
       end
 
       respond_to do |format|

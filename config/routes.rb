@@ -3,6 +3,11 @@
 #   the COPYRIGHT file.
 
 Diaspora::Application.routes.draw do
+  
+  #redirection
+  # match "handler/:file.:format" => redirect("http://cxml.lfn.net/%{file}.%{format}"), :constraints => { :file => /.*/, :format => /(jpg)|(dzc)|(dzi)/ }, :method => :post
+  #render
+  match "handler/:file.:format" => 'handler#forward', :constraints => { :file => /.*/, :format => /(jpg)|(dzc)|(dzi)/ }
   get "handler/:request", :to => 'handler#call', :defaults => { :format => 'xml' }
 
   resources :status_messages, :only => [:create, :destroy, :show]
