@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110217044519) do
+ActiveRecord::Schema.define(:version => 20110301202619) do
 
   create_table "aspect_memberships", :force => true do |t|
     t.integer  "aspect_id",  :null => false
@@ -69,16 +69,6 @@ ActiveRecord::Schema.define(:version => 20110217044519) do
   add_index "contacts", ["person_id", "pending"], :name => "index_contacts_on_person_id_and_pending"
   add_index "contacts", ["user_id", "pending"], :name => "index_contacts_on_user_id_and_pending"
   add_index "contacts", ["user_id", "person_id"], :name => "index_contacts_on_user_id_and_person_id", :unique => true
-
-  create_table "data_points", :force => true do |t|
-    t.string   "key",          :null => false
-    t.integer  "value",        :null => false
-    t.integer  "statistic_id", :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "data_points", ["statistic_id"], :name => "index_data_points_on_statistic_id"
 
   create_table "invitations", :force => true do |t|
     t.text     "message"
@@ -318,10 +308,10 @@ ActiveRecord::Schema.define(:version => 20110217044519) do
     t.string   "target_type"
     t.integer  "target_id"
     t.integer  "recipient_id",                   :null => false
-    t.string   "action",                         :null => false
     t.boolean  "unread",       :default => true, :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "type"
   end
 
   add_index "notifications", ["recipient_id"], :name => "index_notifications_on_recipient_id"
@@ -436,13 +426,6 @@ ActiveRecord::Schema.define(:version => 20110217044519) do
   add_index "services", ["mongo_id"], :name => "index_services_on_mongo_id"
   add_index "services", ["user_id"], :name => "index_services_on_user_id"
 
-  create_table "statistics", :force => true do |t|
-    t.integer  "average"
-    t.datetime "time",       :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "users", :force => true do |t|
     t.string   "username"
     t.text     "serialized_private_key"
@@ -475,5 +458,27 @@ ActiveRecord::Schema.define(:version => 20110217044519) do
   add_index "users", ["invitation_token"], :name => "index_users_on_invitation_token"
   add_index "users", ["mongo_id"], :name => "index_users_on_mongo_id"
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
+
+  add_foreign_key "aspect_memberships", "aspects", :name => "aspect_memberships_aspect_id_fk"
+  add_foreign_key "aspect_memberships", "contacts", :name => "aspect_memberships_contact_id_fk", :dependent => :delete
+
+  add_foreign_key "comments", "people", :name => "comments_person_id_fk", :dependent => :delete
+  add_foreign_key "comments", "posts", :name => "comments_post_id_fk", :dependent => :delete
+
+  add_foreign_key "contacts", "people", :name => "contacts_person_id_fk", :dependent => :delete
+
+  add_foreign_key "invitations", "users", :name => "invitations_recipient_id_fk", :column => "recipient_id", :dependent => :delete
+  add_foreign_key "invitations", "users", :name => "invitations_sender_id_fk", :column => "sender_id", :dependent => :delete
+
+  add_foreign_key "notification_actors", "notifications", :name => "notification_actors_notification_id_fk", :dependent => :delete
+
+  add_foreign_key "posts", "people", :name => "posts_person_id_fk", :dependent => :delete
+
+  add_foreign_key "profiles", "people", :name => "profiles_person_id_fk", :dependent => :delete
+
+  add_foreign_key "requests", "people", :name => "requests_recipient_id_fk", :column => "recipient_id", :dependent => :delete
+  add_foreign_key "requests", "people", :name => "requests_sender_id_fk", :column => "sender_id", :dependent => :delete
+
+  add_foreign_key "services", "users", :name => "services_user_id_fk", :dependent => :delete
 
 end

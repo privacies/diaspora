@@ -6,6 +6,7 @@ class ApplicationController < ActionController::Base
   has_mobile_fu
   protect_from_forgery :except => :receive
 
+  before_filter :ensure_http_referer_is_set
   before_filter :set_contacts_notifications_and_status, :except => [:create, :update]
   before_filter :count_requests
   before_filter :set_invites
@@ -17,11 +18,15 @@ class ApplicationController < ActionController::Base
 
   inflection_method :grammatical_gender => :gender
 
+  def ensure_http_referer_is_set
+    request.env['HTTP_REFERER'] ||= '/aspects'
+  end
+
   def set_contacts_notifications_and_status
     if user_signed_in?
       @aspect = nil
       @object_aspect_ids = []
-      @all_aspects = current_user.aspects.includes(:aspect_memberships)
+      @all_aspects = current_user.aspects.includes(:aspect_memberships, :post_visibilities)
       @notification_count = Notification.for(current_user, :unread =>true).count
       @user_id = current_user.id
     end

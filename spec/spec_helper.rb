@@ -8,6 +8,7 @@ ENV["RAILS_ENV"] ||= 'test'
 require File.join(File.dirname(__FILE__), '..', 'config', 'environment') unless defined?(Rails)
 require 'helper_methods'
 require 'rspec/rails'
+puts require 'rspec'
 require 'webmock/rspec'
 require 'factory_girl'
 
@@ -53,16 +54,16 @@ end
 
 def alice
   #users(:alice)
-  User.where(:username => 'alice').first
+  @alice ||= User.where(:username => 'alice').first
 end
 
 def bob
   #users(:bob)
-  User.where(:username => 'bob').first
+  @bob ||= User.where(:username => 'bob').first
 end
 
 def eve
   #users(:eve)
-  User.where(:username => 'eve').first
+  @eve ||= User.where(:username => 'eve').first
 end
 
