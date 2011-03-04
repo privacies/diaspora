@@ -13,6 +13,9 @@ class StatusMessage < Post
   xml_attr :raw_message
 
   has_many :photos, :dependent => :destroy
+  has_one  :controls, :dependent => :destroy, :class_name => 'PostControl'
+  accepts_nested_attributes_for :controls, :allow_destroy => true
+
   validate :message_or_photos_present?
 
   attr_accessible :message

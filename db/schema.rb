@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110301202619) do
+ActiveRecord::Schema.define(:version => 20110304055352) do
 
   create_table "aspect_memberships", :force => true do |t|
     t.integer  "aspect_id",  :null => false
@@ -333,6 +333,13 @@ ActiveRecord::Schema.define(:version => 20110301202619) do
   add_index "people", ["guid"], :name => "index_people_on_guid", :unique => true
   add_index "people", ["mongo_id"], :name => "index_people_on_mongo_id"
   add_index "people", ["owner_id"], :name => "index_people_on_owner_id", :unique => true
+
+  create_table "post_controls", :force => true do |t|
+    t.integer  "status_message_id"
+    t.text     "content"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "post_visibilities", :force => true do |t|
     t.integer  "aspect_id",  :null => false

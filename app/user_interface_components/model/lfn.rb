@@ -20,11 +20,6 @@ class Lfn < UserInterfaceComponent
       target_aspect_ids = params[:target_aspect_ids].present? ? params[:target_aspect_ids] : params[:aspect_ids]
       user              = params[:user]
       
-      # local_target_handles = target_handles.select do |handle|
-      #   handle.split("@")[1].eql?(diaspora_host)
-      # end
-      # 
-      # local_target_handles = (local_target_handles.empty? ? EMPTY_VALUE : local_target_handles.join(",").to_s)
       params               = "createPost/%{userId}/%{aspectIds}/%{aspectContacts}/%{message}/%{postUrl}/" % {
        :userId             => user.person.diaspora_handle.to_s,
        :aspectIds          => target_aspect_ids.join(",").to_s,

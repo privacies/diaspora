@@ -1,0 +1,113 @@
+<script type="text/javascript" src="/javascripts/Silverlight.js"></script>
+
+<script type="text/javascript">
+function onSilverlightError(sender, args) {
+    var appSource = "";
+    if (sender != null && sender != 0) {
+        appSource = sender.getHost().Source;
+    }
+
+    var errorType = args.ErrorType;
+    var iErrorCode = args.ErrorCode;
+
+    if (errorType == "ImageError" || errorType == "MediaError") {
+        return;
+    }
+
+    var errMsg = "Unhandled Error in Silverlight Application " + appSource + "\n";
+
+    errMsg += "Code: " + iErrorCode + "    \n";
+    errMsg += "Category: " + errorType + "       \n";
+    errMsg += "Message: " + args.ErrorMessage + "     \n";
+
+    if (errorType == "ParserError") {
+        errMsg += "File: " + args.xamlFile + "     \n";
+        errMsg += "Line: " + args.lineNumber + "     \n";
+        errMsg += "Position: " + args.charPosition + "     \n";
+    }
+    else if (errorType == "RuntimeError") {
+        if (args.lineNumber != 0) {
+            errMsg += "Line: " + args.lineNumber + "     \n";
+            errMsg += "Position: " + args.charPosition + "     \n";
+        }
+        errMsg += "MethodName: " + args.methodName + "     \n";
+    }
+
+    throw new Error(errMsg);
+}
+
+function LoadSilverlight() {
+    var divTag = document.createElement("div");       
+    divTag.id = "silverlightControlHost";
+    divTag.setAttribute("align","center");        
+    document.body.appendChild(divTag);
+    createSL();
+}
+
+function createSL() {
+
+//THIS OBJECT TAG I HAVE TAKEN FROM THE DIASPORA CODE THAT WE SENT YOU, IF YOU 
+//  HAVE DONE ANY CHANGE IN THIS OBJECT TAG, YOU HAVE TO MODIFY IN THIS STRING
+var object_data = "<object data='data:application/x-silverlight-2,' id='SLObj' type='application/x-silverlight-2' width='100%' height='99%' style='visibility: hidden;'><param name='source' value='/data/LSC.xap' /><param name='onError' value='onSilverlightError' /><param name='background' value='white' /><param name='minRuntimeVersion' value='4.0.50826.0' /><param name='autoUpgrade' value='true' /><param name='scalemode' value='Stretch' /><a href='http://go.microsoft.com/fwlink/?LinkID=149156&v=4.0.50826.0' style='text-decoration: none'><img src='http://go.microsoft.com/fwlink/?LinkId=161376' alt='Get Microsoft Silverlight' style='border-style: none' /></a></object><iframe id='_sl_historyFrame' style='visibility: hidden; height: 0px; width: 0px;border: 0px'></iframe>";
+    
+var slDIV = document.getElementById('silverlightControlHost');
+    if(slDIV == null || slDIV == undefined)
+    {
+        alert('Silverlight DIV not created.');
+    }
+    else
+    {
+        slDIV.innerHTML = object_data;
+    }
+}
+
+function ChangeState(controlIdStr) {
+    
+    //CODE TO LOAD THE XAP FILE ON THE FLY - YOU MAY HAVE TO MODIFY IT ACCORDING TO DIASPORA
+    
+    //CHECK IF LSC ALREADY LOADED - IF NO, THEN CALL LOADSILVERLIGHT()
+    var slObj = document.getElementById('SLObj');       
+    if(slObj == null || slObj == undefined)
+    {        
+        LoadSilverlight();
+    }
+
+    var controlsIdArr = controlIdStr.split(',');
+
+    //Variable to store the control values
+    var controlValString = "";
+
+    //Foreach control get its value (given by the user)
+    for (var controlId in controlsIdArr) {
+			  controlId = controlsIdArr[controlId]
+        var controlObj = document.getElementById(controlId);
+        if (controlObj != null) {
+            //add control value in - controlName$controlValue format
+            controlValString += controlId + "#$#" + controlObj.value;
+
+            //for multilple values use $$ as separator
+            controlValString += "#$#$#";
+        }
+    }
+    
+    //INVOKE THE LSC METHOD TO GET THE NEW INSTRUCTIONS, IF A RELOAD IS REQUIRED IT'LL BE DONE FROM INSIDE THE LSC
+    var control = document.getElementById("SLObj");
+    control.Content.Page.GetInstructions(controlValString);
+}
+</script>
+
+<div id="silverlightControlHost">
+  <object id="SLObj" data="data:application/x-silverlight-2," type="application/x-silverlight-2" width="100%" height="100%">
+    <param name="source" value="/data/LSC.xap" />
+    <param name="onError" value="onSilverlightError" />
+    <param name="background" value="white" />
+    <param name="minRuntimeVersion" value="4.0.50826.0" />
+    <param name="autoUpgrade" value="true" />
+    <param name="scalemode" value="Stretch" />
+    <a href="http://go.microsoft.com/fwlink/?LinkID=149156&v=4.0.50826.0" style="text-decoration: none">
+        <img src="http://go.microsoft.com/fwlink/?LinkId=161376" alt="Get Microsoft Silverlight" style="border-style: none" />
+    </a>
+  </object>
+  <iframe id="_sl_historyFrame" style="visibility: hidden; height: 0px; width: 0px;
+      border: 0px"></iframe>
+</div>
