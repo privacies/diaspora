@@ -42,11 +42,11 @@ user.save!
 user.person.save!
 user.seed_aspects
 
-user2 = User.build( :email => "sanchitg@gmail.com",
-                    :password => "sanchit",
-                    :password_confirmation => "sanchit",
-                     :username => "sanchit",
-                    :person => {:profile => { :first_name => "Sanchit", :last_name => "Garg",
+user2 = User.build( :email => "jrichardlai+diaspora@gmail.com",
+                    :password => "lfnadmin",
+                    :password_confirmation => "lfnadmin",
+                     :username => "jrichardlai",
+                    :person => {:profile => { :first_name => "Test", :last_name => "name",
                       :image_url => "/images/user/korth.jpg"}})
 
 

@@ -12,8 +12,18 @@ class HandlerController < ApplicationController
   
   def forward
     uri      = URI.parse("http://cxml.lfn.net/" + params[:file] + "." + params[:format])
-    response = Net::HTTP::get_response(uri)
-    logger.debug("Forward Handler TO #{uri}")
+    logger.debug("Forward Handler TO #{uri} : #{(time = Time.now).to_s}")
+    begin
+      # response = Net::HTTP::get_response(uri)
+      http = Net::HTTP.new(uri.host, uri.port)
+      http.open_timeout = 120 # in seconds
+      http.read_timeout = 120 # in seconds
+      response = http.start() {|http|
+        http.get(uri.path)
+      }
+    rescue Timeout::Error
+      logger.debug("Timeout for #{uri} : #{Time.now - time}")
+    end
     render :text => (response.nil? ? "EMPTY" : response.body)
   end
 
