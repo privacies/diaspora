@@ -5,7 +5,7 @@ module UserInterfaceComponentsHelper
   end
   
   def component_url(ui_component, action, params = {})
-    uic_url(Lfn::url_params(params).merge({:ui_component => ui_component, :action => action}))
+    uic_path(Lfn::url_params(params).merge({:ui_component => ui_component, :action => action}))
   end
   
 end
