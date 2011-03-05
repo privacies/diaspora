@@ -26,7 +26,7 @@ class AspectsController < ApplicationController
 
     # redirect to signup
     if (current_user.getting_started == true || @aspects.blank?) && !request.format.mobile?
-      redirect_to getting_started_path
+      redirect_to getting_started_path and return
     else
       if params[:sort_order].blank? and session[:sort_order].blank?
          session[:sort_order] = 'updated_at'
