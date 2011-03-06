@@ -20,9 +20,10 @@ class Lfn < UserInterfaceComponent
       target_aspect_ids = params[:target_aspect_ids].present? ? params[:target_aspect_ids] : params[:aspect_ids]
       user              = params[:user]
       
+      target_aspect_ids = target_aspect_ids.join(",") if target_aspect_ids.is_a? Array
       params               = "createPost/%{userId}/%{aspectIds}/%{aspectContacts}/%{message}/%{postUrl}/" % {
        :userId             => user.person.diaspora_handle.to_s,
-       :aspectIds          => target_aspect_ids.join(",").to_s,
+       :aspectIds          => target_aspect_ids,
        :aspectContacts     => get_aspect_contacts_from_ids(target_aspect_ids, user),
        :message            => message,
        :postUrl            => image_url
@@ -37,7 +38,7 @@ class Lfn < UserInterfaceComponent
       aspect_id       = params[:aspect_id]
       aspect_contacts = get_aspect_contacts(aspect_id, user).join(",").to_s
       
-      aspect_id  = aspect_id.join(',') if aspect_id.is_a? Array
+      aspect_id = aspect_id.join(',') if aspect_id.is_a? Array
       url_params = {:userId => user.person.diaspora_handle.to_s,
                     :aspectId => aspect_id.to_s,
                     :aspectContacts => aspect_contacts
