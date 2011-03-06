@@ -20,7 +20,9 @@ class StatusMessagesController < ApplicationController
     end
 
     if params[:PostControl].present?
-      params[:status_message][:control] = {:content => URI.decode(params[:PostControl].gsub('!', '%')) }
+      params[:status_message][:control_attributes] = {}
+      params[:status_message][:control_attributes][:content] = URI.decode(params[:PostControl].gsub('!', '%'))
+      params.delete(:PostControl)
     end
 
     target_aspect_ids = current_user.aspects.collect{|x| x.id} if target_aspect_ids == "all"
