@@ -74,6 +74,7 @@ Diaspora::Application.routes.draw do
 
   # route for uicomponnents
   match 'uic/:action/:ui_component', :to => 'user_interface_components#:action', :as => :uic
+  match 'update_uic_links', :to => 'user_interface_components#update_links'
 
   match 'localize', :to => "localize#show"
   match 'mobile/toggle', :to => 'home#toggle_mobile', :as => 'toggle_mobile'

@@ -13,12 +13,12 @@ class StatusMessage < Post
   xml_attr :raw_message
 
   has_many :photos, :dependent => :destroy
-  has_one  :controls, :dependent => :destroy, :class_name => 'PostControl'
-  accepts_nested_attributes_for :controls, :allow_destroy => true
+  has_one  :control, :dependent => :destroy, :class_name => 'PostControl'
+  accepts_nested_attributes_for :control, :allow_destroy => true
 
   validate :message_or_photos_present?
 
-  attr_accessible :message
+  attr_accessible :message, :control
 
   serialize :youtube_titles, Hash
   before_save do

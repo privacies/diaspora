@@ -37,14 +37,16 @@ class Lfn < UserInterfaceComponent
       aspect_id       = params[:aspect_id]
       aspect_contacts = get_aspect_contacts(aspect_id, user).join(",").to_s
       
-      url_params = {:siteOwner => 'bob',
-                    :userId => user.person.diaspora_handle.to_s,
+      aspect_id  = aspect_id.join(',') if aspect_id.is_a? Array
+      url_params = {:userId => user.person.diaspora_handle.to_s,
                     :aspectId => aspect_id.to_s,
-                    :aspectContacts => aspect_contacts,
-                    :currentUser => 'bob',
-                    :siteName => 'RRbob312201044',
-                    :token => 'd3d12e0e-7968-458e-92a5-f7ba583cb053',
-                    :lfnid => 'Ym9iIyQjVElDS0VUX2YxZTRjZjIxMGRhNzExMWNkYzI4OTk1ZjEyYTliNjllY2Q4ZjFjYjYjJCNib2JAMTIz'}
+                    :aspectContacts => aspect_contacts
+                    # :siteOwner => 'bob',
+                    # :currentUser => 'bob',
+                    # :siteName => 'RRbob312201044',
+                    # :token => 'd3d12e0e-7968-458e-92a5-f7ba583cb053',
+                    # :lfnid => 'Ym9iIyQjVElDS0VUX2YxZTRjZjIxMGRhNzExMWNkYzI4OTk1ZjEyYTliNjllY2Q4ZjFjYjYjJCNib2JAMTIz'
+                    }
     end
 
     ####################################################################################

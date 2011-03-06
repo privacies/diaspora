@@ -17,7 +17,7 @@
       = person_link(post.person)
 
     = render 'status_messages/status_message', :post => post, :photos => post.photos
-    = post.controls.content if post.controls
+    = raw post.control.content if post.control
     .info
       - if post.public?
         %span.aspect_badges

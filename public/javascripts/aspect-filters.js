@@ -125,6 +125,22 @@ $(document).ready(function(){
     performAspectUpdate("home");
   }
 
+  function updateUIComponentLinks(home){
+    var updateURL = '/update_uic_links?';
+    // generate new url
+    if(home == 'home'){
+      updateURL += 'aspect_ids=all';
+    } else {
+      for(i=0; i < selectedGUIDS.length; i++){
+        updateURL += 'aspect_ids[]='+ selectedGUIDS[i] +'&';
+      }
+    }
+    $.ajax({
+      url : updateURL,
+      type: "GET",
+      });
+  }
+
   function performAjax(newURL) {
     var post = $("#publisher textarea").val(),
         photos = {};
@@ -180,6 +196,7 @@ $(document).ready(function(){
           $("#aspect_stream_container").fadeTo(100, 1);
           $("#aspect_contact_pictures").fadeTo(100, 1);
           performAspectUpdate();
+					updateUIComponentLinks();
         }
       }
     });

@@ -1,0 +1,5 @@
+content = <<EOF
+  $('#ui_components_links').html("#{escape_javascript ui_components_links(@aspect_ids)}")
+EOF
+
+page << content

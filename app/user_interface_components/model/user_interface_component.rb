@@ -18,6 +18,8 @@ class UserInterfaceComponent
   def self.get_aspect_contacts(aspect_id, user)
     if (aspect_id == "all")
       target_aspects = user.aspects.collect{|x| x.id}
+    elsif aspect_id.is_a? Array
+      target_aspects = aspect_id
     else
       target_aspects = [aspect_id]
     end
