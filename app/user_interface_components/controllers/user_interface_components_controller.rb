@@ -1,4 +1,5 @@
 class UserInterfaceComponentsController < ApplicationController
+  before_filter :authenticate_user!
   
   before_filter :load_aspect_ids
 
