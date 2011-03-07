@@ -18,7 +18,7 @@ class StatusMessage < Post
 
   validate :message_or_photos_present?
 
-  attr_accessible :message, :control
+  attr_accessible :message, :control, :control_attributes
 
   serialize :youtube_titles, Hash
   before_save do
