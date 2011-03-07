@@ -1,4 +1,6 @@
 class UserInterfaceComponentsController < ApplicationController
+  
+  before_filter :load_aspect_ids
 
   def load
     @user_interface_component = UserInterfaceComponent::get(params[:ui_component])
@@ -9,6 +11,14 @@ class UserInterfaceComponentsController < ApplicationController
     @aspect_ids = params[:aspect_ids]
     respond_to do |format|
       format.js
+    end
+  end
+
+  def load_aspect_ids
+    if params[:aspectId] == 'all'
+      @aspect = :all
+    else
+      @object_aspect_ids = params[:aspectId].split(',').map(&:to_i)
     end
   end
 
