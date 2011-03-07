@@ -49,6 +49,8 @@ class PhotosController < ApplicationController
         params[:photo][:aspect_ids] = current_user.aspects.collect{|x| x.id}
       elsif params[:photo][:aspect_ids].is_a?(Hash)
         params[:photo][:aspect_ids] = params[:photo][:aspect_ids].values
+      else
+        params[:photo][:aspect_ids] = [params[:photo][:aspect_ids]]
       end
 
       params[:photo][:user_file] = file_handler(params)
