@@ -34,11 +34,13 @@ class Lfn < UserInterfaceComponent
 
     # Get the url params for the link
     def url_params(params = {})
-      user            = params[:user]
-      aspect_id       = params[:aspect_id]
-      aspect_contacts = get_aspect_contacts(aspect_id, user).join(",").to_s
-      
-      aspect_id = aspect_id.join(',') if aspect_id.is_a? Array
+      user                = params[:user]
+      aspect_id           = params[:aspect_id]
+      aspect_contacts     = get_aspect_contacts(aspect_id, user)
+
+      aspect_contacts     = aspect_contacts.join(",").to_s if aspect_contacts.is_a? Array
+      aspect_id           = aspect_id.join(',') if aspect_id.is_a? Array
+
       url_params = {:userId => user.person.diaspora_handle.to_s,
                     :aspectId => aspect_id.to_s,
                     :aspectContacts => aspect_contacts
