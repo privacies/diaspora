@@ -35,6 +35,9 @@ class StatusMessagesController < ApplicationController
     @status_message = current_user.build_post(:status_message, params[:status_message])
     aspects = current_user.aspects_from_ids(target_aspect_ids)
 
+    if !photos.empty?
+      @status_message.photos << photos
+    end
     if @status_message.save
       Rails.logger.info("event=create type=status_message chars=#{params[:status_message][:message].length}")
 
@@ -46,15 +49,13 @@ class StatusMessagesController < ApplicationController
       if !photos.empty?
         for photo in photos
           was_pending = photo.pending
-          photo.public = public_flag
-          photo.pending = false
-          @status_message.photos << photo
           if was_pending
             current_user.add_to_streams(photo, aspects)
             current_user.dispatch_post(photo)
             UserInterfaceComponent::run(:create_post, {:photo => photo, :post => @status_message, :target_aspect_ids => target_aspect_ids, :user => current_user})
           end
         end
+        photos.update_all(:pending => false, :public => public_flag)
       else
         UserInterfaceComponent::run(:create_post, {:post => @status_message, :target_aspect_ids => target_aspect_ids, :user => current_user})
       end
@@ -66,6 +67,9 @@ class StatusMessagesController < ApplicationController
       end
 
     else
+      if !photos.empty?
+        photos.update_all(:status_message_id => nil)
+      end
       respond_to do |format|
         format.js { render :json =>{:errors =>   @status_message.errors.full_messages}, :status => 406 }
         format.html {redirect_to :back}
