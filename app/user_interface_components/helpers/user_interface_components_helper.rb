@@ -1,5 +1,6 @@
 module UserInterfaceComponentsHelper
   def ui_components_links(aspect_id = 'all')
+    aspect_id = aspect_id.nil? ? 'all' : aspect_id
     link_to "Lfn", component_url('lfn', 'load', {:aspect_id => aspect_id, :user => current_user})
   end
   
