@@ -72,10 +72,7 @@ class PhotosController < ApplicationController
                            :image_url_small => @photo.url(:thumb_small)}
           current_user.update_profile(profile_params)
         end
-
-        respond_to do |format|
-          format.json{ render(:layout => false , :json => {"success" => true, "data" => @photo}.to_json )}
-        end
+        render :layout => false, :json => {"success" => true, "data" => @photo}.to_json
       else
         respond_with @photo, :location => photos_path, :error => message
       end
