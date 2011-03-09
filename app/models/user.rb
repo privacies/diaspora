@@ -281,6 +281,10 @@ class User < ActiveRecord::Base
     OpenSSL::PKey::RSA.new(serialized_private_key)
   end
 
+  def to_api_json
+    {:first_name => first_name, :last_name => last_name, :diaspora_handle => diaspora_handle, :username => username}
+  end
+
   protected
 
   def remove_person
