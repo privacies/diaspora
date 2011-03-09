@@ -27,6 +27,8 @@ en:
   search: "Search"
   new_notifications: "%{count} new notifications"
   no_new_notifications: "no new notifications"
+  new_messages: "%{count} new messages"
+  no_new_messages: "no new messages"
   _home: "Home"
   _more: "More"
   _comments: "Comments"
@@ -112,6 +114,7 @@ en:
         your_aspects: "your aspects"
         logged_in_as: "logged in as %{name}"
         toggle: "toggle mobile site"
+        public_feed: "Public Diaspora Feed for %{name}"
   shared:
       publisher:
           mention_helper_text: "to mention someone, press '@' and start typing their name"
@@ -246,7 +249,7 @@ en:
           your_email: "Your email"
           edit_account: "Edit account"
           email_notifications: "Email notifications"
-          receive_email_notifications: "Receive email notificaions?"
+          receive_email_notifications: "Receive email notifications?"
           change: "Change"
       destroy: "Account successfully closed."
       getting_started:
@@ -403,7 +406,7 @@ en:
           recent_public_posts: "Recent Public Posts"
           similar_contacts: "similar contacts"
           start_sharing: "start sharing"
-
+          message: "Message"
       profile_sidebar:
           remove_contact: "remove contact"
           edit_my_profile: "Edit my profile"
@@ -488,6 +491,11 @@ en:
           subject: "%{name} has mentioned you on Diaspora*"
           mentioned: "mentioned you in a post:"
           sign_in: "Sign in to view it."
+      private_message:
+          subject: "%{name} has sent you a private message yon Diaspora*"
+          private_message: "has sent you a private message:"
+          message_subject: "Subject: %{subject}"
+          sign_in: "Sign in to view it."
   home:
       show:
           share_what_you_want: "Share what you want, with whom you want."
@@ -519,3 +527,17 @@ en:
           fullmonth_day: "%B %d"
           birthday: "%B %d"
           birthday_with_year: "%B %d %Y"
+  conversations:
+      index:
+          message_inbox: "Message Inbox"
+          new_message: "New Message"
+          no_conversation_selected: "no conversation selected"
+          create_a_new_message: "create a new message"
+          no_messages: "no messages"
+      show:
+          reply: "reply"
+      new:
+          to: "to"
+          subject: "subject"
+          send: "Send"
+          no_results: "No Results Found"

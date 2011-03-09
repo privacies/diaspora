@@ -26,7 +26,7 @@ class Person < ActiveRecord::Base
   end
 
   has_many :contacts #Other people's contacts for this person
-  has_many :posts #his own posts
+  has_many :posts, :foreign_key => :author_id #his own posts
 
   belongs_to :owner, :class_name => 'User'
 
@@ -93,8 +93,8 @@ class Person < ActiveRecord::Base
               end
   end
 
-  def owns?(post)
-    self == post.person
+  def owns?(obj)
+    self == obj.author
   end
 
   def url
@@ -114,7 +114,12 @@ class Person < ActiveRecord::Base
   end
 
   def public_url
-    "#{url}public/#{self.owner.username}"
+    if self.owner
+      username = self.owner.username
+    else
+      username = self.diaspora_handle.split("@")[0]
+    end
+    "#{url}public/#{username}"
   end
 
   def public_key_hash

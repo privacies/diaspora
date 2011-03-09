@@ -30,7 +30,7 @@ class PhotosController < ApplicationController
       end
 
       @posts = current_user.visible_photos.where(
-        :person_id => @person.id
+        :author_id => @person.id
       ).paginate(:page => params[:page])
 
       render 'people/show'
@@ -93,8 +93,8 @@ class PhotosController < ApplicationController
   end
 
   def make_profile_photo
-    person_id = current_user.person.id
-    @photo = Photo.where(:id => params[:photo_id], :person_id => person_id).first
+    author_id = current_user.person.id
+    @photo = Photo.where(:id => params[:photo_id], :author_id => author_id).first
 
     if @photo
       profile_hash = {:image_url        => @photo.url(:thumb_large),
@@ -107,7 +107,7 @@ class PhotosController < ApplicationController
                                        :image_url => @photo.url(:thumb_large),
                                        :image_url_medium => @photo.url(:thumb_medium),
                                        :image_url_small  => @photo.url(:thumb_small),
-                                       :person_id => person_id},
+                                       :author_id => author_id},
                             :status => 201}
         end
       else
@@ -138,8 +138,8 @@ class PhotosController < ApplicationController
   end
 
   def show
-    @photo = current_user.visible_photos.where(:id => params[:id]).includes(:person, :status_message => :photos).first
-    @photo ||= Photo.where(:public => true, :id => params[:id]).includes(:person, :status_message => :photos).first
+    @photo = current_user.visible_photos.where(:id => params[:id]).includes(:author, :status_message => :photos).first
+    @photo ||= Photo.where(:public => true, :id => params[:id]).includes(:author, :status_message => :photos).first
     if @photo
       @parent = @photo.status_message
 
