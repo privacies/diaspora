@@ -10,7 +10,7 @@ Diaspora::Application.routes.draw do
   match "handler/:file.:format" => 'handler#forward', :constraints => { :file => /.*/, :format => /(jpg)|(dzc)|(dzi)/ }
   get "handler/:request", :to => 'handler#call', :defaults => { :format => 'xml' }
 
-  post "api/:request", :to => 'api#call', :defaults => { :format => 'json' }
+  match "api/:request", :to => 'api#call', :defaults => { :format => 'json' }
 
   resources :status_messages, :only => [:create, :destroy, :show]
   resources :comments,        :only => [:create]
