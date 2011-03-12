@@ -6,6 +6,11 @@ require 'spec_helper'
 
 
 describe StatusMessage do
+  include ActionView::Helpers::UrlHelper
+  include Rails.application.routes.url_helpers
+  def controller
+    mock()
+  end
 
   before do
     @user = alice
@@ -16,6 +21,11 @@ describe StatusMessage do
     it 'calls create_mentions' do
       status = Factory.build(:status_message)
       status.should_receive(:create_mentions)
+      status.save
+    end
+    it 'calls build_tags' do
+      status = Factory.build(:status_message)
+      status.should_receive(:build_tags)
       status.save
     end
   end
@@ -63,12 +73,6 @@ describe StatusMessage do
   end
 
   describe 'mentions' do
-    def controller
-      mock()
-    end
-
-    include ActionView::Helpers::UrlHelper
-    include Rails.application.routes.url_helpers
     before do
       @people = [alice, bob, eve].map{|u| u.person}
       @test_string = <<-STR
@@ -78,9 +82,9 @@ STR
       @sm = Factory.create(:status_message, :message => @test_string )
     end
 
-    describe '#formatted_message' do
+    describe '#format_mentions' do
       it 'adds the links in the formated message text' do
-        @sm.formatted_message.should == <<-STR
+        @sm.format_mentions(@sm.raw_message).should == <<-STR
 #{link_to('@' << @people[0].name, person_path(@people[0]), :class => 'mention')} can mention people like Raphael #{link_to('@' << @people[1].name, person_path(@people[1]), :class => 'mention')}
 can mention people like Raphaellike Raphael #{link_to('@' << @people[2].name, person_path(@people[2]), :class => 'mention')} can mention people like Raph
 STR
@@ -89,13 +93,13 @@ STR
       context 'with :plain_text option' do
         it 'removes the mention syntax and displays the unformatted name' do
           status  = Factory(:status_message, :message => "@{Barack Obama; barak@joindiaspora.com } is so cool @{Barack Obama; barak@joindiaspora.com } ")
-          status.formatted_message(:plain_text => true).should == 'Barack Obama is so cool Barack Obama '
+          status.format_mentions(status.raw_message, :plain_text => true).should == 'Barack Obama is so cool Barack Obama '
         end
       end
 
       it 'leaves the name of people that cannot be found' do
         @sm.stub(:mentioned_people).and_return([])
-        @sm.formatted_message.should == <<-STR
+        @sm.format_mentions(@sm.raw_message).should == <<-STR
 Raphael can mention people like Raphael Ilya
 can mention people like Raphaellike Raphael Daniel can mention people like Raph
 STR
@@ -103,10 +107,15 @@ STR
       it 'escapes the link title' do
         p = @people[0].profile
         p.first_name="</a><script>alert('h')</script>"
+["a", "b", "A", "C"]\
+.inject(Hash.new){ |h,element| h[element.downcase] = element  unless h[element.downcase]  ; h }\
+.values
         p.save!
 
-        @sm.formatted_message.should_not include(@people[0].profile.first_name)
+        @sm.format_mentions(@sm.raw_message).should_not include(@people[0].profile.first_name)
       end
+    end
+    describe '#formatted_message' do
       it 'escapes the message' do
         xss = "</a> <script> alert('hey'); </script>"
         @sm.message << xss
@@ -165,6 +174,60 @@ STR
       end
     end
   end
+  describe 'tags' do
+    before do
+      @sm = Factory.build(:status_message)
+    end
+    describe '#format_tags' do
+      before do
+        @str = '#what #hey'
+        @sm.message = @str
+        @sm.build_tags
+        @sm.save
+        @sm.reload
+      end
+      it 'links the tag to /p' do
+        link = link_to('#what', posts_path(:tag => 'what'), :class => 'tag')
+        @sm.format_tags(@str).should include(link)
+      end
+      it 'responds to plain_text' do
+        @sm.format_tags(@str, :plain_text => true).should == @str
+      end
+    end
+    describe '#build_tags' do
+      it 'builds the tags' do
+        @sm.message = '#what'
+        @sm.build_tags
+        @sm.tag_list.should == ['what']
+        lambda {
+          @sm.save
+        }.should change{@sm.tags.count}.by(1)
+      end
+    end
+    describe '#tag_strings' do
+      it 'returns a string for every #thing' do
+        str = '#what #hey #that"smybike. #@hey ##boo # #THATWASMYBIKE #hey#there #135440we #abc/23 ###'
+        arr = ['what', 'hey', 'that', 'THATWASMYBIKE', '135440we', 'abc']
+
+        @sm.message = str
+        @sm.tag_strings.should =~ arr
+      end
+      it 'returns no duplicates' do
+        str = '#what #what #what #whaaaaaaaaaat'
+        arr = ['what','whaaaaaaaaaat']
+
+        @sm.message = str
+        @sm.tag_strings.should =~ arr
+      end
+      it 'is case insensitive' do
+        str = '#what #wHaT #WHAT'
+        arr = ['what']
+
+        @sm.message = str
+        @sm.tag_strings.should =~ arr
+      end
+    end
+  end
   describe "XML" do
     before do
       @message = Factory.create(:status_message, :message => "I hate WALRUSES!", :author => @user.person)
@@ -199,6 +262,13 @@ STR
         @marshalled.diaspora_handle.should == @message.diaspora_handle
       end
     end
+
+
+    describe '#to_activity' do
+      it 'should render a string' do
+        @message.to_activity.should_not be_blank
+      end
+    end
   end
 
   describe 'youtube' do
@@ -216,27 +286,6 @@ STR
 
       post.save!
       Post.find(post.id).youtube_titles.should == {video_id => CGI::escape(expected_title)}
-    end
-  end
-
-  describe '#public_message' do
-    before do
-      message = ""
-      440.times{message << 'd'}
-      @status_message = @user.post(:status_message, :message => message, :to => @aspect.id)
-    end
-
-    it 'truncates the message' do
-      @status_message.public_message(140).length.should == 140
-      @status_message.public_message(420).length.should == 420
-    end
-
-    it 'has the correct length if a url is present' do
-      @status_message.public_message(140, "a_url_goes_here").length.should == 140
-    end
-
-    it 'adds the public link if present' do
-      @status_message.public_message(140, "/p/#{@status_message.id}").should include "/p/#{@status_message.id}"
     end
   end
 end

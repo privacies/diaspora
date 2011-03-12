@@ -215,6 +215,22 @@ describe User do
       end
     end
   end
+  
+  describe 'update_user_preferences' do
+    it 'unsets disable mail and makes the right amount of prefs' do
+      alice.disable_mail = true
+      proc {
+        alice.update_user_preferences({})
+      }.should change(alice.user_preferences, :count).by(6)
+    end
+    it 'still sets new prefs to false on update' do
+      alice.disable_mail = true
+      proc {
+        alice.update_user_preferences({'mentioned' => false})
+      }.should change(alice.user_preferences, :count).by(5)
+    end
+
+  end
 
   describe ".find_for_authentication" do
     it 'finds a user' do
@@ -314,6 +330,34 @@ describe User do
       Postzord::Dispatch.should_receive(:new).and_return(m)
       photo = alice.build_post(:photo, :user_file => uploaded_photo, :caption => "hello", :to => alice.aspects.first.id)
       alice.update_post(photo, :caption => 'hellp')
+    end
+  end
+
+  describe '#notify_if_mentioned' do
+    before do
+      @post = Factory.create(:status_message, :author => bob.person)
+    end
+
+    it 'notifies the user if the incoming post mentions them' do
+      @post.should_receive(:mentions?).with(alice.person).and_return(true)
+      @post.should_receive(:notify_person).with(alice.person)
+
+      alice.notify_if_mentioned(@post)
+    end
+
+    it 'does not notify the user if the incoming post does not mention them' do
+      @post.should_receive(:mentions?).with(alice.person).and_return(false)
+      @post.should_not_receive(:notify_person)
+
+      alice.notify_if_mentioned(@post)
+    end
+
+    it 'does not notify the user if the post author is not a contact' do
+      @post = Factory.create(:status_message, :author => eve.person)
+      @post.stub(:mentions?).and_return(true)
+      @post.should_not_receive(:notify_person)
+
+      alice.notify_if_mentioned(@post)
     end
   end
 
@@ -422,11 +466,8 @@ describe User do
       alice.mail(Job::MailRequestReceived, alice.id, 'contactrequestid')
     end
 
-    it 'does not enqueue a mail job' do
-      alice.disable_mail = true
-      alice.save
-      alice.reload
-
+    it 'does not enqueue a mail job if the correct corresponding job has a prefrence entry' do
+      alice.user_preferences.create(:email_type => 'request_received')
       Resque.should_not_receive(:enqueue)
       alice.mail(Job::MailRequestReceived, alice.id, 'contactrequestid')
     end

@@ -5,20 +5,19 @@
 require 'spec_helper'
 
 describe Mention do
-  describe 'before create' do
+  describe "#notify_recipient" do
     before do
       @user = alice
       @aspect1 = @user.aspects.create(:name => 'second_aspect')
       @mentioned_user = bob
       @non_friend = eve
 
-      @sm =  Factory(:status_message)
-      @m  = Mention.new(:person => @user.person, :post=> @sm)
-
+      @sm = @user.build_post(:status_message, :message => "hi @{#{@mentioned_user.name}; #{@mentioned_user.diaspora_handle}}", :to => @user.aspects.first)
     end
+
     it 'notifies the person being mentioned' do
-      Notification.should_receive(:notify).with(@user, anything(), @sm.author)
-      @m.save
+      Notification.should_receive(:notify).with(@mentioned_user, anything(), @sm.author)
+      @sm.receive(@mentioned_user, @mentioned_user.person)
     end
 
     it 'should not notify a user if they do not see the message' do
@@ -28,7 +27,6 @@ describe Mention do
       sm2 = @user.post(:status_message, :message => "stuff @{#{@non_friend.name}; #{@non_friend.diaspora_handle}}", :to => @user.aspects.first)
       sm2.receive(@non_friend, @non_friend.person)
     end
-
   end
 
   describe '#notification_type' do
@@ -40,8 +38,11 @@ describe Mention do
   describe 'after destroy' do
     it 'destroys a notification' do
       @user = alice
-      @sm =  Factory(:status_message)
-      @m  = Mention.create(:person => @user.person, :post=> @sm)
+      @mentioned_user = bob
+
+      @sm =  @user.post(:status_message, :message => "hi", :to => @user.aspects.first)
+      @m  = Mention.create!(:person => @mentioned_user.person, :post => @sm)
+      @m.notify_recipient
 
       lambda{
         @m.destroy

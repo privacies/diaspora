@@ -28,7 +28,7 @@ Diaspora::Application.routes.draw do
 
   match 'notifications/read_all' => 'notifications#read_all'
   resources :notifications,   :only => [:index, :update]
-  resources :posts,           :only => [:show], :path => '/p/'
+  resources :posts,           :only => [:show, :index], :path => '/p/'
 
   resources :contacts
   resources :aspect_memberships, :only => [:destroy, :create]
@@ -60,7 +60,7 @@ Diaspora::Application.routes.draw do
 
 
   # added public route to user
-  match 'public/:username',          :to => 'users#public'
+  match 'public/:username',          :to => 'users#public', :as => 'users_public'
   match 'getting_started',           :to => 'users#getting_started', :as => 'getting_started'
   match 'getting_started_completed', :to => 'users#getting_started_completed'
   match 'users/export',              :to => 'users#export'
@@ -73,7 +73,9 @@ Diaspora::Application.routes.draw do
   match 'aspects/remove_from_aspect',:to => 'aspects#remove_from_aspect', :as => 'remove_from_aspect'
   match 'aspects/manage',            :to => 'aspects#manage'
   match 'aspects/lfn',               :to => 'aspects#lfn'
-  resources :aspects
+  resources :aspects do
+    match '/toggle_contact_visibility', :to => 'aspects#toggle_contact_visibility'
+  end
 
   #public routes
   match 'webfinger',            :to => 'publics#webfinger'

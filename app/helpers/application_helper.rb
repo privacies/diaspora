@@ -21,13 +21,13 @@ module ApplicationHelper
 
   def aspects_with_post aspects, post
     aspects.select do |aspect|
-      aspect.post_visibilities.detect{|pv| pv.post_id == post.id}
+      PostVisibility.exists?(:aspect_id => aspect.id, :post_id => post.id)
     end
   end
 
   def aspects_without_post aspects, post
     aspects.reject do |aspect|
-      aspect.post_visibilities.detect{|pv| pv.post_id == post.id}
+      PostVisibility.exists?(:aspect_id => aspect.id, :post_id => post.id)
     end
   end
 
@@ -129,7 +129,7 @@ module ApplicationHelper
   end
 
   def person_image_tag(person, size=:thumb_small)
-    "<img alt=\"#{h(person.name)}\" class=\"avatar\" #{("data-owner_id="+@user_id.to_s) if @user_id} data-person_id=\"#{person.id}\" src=\"#{person.profile.image_url(size)}\" title=\"#{h(person.name)}\">".html_safe
+    "<img alt=\"#{h(person.name)}\" class=\"avatar\" data-person_id=\"#{person.id}\" src=\"#{person.profile.image_url(size)}\" title=\"#{h(person.name)}\">".html_safe
   end
 
   def person_link(person, opts={})
@@ -165,10 +165,11 @@ module ApplicationHelper
     end
 
     message = process_links(message)
-    message = process_youtube(message, options[:youtube_maps])
-    message = process_vimeo(message, options[:vimeo_maps])
     message = process_autolinks(message)
     message = process_emphasis(message)
+    message = process_youtube(message, options[:youtube_maps])
+    message = process_vimeo(message, options[:vimeo_maps])
+    
     message.gsub!(/&lt;3/, "&hearts;")
 
     if options[:newlines]
@@ -215,7 +216,7 @@ module ApplicationHelper
       else
         title = I18n.t 'application.helper.video_title.unknown'
       end
-      '<a class="video-link" data-host="youtube.com" data-video-id="' + video_id + '" href="'+ match_data[0].strip + '">Youtube: ' + title + '</a>'
+      ' <a class="video-link" data-host="youtube.com" data-video-id="' + video_id + '" href="'+ match_data[0].strip + '" target="_blank">Youtube: ' + title + '</a>'
     end
     return processed_message
   end
@@ -262,7 +263,7 @@ module ApplicationHelper
       else
         title = I18n.t 'application.helper.video_title.unknown'
       end
-      '<a class="video-link" data-host="vimeo.com" data-video-id="' + video_id + '" href="' + match_data[0] + '">Vimeo: ' + title + '</a>'
+      ' <a class="video-link" data-host="vimeo.com" data-video-id="' + video_id + '" href="' + match_data[0] + '" target="_blank">Vimeo: ' + title + '</a>'
     end
     return processed_message
   end

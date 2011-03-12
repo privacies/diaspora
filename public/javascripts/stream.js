@@ -10,7 +10,15 @@ var Stream = {
 
     Diaspora.widgets.timeago.updateTimeAgo();
     $stream.not(".show").delegate("a.show_post_comments", "click", Stream.toggleComments);
+    //audio linx
+    $(".stream a[target='_blank']").each(function(){
+      if($(this).attr('href').match(/\.mp3$|\.ogg$/)) {
+        $(this).parent().html("<audio src='" + this.href + "' controls='controls'>mom</audio>");}
+    });
 
+    $('.thumbs img').live('hover', function(){
+      Stream.replaceKeyPhoto($(this));
+    });
     // comment link form focus
     $stream.delegate(".focus_comment_textarea", "click", function(e){
       Stream.focusNewComment($(this), e);
@@ -52,7 +60,6 @@ var Stream = {
     });
 
     $(".new_status_message").live('ajax:success', function(data, json, xhr) {
-      json = $.parseJSON(json);
       WebSocketReceiver.addPostToStream(json.post_id, json.html);
       //collapse publisher
       Publisher.close();
@@ -122,7 +129,19 @@ var Stream = {
         commentBlock.find('textarea').focus();
       }
     }
+  },
+
+  replaceKeyPhoto: function(photo){
+    var show_url = photo.parent().first()[0].href
+    var img_url = photo.first()[0].src;
+    var large_url = img_url.replace("thumb_small", "scaled_full");
+    var key_photo = photo.parent().parent().siblings('.key_photo')
+    var key_photo_img = key_photo.find('img');
+    key_photo_img.attr('height', key_photo_img.height());
+    key_photo_img.attr('src', large_url);
+    key_photo.find('a').attr('href', show_url);
   }
+
 };
 
 $(document).ready(Stream.initialize);

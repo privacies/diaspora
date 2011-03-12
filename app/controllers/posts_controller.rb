@@ -3,12 +3,29 @@
 #   the COPYRIGHT file.
 
 class PostsController < ApplicationController
-  skip_before_filter :set_contacts_notifications_unread_count_and_status
   skip_before_filter :count_requests
   skip_before_filter :set_invites
-  skip_before_filter :set_locale
   skip_before_filter :which_action_and_user
   skip_before_filter :set_grammatical_gender
+
+  def index
+    if current_user
+      @posts = StatusMessage.joins(:aspects).where(:pending => false
+               ).where(Aspect.arel_table[:user_id].eq(current_user.id).or(StatusMessage.arel_table[:public].eq(true))
+               ).select('DISTINCT `posts`.*')
+    else
+      @posts = StatusMessage.where(:public => true, :pending => false)
+    end
+
+    params[:tag] ||= 'partytimeexcellent'
+
+    @posts = @posts.tagged_with(params[:tag])
+    @posts = @posts.includes(:comments, :photos).paginate(:page => params[:page], :per_page => 15, :order => 'created_at DESC')
+
+    @fakes = PostsFake.new(@posts)
+    @commenting_disabled = true
+    @pod_url = AppConfig[:pod_uri].host
+  end
 
   def show
     @post = Post.where(:id => params[:id], :public => true).includes(:author, :comments => :author).first

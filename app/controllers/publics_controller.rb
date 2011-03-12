@@ -6,10 +6,9 @@ class PublicsController < ApplicationController
   require File.join(Rails.root, '/lib/diaspora/parser')
   include Diaspora::Parser
 
-  skip_before_filter :set_contacts_notifications_unread_count_and_status, :except => [:create, :update]
+  skip_before_filter :set_header_data
   skip_before_filter :count_requests
   skip_before_filter :set_invites
-  skip_before_filter :set_locale
   skip_before_filter :which_action_and_user
   skip_before_filter :set_grammatical_gender
 
@@ -39,9 +38,7 @@ class PublicsController < ApplicationController
   end
 
   def hub
-    if params['hub.mode'] == 'subscribe' || params['hub.mode'] == 'unsubscribe'
-      render :text => params['hub.challenge'], :status => 202, :layout => false
-      end
+    render :text => params['hub.challenge'], :status => 202, :layout => false
   end
 
   def receive

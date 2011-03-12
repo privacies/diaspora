@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Diaspora: Getting Started</title>
+    <style type="text/css" media="screen">
+      body {
+        margin: 0;
+        margin-bottom: 25px;
+        margin-top: 2em;
+        padding: 0;
+        background-color: #fff;
+        font-family: 'Helvetica Neue', Arial, Helvetica, sans-serif;
+        font-size: 13px;
+        color: #333;
+      }
+
+      h1 {
+        font-size: 28px;
+        color: #000;
+        text-shadow: #999 0px 1px 3px;
+      }
+
+      a {
+        color: #3F8FBA;
+      }
+
+      #page {
+        background-color: #f0f0f0;
+        width: 950px;
+        margin: 0 auto;
+      }
+
+      #content {
+        float: left;
+        background-color: white;
+        border: 1px solid #ddd;
+        border-top: none;
+        padding: 25px;
+        width: 700px;
+      }
+
+      #sidebar {
+        float: right;
+        width: 175px;
+      }
+
+      #footer {
+        clear: both;
+        height: 0;
+      }
+
+      #header, #about, #getting-started {
+        padding-left: 25px;
+        padding-right: 30px;
+      }
+
+      #about h3 {
+        margin: 0;
+        margin-bottom: 10px;
+        font-size: 14px;
+      }
+
+      #about-content {
+        background-color: #ffd;
+        border: 1px solid #fc0;
+      }
+
+      #about-content table {
+        margin-top: 10px;
+        margin-bottom: 10px;
+        font-size: 11px;
+        border-collapse: collapse;
+      }
+
+      #about-content ul {
+        padding: 0;
+        list-style-type: none;
+      }
+
+      #about-content.failure p {
+        margin: 0;
+        padding: 10px;
+      }
+
+
+      #getting-started {
+        border-top: 1px solid #ccc;
+        margin-top: 25px;
+        padding-top: 15px;
+      }
+      
+      #getting-started h1 {
+        margin-bottom: 10px;
+        font-size: 20px;
+      }
+      #getting-started h2 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: normal;
+        color: #333;
+      }
+
+      #getting-started ol {
+        margin-left: 0;
+        padding-left: 0;
+      }
+
+      #getting-started li {
+        margin-bottom: 5px;
+      }
+
+      #getting-started li h2 {
+        margin: 0;
+        font-weight: bold;
+        font-size: 18px;
+        color: #333;
+      }
+      #getting-started li p {
+        color: #555;
+        font-size: 13px;
+      }
+
+
+      #sidebar ul {
+        margin-left: 0;
+        padding-left: 0;
+      }
+      #sidebar ul h3 {
+        margin-top: 25px;
+        font-size: 16px;
+        padding-bottom: 10px;
+        border-bottom: 1px solid #ccc;
+      }
+      #sidebar li {
+        list-style-type: none;
+      }
+      #sidebar ul.links li {
+        margin-bottom: 5px;
+      }
+
+    </style>
+    <script type="text/javascript">
+      function about() {
+        info = document.getElementById('about-content');
+        if (window.XMLHttpRequest)
+          { xhr = new XMLHttpRequest(); }
+        else
+          { xhr = new ActiveXObject("Microsoft.XMLHTTP"); }
+        xhr.open("GET","rails/info/properties",false);
+        xhr.send("");
+        info.innerHTML = xhr.responseText;
+        info.style.display = 'block'
+      }
+    </script>
+  </head>
+  <body>
+    <div id="page">
+      <div id="content">
+        <div id="header">
+          <h1>Looking Good!</h1>
+          <h2>Welcome to Diaspora!</h2>
+        </div>
+
+        <div id="about">
+          <h3><a href="rails/info/properties" onclick="about(); return false;">About your pod&rsquo;s environment</a></h3>
+          <div id="about-content" style="display: none"></div>
+        </div>
+
+        <div id="getting-started">
+          <h1>Getting started</h1>
+          <h2>Here&rsquo;s how to get rolling:</h2>
+
+          <ol>
+            <li>
+              <h2>check all of your settings!</h2>
+              <p>look at config/app_config.yml.example for help</p>
+            </li>
+
+            <li>
+              <h2>Make a new user!</h2>
+              <p>click on the login link to make it happen</p>
+            </li>
+
+            <li>
+              <h2>Tell us what you think!</h2>
+              <p>make bug reports, feature requests at: <a href="http://bugs.joindiaspora.com">our bug tracker </a></p>
+            </li>
+          </ol>
+        </div>
+      </div>
+
+      <div id="sidebar">
+        <ul id="sidebar-items">
+          <li>
+            <h3>Browse the documentation</h3>
+            <ul class="links">
+              <li><a href="http://github.com/diaspora/diaspora/">Diaspora Github</a></li>
+              <li><a href="http://github.com/diaspora/diaspora/wiki">Diaspora Wiki</a></li>
+              <li><a href="http://webchat.freenode.net/?channels=diaspora">Diaspora IRC</a></li>
+              <li><a href="http://bugs.joindiaspora.com/">Diaspora Bug Tracker</a></li>
+              <li><a href="http://groups.google.com/group/diaspora-discuss">User Mailing List</a></li>
+              <li><a href="http://groups.google.com/group/diaspora-dev">Dev Mailing List</a></li>
+              <li><a href="http://getsatisfaction.com/diaspora/">Get Satisfaction</a></li>
+              <li><a href="http://guides.rubyonrails.org/">Learn more about Ruby On Rails!</a></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <div id="footer">&nbsp;</div>
+    </div>
+  </body>
+</html>

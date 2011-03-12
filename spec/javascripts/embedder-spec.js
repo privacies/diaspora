@@ -45,6 +45,17 @@ describe("Diaspora", function() {
           expect($.fn.delegate).toHaveBeenCalledWith("a.video-link", "click", Diaspora.widgets.embedder.onVideoLinkClicked);
         });
       });
+
+
+      it("has to have a certain DOM structure", function() {
+        spec.loadFixture("aspects_index_with_posts");
+
+        var $post = $("#main_stream").children(".stream_element:first"),
+          $contentParagraph = $post.children(".content").children(".from").children("p"),
+          $infoDiv = $contentParagraph.closest(".from").siblings(".info");
+
+        expect($infoDiv.length).toEqual(1);
+      });
     });
   });
 });

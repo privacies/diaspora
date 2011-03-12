@@ -67,6 +67,11 @@ describe AspectsController do
       get :index, :prefill => "reshare things"
       save_fixture(html_for("body"), "aspects_index_services")
     end
+    it 'generates a jasmine fixture with posts' do
+      @user.post(:status_message, :message => "hello", :to => @aspect1.id)
+      get :index
+      save_fixture(html_for("body"), "aspects_index_with_posts")
+    end
     context 'filtering' do
       before do
         @posts = []
@@ -279,6 +284,26 @@ describe AspectsController do
 
   describe "#hashes_for_posts" do
     it 'returns only distinct people' do
+      pending
     end
+  end
+
+  describe "#toggle_contact_visibility" do
+    it 'sets contacts visible' do
+      @aspect0.contacts_visible = false
+      @aspect0.save
+
+      get :toggle_contact_visibility, :format => 'js', :aspect_id => @aspect0.id
+      @aspect0.reload.contacts_visible.should be_true
+    end
+
+    it 'sets contacts hidden' do
+      @aspect0.contacts_visible = true
+      @aspect0.save
+
+      get :toggle_contact_visibility, :format => 'js', :aspect_id => @aspect0.id
+      @aspect0.reload.contacts_visible.should be_false
+    end
+
   end
 end
