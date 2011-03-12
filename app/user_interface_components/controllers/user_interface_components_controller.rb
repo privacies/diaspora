@@ -15,6 +15,8 @@ class UserInterfaceComponentsController < ApplicationController
     end
   end
 
+  private
+
   def load_aspect_ids
     if params[:aspectId] == 'all'
       @aspect = :all

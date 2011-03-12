@@ -10,7 +10,6 @@ class StatusMessagesController < ApplicationController
   respond_to :json, :only => :show
 
   def create
-
     if params[:aspect_ids].present?
       target_aspect_ids = params[:aspect_ids]
     elsif params[:status_message] and params[:status_message][:aspect_ids].present?
@@ -19,9 +18,10 @@ class StatusMessagesController < ApplicationController
       target_aspect_ids = 'all'
     end
 
+    # TODO remove when the LSC will be updated
     if params[:PostControl].present?
       params[:status_message][:control_attributes] = {}
-      params[:status_message][:control_attributes][:content] = URI.decode(params[:PostControl].gsub('!', '%'))
+      params[:status_message][:control_attributes][:content] = params[:PostControl]
       params.delete(:PostControl)
     end
 

@@ -1,6 +1,7 @@
 class UserInterfaceComponent
 
   EMPTY_VALUE = 'none'
+  @@components = {}
 
   #Preload all ui components
   def self.load_components(force_reload = false)
@@ -48,5 +49,15 @@ class UserInterfaceComponent
   def view_file
     self.class.downcase
   end
+
+  def self.invoke_3rd_party_service(params = {})
+    @service_url = params[:service_url]
+    @method      = params[:method]
+    @params      = params[:params]
+
+    response = Net::HTTP.post_form(URI.parse(@service_url), {:method => @method, :params => @params})
+    response.body
+  end
+
 
 end

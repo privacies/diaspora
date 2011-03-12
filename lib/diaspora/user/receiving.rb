@@ -186,7 +186,7 @@ module Diaspora
         self.raw_visible_posts << post
         self.save
         
-        UserInterfaceComponent::run(:received_posts, :post => post)
+        UserInterfaceComponent::run(:receive_post, :post => post)
         
         aspects = self.aspects_with_person(post.person)
         aspects.each do |aspect|

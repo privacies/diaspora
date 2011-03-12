@@ -26,7 +26,7 @@ class Aspect < ActiveRecord::Base
   end
 
   def to_api_json
-    to_json(:only => [:id, :name])
+    {:id => id, :name => name}
   end
 
 end

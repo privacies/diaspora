@@ -4,11 +4,13 @@
 
 Diaspora::Application.routes.draw do
 
-  #redirection
-  # match "handler/:file.:format" => redirect("http://cxml.lfn.net/%{file}.%{format}"), :constraints => { :file => /.*/, :format => /(jpg)|(dzc)|(dzi)/ }, :method => :post
-  #render
-  match "handler/:file.:format" => 'handler#forward', :constraints => { :file => /.*/, :format => /(jpg)|(dzc)|(dzi)/ }
-  get "handler/:request", :to => 'handler#call', :defaults => { :format => 'xml' }
+  # TODO make it generic
+  # match "handler/:uic/:request", :to => 'handler#call'
+  match "handler/:third_party_service/:call", :to => 'handler#call'
+  match "handler/lfn/:file.:format" => 'handler#call', :call => 'forward', :constraints => { :file => /.*/, :format => /(jpg)|(dzc)|(dzi)/ }
+  match "handler/:call", :to => 'handler#call'
+
+  post "mediator/invoke", :to => 'handler#invoke'
 
   match "api/:request", :to => 'api#call', :defaults => { :format => 'json' }
 
