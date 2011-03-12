@@ -72,7 +72,6 @@ Diaspora::Application.routes.draw do
   match 'aspects/add_to_aspect',     :to => 'aspects#add_to_aspect', :as => 'add_to_aspect'
   match 'aspects/remove_from_aspect',:to => 'aspects#remove_from_aspect', :as => 'remove_from_aspect'
   match 'aspects/manage',            :to => 'aspects#manage'
-  match 'aspects/lfn',               :to => 'aspects#lfn'
   resources :aspects do
     match '/toggle_contact_visibility', :to => 'aspects#toggle_contact_visibility'
   end
