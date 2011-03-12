@@ -9,7 +9,7 @@ describe HandlerController do
 
   describe "GET 'get_posts'" do
     it "should be successful" do
-      get 'get_posts'
+      get 'lfn/get_posts'
       response.should be_success
     end
   end
