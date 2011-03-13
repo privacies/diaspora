@@ -6,12 +6,4 @@ describe HandlerController do
     @user = Factory :user
     sign_in :user, @user
   end
-
-  describe "GET 'get_posts'" do
-    it "should be successful" do
-      get 'lfn/get_posts'
-      response.should be_success
-    end
-  end
-
 end

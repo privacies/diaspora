@@ -52,12 +52,12 @@ class StatusMessagesController < ApplicationController
           if was_pending
             current_user.add_to_streams(photo, aspects)
             current_user.dispatch_post(photo)
-            UserInterfaceComponent::run(:create_post, {:photo => photo, :post => @status_message, :target_aspect_ids => target_aspect_ids, :user => current_user})
+            ThirdPartyService::run(:create_post, {:photo => photo, :post => @status_message, :target_aspect_ids => target_aspect_ids, :user => current_user})
           end
         end
         photos.update_all(:pending => false, :public => public_flag)
       else
-        UserInterfaceComponent::run(:create_post, {:post => @status_message, :target_aspect_ids => target_aspect_ids, :user => current_user})
+        ThirdPartyService::run(:create_post, {:post => @status_message, :target_aspect_ids => target_aspect_ids, :user => current_user})
       end
 
       respond_to do |format|

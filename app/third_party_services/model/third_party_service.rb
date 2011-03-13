@@ -1,15 +1,16 @@
-class UserInterfaceComponent
+class ThirdPartyService
 
-  EMPTY_VALUE = 'none'
+  EMPTY_VALUE  = nil
   @@components = {}
 
   #Preload all ui components
   def self.load_components(force_reload = false)
-    @@components = UI_COMPONENTS.each_with_object({}) do |c, h|
+    @@components = THIRD_PARTY_SERVICES.each_with_object({}) do |c, h|
       h[c] = Object.const_get(c.to_s.classify) if Object.const_get(c.to_s.classify)
     end
   end
 
+  # return the component if exists
   def self.get(component)
     self.load_components
     return @@components[component.to_sym] if @@components[component.to_sym]
@@ -39,6 +40,7 @@ class UserInterfaceComponent
     end.reject {|v| v == EMPTY_VALUE }
   end
 
+  # TODO instead of this maybe use ActiveSupport::Notifications
   def self.run(action, params = {})
     self.load_components
     @@components.each_value do |c|
@@ -46,18 +48,18 @@ class UserInterfaceComponent
     end
   end
 
+  # return the view file to render / by default the view file is the name of the class downcase
   def view_file
     self.class.downcase
   end
 
-  def self.invoke_3rd_party_service(params = {})
+  def self.invoke(params = {})
     @service_url = params[:service_url]
     @method      = params[:method]
-    @params      = params[:params]
+    @params      = params[:params].compact
 
     response = Net::HTTP.post_form(URI.parse(@service_url), {:method => @method, :params => @params})
     response.body
   end
-
 
 end

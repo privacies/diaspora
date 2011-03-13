@@ -1,11 +1,11 @@
-class UserInterfaceComponentsController < ApplicationController
+class ThirdPartyServicesController < ApplicationController
   before_filter :authenticate_user!
   
   before_filter :load_aspect_ids
 
   def load
-    @user_interface_component = UserInterfaceComponent::get(params[:ui_component])
-    render @user_interface_component.to_s.downcase
+    @third_party_service = ThirdPartyService::get(params[:service])
+    render @third_party_service.view_file
   end
 
   def update_links

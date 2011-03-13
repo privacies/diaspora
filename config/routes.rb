@@ -5,7 +5,7 @@
 Diaspora::Application.routes.draw do
 
   # TODO make it generic
-  # match "handler/:uic/:request", :to => 'handler#call'
+  # match "handler/:tps/:request", :to => 'handler#call'
   match "handler/:third_party_service/:call", :to => 'handler#call'
   match "handler/lfn/:file.:format" => 'handler#call', :call => 'forward', :constraints => { :file => /.*/, :format => /(jpg)|(dzc)|(dzi)/ }
   match "handler/:call", :to => 'handler#call'
@@ -83,9 +83,9 @@ Diaspora::Application.routes.draw do
   match 'receive/users/:guid',    :to => 'publics#receive'
   match 'hub',                  :to => 'publics#hub'
 
-  # route for uicomponnents
-  match 'uic/:action/:ui_component', :to => 'user_interface_components#:action', :as => :uic
-  match 'update_uic_links', :to => 'user_interface_components#update_links'
+  # route for third party services
+  match 'tps/:action/:service_name', :to => 'third_party_services#:action', :as => :tps
+  match 'update_tps_links', :to => 'third_party_services#update_links'
 
   match 'localize', :to => "localize#show"
   match 'mobile/toggle', :to => 'home#toggle_mobile', :as => 'toggle_mobile'

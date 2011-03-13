@@ -1,4 +1,4 @@
-class Lfn < UserInterfaceComponent
+class Lfn < ThirdPartyService
   class << self
 
     SERVICE_URI = "http://lam.lfn.net/LAMService/"
@@ -42,7 +42,7 @@ class Lfn < UserInterfaceComponent
        :postUrl            => image_url
       }
       Rails.logger.info("LFN: CREATE POST : #{params.to_yaml}")
-      invoke_3rd_party_service({:method => 'createPost', :service_url => SERVICE_URI, :params => params})
+      invoke({:method => 'createPost', :service_url => SERVICE_URI, :params => params})
     end
 
     ####################################################################################
@@ -64,20 +64,10 @@ class Lfn < UserInterfaceComponent
         :postUrl       => post.url.blank? ? self::EMPTY_VALUE : post.url
       }
       Rails.logger.info("LFN: RECEIVE POST : #{params.to_yaml}")
-      invoke_3rd_party_service({:method => 'receivePost', :service_url => SERVICE_URI, :params => params})
+      invoke({:method => 'receivePost', :service_url => SERVICE_URI, :params => params})
     end
 
-    def get_new_post(params)
-      params = {
-        :userId => params[:user_id],
-        :aspectId => params[:aspect_id],
-        :aspectContacts => params[:aspect_contacts],
-        :userInputs => params[:user_inputs].blank? ? self::EMPTY_VALUE : params[:user_inputs]
-      }
-      Rails.logger.info("LFN: GET NEW POST : #{params.to_yaml}")
-      invoke_3rd_party_service({:method => 'getNewPost', :service_url => SERVICE_URI, :params => params})
-    end
-
+    # retrieve the posts from the lfn service
     def get_posts(params)
       sub_handler       = params[:sub_handler]
       params            = {
@@ -86,7 +76,7 @@ class Lfn < UserInterfaceComponent
         :aspectContacts => params[:aspect_contacts]
       }
       Rails.logger.info("LFN: GET POSTS : #{params.to_yaml}")
-      mediator_xml = invoke_3rd_party_service({:method => 'getPosts', :service_url => SERVICE_URI, :params => params})
+      mediator_xml = invoke({:method => 'getPosts', :service_url => SERVICE_URI, :params => params})
       return_xml   = CGI.unescapeHTML(mediator_xml)
       if sub_handler.present?
         begin

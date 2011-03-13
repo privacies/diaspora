@@ -33,7 +33,7 @@ RSpec.configure do |config|
   config.before(:each) do
     I18n.locale = :en
     RestClient.stub!(:post).and_return(FakeHttpRequest.new(:success))
-    UserInterfaceComponent.stub!(:run)
+    ThirdPartyService.stub!(:run)
     $process_queue = false
   end
 end

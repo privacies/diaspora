@@ -1,5 +1,5 @@
-UI_COMPONENTS = [:lfn].freeze
-ActionController::Base.append_view_path("app/user_interface_components/views")
+THIRD_PARTY_SERVICES = [:lfn].freeze
+ActionController::Base.append_view_path("app/third_party_services/views")
 
 # class StatusMessagesController
 #   define_callbacks :create

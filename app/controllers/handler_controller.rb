@@ -8,7 +8,7 @@ class HandlerController < ApplicationController
     begin
       #call the third party service
       if params[:third_party_service]
-        if @service = UserInterfaceComponent::get(params[:third_party_service])
+        if @service = ThirdPartyService::get(params[:third_party_service])
           service_response = @service::send(params[:call], params)
         end
       #call methods of the handler controller
@@ -22,7 +22,7 @@ class HandlerController < ApplicationController
   end
 
   def invoke
-    render :text => UserInterfaceComponent::invoke_3rd_party_service(params)
+    render :text => ThirdPartyService::invoke(params)
   end
 
 end

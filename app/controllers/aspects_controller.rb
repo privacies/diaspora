@@ -9,9 +9,9 @@ class AspectsController < ApplicationController
   respond_to :json, :only => [:show, :create]
   respond_to :js
 
-  helper :user_interface_components
-  after_filter :index do
-    @ui_components = UserInterfaceComponent::load_components
+  helper :third_party_services
+  before_filter :index do
+    @ui_components = ThirdPartyService::load_components
   end
 
   def index
