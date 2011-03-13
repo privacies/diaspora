@@ -28,9 +28,9 @@ class Lfn < ThirdPartyService
     # , Photo URL and the handles of viewers who should receive that photo
     ####################################################################################
     def create_post(params)
-      image_url         = params[:photo] ? params[:photo].url : self::EMPTY_VALUE
-      message           = params[:post].message.blank? ? self::EMPTY_VALUE : params[:post].message
-      target_aspect_ids = params[:target_aspect_ids].present? ? params[:target_aspect_ids] : params[:aspect_ids]
+      image_url         = params[:photo].try(:url)
+      message           = params[:post].message
+      target_aspect_ids = params[:target_aspect_ids]
       user              = params[:user]
       
       target_aspect_ids = target_aspect_ids.join(",") if target_aspect_ids.is_a? Array
@@ -60,8 +60,8 @@ class Lfn < ThirdPartyService
       params           = {
         :userId        => post.person.diaspora_handle,
         :receiverId    => target.person.diaspora_handle,
-        :message       => post.message.blank? ? self::EMPTY_VALUE : post.message,
-        :postUrl       => post.url.blank? ? self::EMPTY_VALUE : post.url
+        :message       => post.message,
+        :postUrl       => post.url_params
       }
       Rails.logger.info("LFN: RECEIVE POST : #{params.to_yaml}")
       invoke({:method => 'receivePost', :service_url => SERVICE_URI, :params => params})

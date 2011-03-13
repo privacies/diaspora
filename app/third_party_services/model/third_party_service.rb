@@ -1,6 +1,5 @@
 class ThirdPartyService
 
-  EMPTY_VALUE  = nil
   @@components = {}
 
   #Preload all ui components
@@ -28,7 +27,7 @@ class ThirdPartyService
 
     target_contacts = Contact.joins(:aspect_memberships).where(:aspect_memberships => {:aspect_id => target_aspects}, :pending => false)
 
-    return EMPTY_VALUE if target_contacts.empty?
+    return nil if target_contacts.empty?
     target_contacts.collect do |contact|
       contact.person.diaspora_handle
     end
@@ -37,7 +36,7 @@ class ThirdPartyService
   def self.get_aspect_contacts_from_ids(aspect_ids, user)
     aspect_ids.map do |id|
       get_aspect_contacts(id, user)
-    end.reject {|v| v == EMPTY_VALUE }
+    end.compact
   end
 
   # TODO instead of this maybe use ActiveSupport::Notifications
@@ -56,7 +55,7 @@ class ThirdPartyService
   def self.invoke(params = {})
     @service_url = params[:service_url]
     @method      = params[:method]
-    @params      = params[:params].compact
+    @params      = params[:params].reject {|k, v| v.blank? }
 
     response = Net::HTTP.post_form(URI.parse(@service_url), {:method => @method, :params => @params})
     response.body
