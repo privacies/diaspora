@@ -20,13 +20,13 @@ describe SocketsController do
   describe 'actionhash' do
     before do
       @aspect = @user.aspects.first
-      @message = @user.post :status_message, :message => "post through user for victory", :to => @aspect.id
+      @message = @user.post :status_message, :text => "post through user for victory", :to => @aspect.id
       @fixture_name = File.dirname(__FILE__) + '/../fixtures/button.png'
     end
 
     it 'actionhashes posts' do
       json = @controller.action_hash(@user, @message)
-      json.include?(@message.message).should be_true
+      json.include?(@message.text).should be_true
       json.include?('status_message').should be_true
     end
 

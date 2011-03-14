@@ -17,9 +17,9 @@ describe Diaspora::Exporter do
     @aspect2 =  @user2.aspects.create(:name => "Family")
     @aspect3 =  @user3.aspects.first
 
-    @status_message1 =  @user1.post(:status_message, :message => "One", :public => true, :to => @aspect1.id)
-    @status_message2 =  @user1.post(:status_message, :message => "Two", :public => true, :to => @aspect1.id)
-    @status_message3 =  @user2.post(:status_message, :message => "Three", :public => false, :to => @aspect2.id)
+    @status_message1 =  @user1.post(:status_message, :text => "One", :public => true, :to => @aspect1.id)
+    @status_message2 =  @user1.post(:status_message, :text => "Two", :public => true, :to => @aspect1.id)
+    @status_message3 =  @user2.post(:status_message, :text => "Three", :public => false, :to => @aspect2.id)
   end
 
   def exported
@@ -89,9 +89,9 @@ describe Diaspora::Exporter do
   context '<posts>' do
     let(:posts_xml) {exported.xpath('//posts').to_s}
     it 'should include many posts xml' do
-      posts_xml.should include @status_message1.message
-      posts_xml.should include @status_message2.message
-      posts_xml.should_not include @status_message3.message
+      posts_xml.should include @status_message1.text
+      posts_xml.should include @status_message2.text
+      posts_xml.should_not include @status_message3.text
     end
 
     it 'should include post created at time' do

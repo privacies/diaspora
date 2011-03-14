@@ -4,14 +4,14 @@ describe Services::Facebook do
 
   before do
     @user = alice
-    @post = @user.post(:status_message, :message => "hello", :to =>@user.aspects.first.id)
+    @post = @user.post(:status_message, :text => "hello", :to =>@user.aspects.first.id)
     @service = Services::Facebook.new(:access_token => "yeah")
     @user.services << @service
   end
 
   describe '#post' do
     it 'posts a status message to facebook' do
-      RestClient.should_receive(:post).with("https://graph.facebook.com/me/feed", :message => @post.message, :access_token => @service.access_token)
+      RestClient.should_receive(:post).with("https://graph.facebook.com/me/feed", :message => @post.text, :access_token => @service.access_token)
       @service.post(@post)
     end
     it 'swallows exception raised by facebook always being down' do
@@ -103,7 +103,7 @@ JSON
         it 'caches the sender' do
           @service.finder["#{@user2_fb_id}"][:request].sender.loaded?.should be_true
         end
-        
+
       end
 
       it 'contains a contact object if connected' do
@@ -124,7 +124,7 @@ JSON
           @service.finder(:remote => true)["#{@user2_fb_id}"].should be_nil
         end
       end
-      
+
       context 'already invited' do
         before do
           @user2.invitation_service = 'facebook'

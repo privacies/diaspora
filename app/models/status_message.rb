@@ -10,7 +10,7 @@ class StatusMessage < Post
 
   acts_as_taggable_on :tags
 
-  validates_length_of :message, :maximum => 1000, :message => "please make your status messages less than 1000 characters"
+  validates_length_of :text, :maximum => 1000, :text => "please make your status messages less than 1000 characters"
   xml_name :status_message
   xml_attr :raw_message
 
@@ -20,24 +20,26 @@ class StatusMessage < Post
 
   validate :message_or_photos_present?
 
-  attr_accessible :message, :control, :control_attributes
+  alias_attribute :message, :text
+
+  attr_accessible :text, :message, :control, :control_attributes
 
   serialize :youtube_titles, Hash
   before_save do
-    get_youtube_title message
+    get_youtube_title text
   end
 
   before_create :build_tags
 
-  def message(opts = {})
+  def text(opts = {})
     self.formatted_message(opts)
   end
 
   def raw_message
-    read_attribute(:message)
+    read_attribute(:text)
   end
   def raw_message=(text)
-    write_attribute(:message, text)
+    write_attribute(:text, text)
   end
 
   def formatted_message(opts={})
@@ -139,7 +141,7 @@ class StatusMessage < Post
   protected
 
   def message_or_photos_present?
-    if self.message.blank? && self.photos == []
+    if self.text.blank? && self.photos == []
       errors[:base] << 'Status message requires a message or at least one photo'
     end
   end

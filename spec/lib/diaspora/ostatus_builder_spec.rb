@@ -12,24 +12,24 @@ describe Diaspora::OstatusBuilder do
   let(:aspect) { user.aspects.first }
   let!(:public_status_messages) {
     3.times.inject([]) do |arr,n|
-      s = user.post(:status_message, :message => "hey#{n}", :public => true, :to => aspect.id)
+      s = user.post(:status_message, :text => "hey#{n}", :public => true, :to => aspect.id)
       arr << s
     end
   }
   let!(:private_status_messages) {
     3.times.inject([]) do |arr,n|
-      s = user.post(:status_message, :message => "secret_ney#{n}", :public => false, :to => aspect.id)
+      s = user.post(:status_message, :text => "secret_ney#{n}", :public => false, :to => aspect.id)
       arr << s
     end
   }
   let!(:atom) { director = Diaspora::Director.new; director.build(Diaspora::OstatusBuilder.new(user, public_status_messages)) }
 
   it 'should include a users posts' do
-    public_status_messages.each{ |status| atom.should include status.message }
+    public_status_messages.each{ |status| atom.should include status.text}
   end
 
   it 'should iterate through all objects, and not stop if it runs into a post without a to_activity' do
-    messages = public_status_messages.collect{|x| x.message}
+    messages = public_status_messages.collect{|x| x.text}
     public_status_messages.insert(1, [])
     director = Diaspora::Director.new;
     atom2 = director.build(Diaspora::OstatusBuilder.new(user, public_status_messages))
