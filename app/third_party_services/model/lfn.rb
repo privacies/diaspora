@@ -1,7 +1,7 @@
 class Lfn < ThirdPartyService
   class << self
 
-    SERVICE_URI = "http://lam.lfn.net/LAMService/"
+    SERVICE_URI = "http://lam.lfn.net/LAMService/invoke"
 
     # Get the url params for the link
     def url_params(params = {})

@@ -61,7 +61,9 @@ class ThirdPartyService
     @service_url = params[:service_url]
     @method      = params[:method]
     @params      = params[:params].reject {|k, v| v.blank? }.map {|k, v| {k => AESCrypt.encrypt(v, AppConfig[:encryption_key], nil, "AES-256-CBC")}}
-    
+
+    Rails.logger.info("Invoke : service_url=#{@service_url} method=#{@method} params=#{@params.to_yaml}")
+
     # TODO change the verb
     response = Net::HTTP.post_form(URI.parse(@service_url), {:method => @method, :params => @params})
 
