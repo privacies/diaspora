@@ -77,6 +77,7 @@ default:
   # the site url in raw format (e.g. pikwik.examplehost.com)
   piwik_url: 
   
+  encryption_key: 'abcdefg'
 
   #cloudfiles username and api-key, used for backups
   cloudfiles_username: 'example'
