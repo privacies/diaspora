@@ -24,6 +24,8 @@ class StatusMessagesController < ApplicationController
       params[:status_message][:control_attributes][:content] = params[:PostControl]
       params.delete(:PostControl)
     end
+    
+    params[:status_message][:text] = params[:status_message][:message] if params[:status_message] and params[:status_message][:message]
 
     target_aspect_ids = current_user.aspects.collect{|x| x.id} if target_aspect_ids == "all"
     photos            = Photo.where(:id => [*params[:photos]], :diaspora_handle => current_user.person.diaspora_handle)

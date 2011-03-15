@@ -4,7 +4,7 @@ class ThirdPartyServicesController < ApplicationController
   before_filter :load_aspect_ids
 
   def load
-    @third_party_service = ThirdPartyService::get(params[:service])
+    @third_party_service = ThirdPartyService::get(params[:service_name])
     render @third_party_service.view_file
   end
 

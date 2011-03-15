@@ -1,5 +1,10 @@
 class ThirdPartyService
 
+  require 'rexml/document'
+
+  include AESCrypt
+  include REXML
+
   @@components = {}
 
   #Preload all ui components
@@ -48,17 +53,21 @@ class ThirdPartyService
   end
 
   # return the view file to render / by default the view file is the name of the class downcase
-  def view_file
-    self.class.downcase
+  def self.view_file
+    self.to_s.downcase
   end
 
   def self.invoke(params = {})
     @service_url = params[:service_url]
     @method      = params[:method]
-    @params      = params[:params].reject {|k, v| v.blank? }
-
+    @params      = params[:params].reject {|k, v| v.blank? }.map {|k, v| {k => AESCrypt.encrypt(v, AppConfig[:encryption_key], nil, "AES-256-CBC")}}
+    
+    # TODO change the verb
     response = Net::HTTP.post_form(URI.parse(@service_url), {:method => @method, :params => @params})
-    response.body
+
+    doc = Document.new(response.body)
+    doc.each_element('//Column') { |column| column.text = AESCrypt.decrypt(column.text, AppConfig[:encryption_key], nil, "AES-256-CBC") }
+    doc.to_s
   end
 
 end

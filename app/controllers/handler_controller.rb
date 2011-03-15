@@ -9,11 +9,11 @@ class HandlerController < ApplicationController
       #call the third party service
       if params[:third_party_service]
         if @service = ThirdPartyService::get(params[:third_party_service])
-          service_response = @service::send(params[:call], params)
+          service_response = @service::send(params[:call].underscore, params)
         end
       #call methods of the handler controller
       else
-        service_response = send(params[:call])
+        service_response = send(params[:call].underscore)
       end
     rescue Exception => e
       logger.error("Handler controller, in call : #{params.to_yaml} #{e} #{e.backtrace}")
