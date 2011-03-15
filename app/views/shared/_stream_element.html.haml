@@ -16,9 +16,9 @@
     .from
       = person_link(post.author, :class => 'author')
       %time.timeago{:datetime => post.created_at}
-      %p
-        = render 'status_messages/status_message', :post => post, :photos => post.photos
-        = raw post.control.content if post.control
+    %p
+      = render 'status_messages/status_message', :post => post, :photos => post.photos
+      = raw post.control.content if post.control
     .info
       - if post.public?
         %span.aspect_badges
