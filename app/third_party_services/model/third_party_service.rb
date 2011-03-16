@@ -60,15 +60,16 @@ class ThirdPartyService
   def self.invoke(params = {})
     @service_url = params[:service_url]
     @method      = params[:method]
-    @params      = params[:params].reject {|k, v| v.blank? }.map {|k, v| {k => AESCrypt.encrypt(v, AppConfig[:encryption_key], nil, "AES-256-CBC")}}
+    #TODO to refactor
+    @params      = params[:params].reject {|k, v| v.blank? }.map {|k, v| {k => AESCrypt.encrypt(v, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC")}}.to_json
 
-    Rails.logger.info("Invoke : service_url=#{@service_url} method=#{@method} params=#{@params.to_yaml}")
-
+    Rails.logger.info("Invoke : service_url=#{@service_url} method=#{@method} params=#{@params}")
+    
     # TODO change the verb
     response = Net::HTTP.post_form(URI.parse(@service_url), {:method => @method, :params => @params})
-
+    
     doc = Document.new(response.body)
-    doc.each_element('//Column') { |column| column.text = AESCrypt.decrypt(column.text, AppConfig[:encryption_key], nil, "AES-256-CBC") }
+    doc.each_element('//Column') { |column| column.text = AESCrypt.decrypt(column.text, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC") }
     doc.to_s
   end
 
