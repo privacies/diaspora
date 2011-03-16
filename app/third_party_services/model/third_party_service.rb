@@ -41,7 +41,7 @@ class ThirdPartyService
   def self.get_aspect_contacts_from_ids(aspect_ids, user)
     aspect_ids.map do |id|
       get_aspect_contacts(id, user)
-    end.compact
+    end.compact.uniq
   end
 
   # TODO instead of this maybe use ActiveSupport::Notifications
@@ -61,15 +61,15 @@ class ThirdPartyService
     @service_url = params[:service_url]
     @method      = params[:method]
     #TODO to refactor
-    @params      = params[:params].reject {|k, v| v.blank? }.map {|k, v| {k => AESCrypt.encrypt(v, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC")}}.to_json
+    @params      = params[:params].reject {|k, v| v.blank? }.map {|k, v| {"params[#{k}]" => Base64.encode64(AESCrypt.encrypt(v, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC"))}}
 
-    Rails.logger.info("Invoke : service_url=#{@service_url} method=#{@method} params=#{@params}")
-    
+    Rails.logger.info("Invoke : service_url=#{@service_url} method=#{@method} #{@params}")
+
     # TODO change the verb
-    response = Net::HTTP.post_form(URI.parse(@service_url), {:method => @method, :params => @params})
-    
+    response = Net::HTTP.post_form(URI.parse(@service_url), {:method => @method}.merge(@params))
+
     doc = Document.new(response.body)
-    doc.each_element('//Column') { |column| column.text = AESCrypt.decrypt(column.text, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC") }
+    doc.each_element('//Column') { |column| column.text = AESCrypt.decrypt(Base64.decode64(column.text, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC")) }
     doc.to_s
   end
 
