@@ -56,8 +56,20 @@
 
     %h3
       = @person.name
-      .description
+      %span.diaspora_handle
         = @person.diaspora_handle
+      .description
+        - if !@person.profile.tag_string.blank?
+          = @person.profile.format_tags(@person.profile.tag_string)
+          - if user_signed_in? && @person == current_user.person
+            %span.hover_edit
+              = link_to t('.edit'), edit_profile_path
+        - else
+          - if user_signed_in? && @person == current_user.person
+            %i
+              = t('.you_have_no_tags')
+              %span.add_tags
+                = link_to t('.add_some'), edit_profile_path
   %hr
 
   - if @posts.count > 0

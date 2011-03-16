@@ -5,7 +5,14 @@
 class Profile < ActiveRecord::Base
   require File.join(Rails.root, 'lib/diaspora/webhooks')
   include Diaspora::Webhooks
+  include Diaspora::Taggable
   include ROXML
+
+  attr_accessor :tag_string
+
+  acts_as_taggable_on :tags
+  extract_tags_from :tag_string
+  validates_length_of :tag_list, :maximum => 5
 
   xml_attr :diaspora_handle
   xml_attr :first_name
@@ -93,6 +100,10 @@ class Profile < ActiveRecord::Base
     elsif [ 'year', 'month', 'day'].all? { |key| params[key].blank? }
       self.birthday = nil
     end
+  end
+
+  def tag_string
+    @tag_string || self.tags.map{|t| '#' << t.to_s }.join(' ')
   end
 
   protected

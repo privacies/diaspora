@@ -9,7 +9,7 @@ $background: rgb(252,252,252)
 body
   :padding 2em
   :margin 0
-    :top 50px
+    :top 60px
   :background-color $background
 a
   :color #107FC9
@@ -250,6 +250,8 @@ header
   :top 4px
   :margin
     :right 1em
+  &:active
+    :top 5px
 
 .stream
   audio
@@ -327,6 +329,8 @@ header
   h4,
   h5
     :display inline-block
+    :margin
+      :bottom 10px
 
   &.show
     a
@@ -781,7 +785,7 @@ textarea
     :size 14px
   :padding 0.3em
   :display block
-  :width 66%
+  :width 100%
   :border 1px solid #ccc
   :height auto
 
@@ -1695,6 +1699,9 @@ h3 span.current_gs_step
     :weight bold
     :size smaller
   :width 28px
+
+  &:active
+    :top 6px
 
   a
     :z-index 5
@@ -2744,3 +2751,54 @@ ul.show_comments
 
 #contact_visibility_padlock:hover
   :opacity 0.7
+
+.side_stream
+  .stream_element
+    :padding 10px 0
+  .avatar
+    :float left
+  .right
+    :display none
+
+  .stream_element:hover
+    .right
+      :display none
+
+.tag
+  &:hover
+    :text
+      :decoration none
+    :border
+      :bottom 1px solid $blue
+
+  :background
+    :color lighten($blue, 47%)
+  :border
+    :bottom 1px dotted $blue
+  :font
+    :weight bold
+
+.diaspora_handle
+  :font
+    :size 12px
+    :weight normal
+  :color #999
+  :margin
+    :left 6px
+
+.add_tags
+  :font
+    :weight normal
+    :size 11px
+
+.hover_edit
+  :display none
+  :font
+    :weight normal
+    :size 11px
+  :margin
+    :left 5px
+
+.description:hover
+  .hover_edit
+    :display inline
