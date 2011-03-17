@@ -16,6 +16,7 @@ class StatusMessage < Post
   validates_length_of :text, :maximum => 1000, :text => "please make your status messages less than 1000 characters"
   xml_name :status_message
   xml_attr :raw_message
+  xml_attr :post_control_content
 
   has_many :photos, :dependent => :destroy
   has_one  :control, :dependent => :destroy, :class_name => 'PostControl'
@@ -36,6 +37,18 @@ class StatusMessage < Post
 
   def text(opts = {})
     self.formatted_message(opts)
+  end
+
+  def post_control_content
+    self.control.content if respond_to?(:control) and control
+  end
+
+  def post_control_content=(text)
+    if control
+      self.control.content = text
+    else
+      self.build_control({:content => text})
+    end if respond_to?(:control)
   end
 
   def raw_message
