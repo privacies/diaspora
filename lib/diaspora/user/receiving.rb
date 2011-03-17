@@ -186,7 +186,7 @@ module Diaspora
         self.raw_visible_posts << post
         self.save
         
-        ThirdPartyService::run(:receive_post, :post => post)
+        ThirdPartyService::run(:receive_post, {:post => post, :target => self})
         
         aspects = self.aspects_with_person(post.person)
         aspects.each do |aspect|
