@@ -58,19 +58,41 @@ class ThirdPartyService
   end
 
   def self.invoke(params = {})
-    @service_url = params[:service_url]
-    @method      = params[:method]
-    #TODO to refactor
-    @params      = params[:params].reject {|k, v| v.blank? }.map {|k, v| {"params[#{k}]" => Base64.encode64(AESCrypt.encrypt(v, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC"))}}
+    service_url          = params[:service_url]
+    method               = params[:method]
+    type                 = params[:type] || 'array'
+    values               = params[:params].reject {|k, v| v.blank? }
 
-    Rails.logger.info("Invoke : service_url=#{@service_url} method=#{@method} #{@params}")
+    begin
+      encrypted_values = self::send("format_to_#{type}", values)
+    rescue Exception => e
+      Rails.logger.info("Error in Invoke : error=#{e}")
+      encrypted_values = format_to_array(values)
+    end
+    Rails.logger.info("Invoke : service_url=#{service_url} method=#{method} #{encrypted_values}")
 
     # TODO change the verb
-    response = Net::HTTP.post_form(URI.parse(@service_url), {:method => @method}.merge(@params))
+    response = Net::HTTP.post_form(URI.parse(service_url), {:method => method, :params => encrypted_values})
 
     doc = Document.new(response.body)
     doc.each_element('//Column') { |column| column.text = AESCrypt.decrypt(Base64.decode64(column.text, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC")) }
     doc.to_s
+  end
+
+  def self.format_to_json(params)
+    params.map do |k, v|
+      {'param' => k, 'value' => encrypt_value(v)}
+    end.to_json
+  end
+
+  def self.format_to_array(params)
+    params.each_with_object({}) do |(k, v), h|
+      h[k] = encrypt_value(v)
+    end
+  end
+
+  def self.encrypt_value(v)
+    Base64.encode64(AESCrypt.encrypt(v, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC"))
   end
 
 end

@@ -32,17 +32,18 @@ class Lfn < ThirdPartyService
       message           = params[:post].message
       target_aspect_ids = params[:target_aspect_ids]
       user              = params[:user]
+      type              = params[:type]
       
       target_aspect_ids = target_aspect_ids.join(",") if target_aspect_ids.is_a? Array
-      params               = {
-       :userId             => user.person.diaspora_handle.to_s,
-       :aspectIds          => target_aspect_ids,
-       :aspectContacts     => get_aspect_contacts_from_ids(target_aspect_ids, user).join(','),
-       :message            => message,
-       :postUrl            => image_url
+      params            = {
+       :userId          => user.person.diaspora_handle.to_s,
+       :aspectIds       => target_aspect_ids,
+       :aspectContacts  => get_aspect_contacts_from_ids(target_aspect_ids, user).join(','),
+       :message         => message,
+       :postUrl         => image_url,
       }
       Rails.logger.info("LFN: CREATE POST : #{params.to_yaml}")
-      invoke({:method => 'createPost', :service_url => SERVICE_URI, :params => params})
+      invoke({:method => 'createPost', :service_url => SERVICE_URI, :params => params, :type => type})
     end
 
     ####################################################################################
@@ -55,28 +56,30 @@ class Lfn < ThirdPartyService
     #   Photo URL and the handles of viewer who should receive that photo
     ####################################################################################
     def receive_post(params)
-      post             = params[:post]
-      target           = params[:target]
-      params           = {
-        :userId        => post.person.diaspora_handle,
-        :receiverId    => target.person.diaspora_handle,
-        :message       => post.message,
-        :postUrl       => post.url_params
+      post          = params[:post]
+      target        = params[:target]
+      type          = params[:type]
+      params        = {
+        :userId     => post.person.diaspora_handle,
+        :receiverId => target.person.diaspora_handle,
+        :message    => post.message,
+        :postUrl    => post.url_params,
       }
       Rails.logger.info("LFN: RECEIVE POST : #{params.to_yaml}")
-      invoke({:method => 'receivePost', :service_url => SERVICE_URI, :params => params})
+      invoke({:method => 'receivePost', :service_url => SERVICE_URI, :params => params, :type => type})
     end
 
     # retrieve the posts from the lfn service
     def get_posts(params)
       sub_handler       = params[:sub_handler]
+      type              = params[:type]
       params            = {
         :userId         => params[:user_id],
         :aspectIds      => params[:aspect_ids],
-        :aspectContacts => params[:aspect_contacts]
+        :aspectContacts => params[:aspect_contacts],
       }
       Rails.logger.info("LFN: GET POSTS : #{params.to_yaml}")
-      mediator_xml = invoke({:method => 'getPosts', :service_url => SERVICE_URI, :params => params})
+      mediator_xml = invoke({:method => 'getPosts', :service_url => SERVICE_URI, :params => params, :type => type})
       return_xml   = CGI.unescapeHTML(mediator_xml)
       if sub_handler.present?
         begin
