@@ -14,12 +14,8 @@
   = include_javascripts :home
 
 .span-24.last
-  %h1
-    - if params[:tag]
-      = "##{params[:tag]}"
-
-    - else
-      = t('.whatup', :pod => @pod_url)
+  %h1.tag
+    = "##{params[:tag]}"
 
 .span-15
   #main_stream.stream
@@ -33,7 +29,13 @@
 
 .prepend-2.span-7.last
   %h3
-    = t('.people_tagged_with', :tag => "##{params[:tag]}")
+    = @people_count
+    %span{:style => "font-weight:normal"}
+      - if @people_count == 1
+        = t('.person')
+      - else
+        = t('.people')
+
   .side_stream.stream
     - for person in @people
       .stream_element{:id => person.id}
@@ -42,4 +44,7 @@
           %span.from
             =person_link(person)
           .info
-            = person.diaspora_handle
+            = person.profile.format_tags(person.profile.tag_string)
+
+    - if @people_count > 15
+      \...
