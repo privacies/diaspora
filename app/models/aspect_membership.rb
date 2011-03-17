@@ -13,7 +13,7 @@ class AspectMembership < ActiveRecord::Base
   
   
   def ensure_membership
-    if self.contact.aspect_memberships.count == 1
+    if self.contact and self.contact.aspect_memberships.count == 1
       errors[:base] << I18n.t('shared.contact_list.cannot_remove')
       false
     else

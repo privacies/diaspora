@@ -99,8 +99,8 @@ var AspectEdit = {
       if (!person.hasClass('request')) {
 
         $.ajax({
-          type: "POST",
-          url: "/aspects/remove_from_aspect",
+          type: "DELETE",
+          url: "/aspect_memberships/42",
           data: {
             'person_id': person_id,
             'aspect_id': person.attr('data-aspect_id')
