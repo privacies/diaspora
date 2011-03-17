@@ -37,7 +37,7 @@ class Lfn < ThirdPartyService
       params               = {
        :userId             => user.person.diaspora_handle.to_s,
        :aspectIds          => target_aspect_ids,
-       :aspectContacts     => get_aspect_contacts_from_ids(target_aspect_ids, user),
+       :aspectContacts     => get_aspect_contacts_from_ids(target_aspect_ids, user).join(','),
        :message            => message,
        :postUrl            => image_url
       }
