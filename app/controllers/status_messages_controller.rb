@@ -78,6 +78,10 @@ class StatusMessagesController < ApplicationController
         ThirdPartyService::run(:create_post, {:post => @status_message, :target_aspect_ids => target_aspect_ids, :user => current_user})
       end
 
+      if request.env['HTTP_REFERER'].include?("people")
+        flash[:notice] = t('.success', :names => @status_message.mentions.includes(:person => :profile).map{ |mention| mention.person.name }.join(', '))
+      end
+
       respond_to do |format|
         format.js { render :create, :status => 201}
         format.html { redirect_to :back}
@@ -89,7 +93,7 @@ class StatusMessagesController < ApplicationController
         photos.update_all(:status_message_id => nil)
       end
       respond_to do |format|
-        format.js { render :json =>{:errors => @status_message.errors.full_messages}, :status => 406 }
+        format.js { render :json =>{:errors => @status_message.errors.full_messages}, :status => 422 }
         format.html {redirect_to :back}
       end
     end

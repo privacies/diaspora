@@ -234,11 +234,11 @@ describe Postzord::Dispatch do
     end
 
     describe '#deliver_to_local' do
-      it 'sends each person an object' do
+      it 'queues a batch receive' do
         local_people = []
         local_people << @user.person
         mailman = Postzord::Dispatch.new(@user, @sm)
-        Resque.should_receive(:enqueue).with(Job::Receive, @user.id, @xml, anything).once
+        Resque.should_receive(:enqueue).with(Job::ReceiveLocalBatch, @sm.id, [@user.id]).once
         mailman.send(:deliver_to_local, local_people)
       end
     end
@@ -304,7 +304,7 @@ describe Postzord::Dispatch do
 
       it 'queues Job::NotifyLocalUsers jobs' do
         @zord.instance_variable_get(:@object).should_receive(:socket_to_user).and_return(false)
-        Resque.should_receive(:enqueue).with(Job::NotifyLocalUsers, @local_user.id, @sm.class.to_s, @sm.id, @sm.author.id)
+        Resque.should_receive(:enqueue).with(Job::NotifyLocalUsers, [@local_user.id], @sm.class.to_s, @sm.id, @sm.author.id)
         @zord.send(:socket_and_notify_users, [@local_user])
       end
     end

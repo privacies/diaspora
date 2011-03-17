@@ -13,8 +13,8 @@ describe Photo do
     @fixture_name      = File.join(File.dirname(__FILE__), '..', 'fixtures', @fixture_filename)
     @fail_fixture_name = File.join(File.dirname(__FILE__), '..', 'fixtures', 'msg.xml')
 
-    @photo  = @user.post(:photo, :user_file=> File.open(@fixture_name), :to => @aspect.id)
-    @photo2 = @user.post(:photo, :user_file=> File.open(@fixture_name), :to => @aspect.id)
+    @photo  = @user.build_post(:photo, :user_file=> File.open(@fixture_name), :to => @aspect.id)
+    @photo2 = @user.build_post(:photo, :user_file=> File.open(@fixture_name), :to => @aspect.id)
   end
 
   describe "protected attributes" do
@@ -35,6 +35,14 @@ describe Photo do
     end
   end
 
+  describe 'after_create' do
+    it 'calls #queue_processing_job' do
+      @photo.should_receive(:queue_processing_job)
+
+      @photo.save!
+    end
+  end
+  
   it 'is mutable' do
     @photo.mutable?.should == true
   end
@@ -124,10 +132,11 @@ describe Photo do
       @xml.include?(@user.diaspora_handle).should be true
     end
   end
+  
   describe 'remote photos' do
     it 'should set the remote_photo on marshalling' do
       @photo.image.store! File.open(@fixture_name)
-
+      @photo.save
       #security hax
       user2 = Factory.create(:user)
       aspect2 = user2.aspects.create(:name => "foobars")
@@ -152,6 +161,13 @@ describe Photo do
   context "commenting" do
     it "accepts comments if there is no parent status message" do
       proc{ @user.comment("big willy style", :on => @photo) }.should change(@photo.comments, :count).by(1)
+    end
+  end
+
+  describe '#queue_processing_job' do
+    it 'should queue a resque job to process the images' do
+      Resque.should_receive(:enqueue).with(Job::ProcessPhoto, @photo.id)
+      @photo.queue_processing_job
     end
   end
 

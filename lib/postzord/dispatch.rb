@@ -44,10 +44,21 @@ class Postzord::Dispatch
   end
 
   def deliver_to_local(people)
-    people.each do |person|
-      Rails.logger.info("event=push_to_local_person route=local sender=#{@sender_person.diaspora_handle} recipient=#{person.diaspora_handle} payload_type=#{@object.class}")
-      Resque.enqueue(Job::Receive, person.owner_id, @xml, @sender_person.id)
+    return if people.blank?
+    if @object.is_a?(Post)
+      batch_deliver_to_local(people)
+    else
+      people.each do |person|
+        Rails.logger.info("event=push route=local sender=#{@sender_person.diaspora_handle} recipient=#{person.diaspora_handle} payload_type=#{@object.class}")
+        Resque.enqueue(Job::Receive, person.owner_id, @xml, @sender_person.id)
+      end
     end
+  end
+
+  def batch_deliver_to_local(people)
+    ids = people.map{ |p| p.owner_id }
+    Resque.enqueue(Job::ReceiveLocalBatch, @object.id, ids)
+    Rails.logger.info("event=push route=local sender=#{@sender_person.diaspora_handle} recipients=#{ids.join(',')} payload_type=#{@object.class}")
   end
 
   def deliver_to_hub
@@ -72,16 +83,12 @@ class Postzord::Dispatch
   end
 
   def notify_users(users)
-    users.each do |user|
-      Resque.enqueue(Job::NotifyLocalUsers, user.id, @object.class.to_s, @object.id, @object.author.id)
-    end
+    Resque.enqueue(Job::NotifyLocalUsers, users.map{|u| u.id}, @object.class.to_s, @object.id, @object.author.id)
   end
   def socket_to_users(users)
-    socket = @object.respond_to?(:socket_to_user)
+    return unless @object.respond_to?(:socket_to_user)
     users.each do |user|
-      if socket
-        @object.socket_to_user(user)
-      end
+      @object.socket_to_user(user)
     end
   end
 end

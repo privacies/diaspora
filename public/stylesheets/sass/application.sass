@@ -305,6 +305,8 @@ header
   :margin
     :bottom 2em
   img
+    :position relative
+    :display inline
     :margin
       :right 1px
       :bottom -1px
@@ -586,6 +588,9 @@ ul.show_comments
     :border
       :bottom 2px solid $background
 
+    .new_comment
+      :min-height 35px
+
     .from
       :font
         :size 1em
@@ -642,6 +647,7 @@ ul.show_comments
       .submit_button
         :display block
         :margin
+          :top 5px
           :bottom 2px
           :right 2px
       textarea
@@ -870,16 +876,6 @@ label
     :position relative
     :top 0
 
-    ul
-      :padding 0
-      >li
-        :display inline
-        :margin-right 2px
-        img
-          :-webkit-border-radius 5px
-          :-moz-border-radius 5px
-          :border-radius 5px
-
   input[type='text'],
   textarea
     :width 435px
@@ -1012,17 +1008,19 @@ label
     :bottom 0
     :width 435px
     :left 5px
+    :padding 0
+
     li
+      :display inline-block
       :margin-right 4px
       img
-        :height 50px
         :width 50px
       .circle
         :display none
         :z-index 1
         :position absolute
         :right -7px
-        :top -47px
+        :top -5px
         :background
           :color #333
 
@@ -1033,19 +1031,15 @@ label
 
         :border 1px solid #fff
 
-        :-webkit-border-radius 10px
-        :-moz-border-radius 10px
-        :border-radius 10px
-
-        :-webkit-box-shadow 0 1px 3px #000
-        :-moz-box-shadow 0 1px 3px #000
-        :box-shadow 0 1px 3px #000
+        :-webkit-border-radius 20px
+        :-moz-border-radius 20px
+        :border-radius 20px
 
       .x
         :display none
         :z-index 2
         :position absolute
-        :top -45px
+        :top -3px
         :right -1px
         :font
           :size small
@@ -1066,6 +1060,18 @@ label
 .dim
   :opacity 0.3
 
+img.thumb_small
+  :max-height 50px
+  :max-width 50px
+img.thumb_medium
+  :max-height 100px
+  :max-width 100px
+img.thumb_large
+  :max-height 300px
+  :max-width 300px
+img.scaled_full
+  :max-height 700px
+  :max-width 700px
 
 #thumbnails
   a
@@ -2256,7 +2262,7 @@ h3,h4
   .aspect_badge
     :top -0.2em
 
-#share_with
+.share_with
   :min-width 430px
 
   .avatar
@@ -2524,7 +2530,7 @@ ul.show_comments
   textarea
     :width 100%
 
-#share_with
+.share_with
   .add_aspect
     :-webkit-border-radius 5px
     :-moz-border-radius 5px
@@ -2538,7 +2544,7 @@ ul.show_comments
       :padding
         :left 1em
       input[type='text']
-        :width 60%
+        :width 95%
 
       &.checkbox_select
         label
@@ -2546,11 +2552,11 @@ ul.show_comments
             :left 15px
           :top 0
         :height 2em
-
     .right
       :z-index 5
-      :top 5px
+      :top 34px
       :right 1em
+
   .done
     :padding 1em
       :bottom 2em
@@ -2845,3 +2851,8 @@ h1.tag
 .description:hover
   .hover_edit
     :display inline
+
+.friend_finder
+  .share_with
+    :background
+      :color rgb(245,245,245)
