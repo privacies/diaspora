@@ -73,12 +73,34 @@ describe Profile do
       @profile.image_url.should == "http://not/a/relative/url"
     end
   end
+
+  describe '#from_xml' do
+    it 'should make a valid profile object' do
+      
+      @profile = Factory.build(:profile)
+      @profile.tag_string = '#big #rafi #style'
+      xml = @profile.to_xml
+
+      new_profile = Profile.from_xml(xml.to_s)
+      new_profile.tag_string.should_not be_blank
+      new_profile.tag_string.should include('#rafi')
+    end
+  end
+  
   describe 'serialization' do
     let(:person) {Factory.create(:person,:diaspora_handle => "foobar" )}
 
     it 'should include persons diaspora handle' do
       xml = person.profile.to_diaspora_xml
       xml.should include "foobar"
+    end
+
+    it 'includes tags' do
+      person.profile.tag_string = '#one'
+      person.profile.build_tags
+      person.profile.save
+      xml = person.profile.to_diaspora_xml
+      xml.should include "#one"
     end
   end
 
