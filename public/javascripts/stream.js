@@ -11,12 +11,9 @@ var Stream = {
     Diaspora.widgets.timeago.updateTimeAgo();
     $stream.not(".show").delegate("a.show_post_comments", "click", Stream.toggleComments);
     //audio linx
-    $(".stream a[target='_blank']").each(function(){
-      if($(this).attr('href').match(/\.mp3$|\.ogg$/)) {
-        $(this).hide();
-        $(this).parent().append("<audio preload='none' src='" + this.href + "' controls='controls'>mom</audio>");}
-    });
-
+    //
+    Stream.setUpAudioLinks();
+    Stream.setUpImageLinks();
 
     // comment link form focus
     $stream.delegate(".focus_comment_textarea", "click", function(e){
@@ -63,6 +60,8 @@ var Stream = {
       //collapse publisher
       Publisher.close();
       Publisher.clear();
+      Stream.setUpImageLinks();
+      Stream.setUpAudioLinks();
     });
 
     $(".new_status_message").bind('ajax:failure', function(data, html , xhr) {
@@ -84,6 +83,26 @@ var Stream = {
 
     $(".stream").find(".delete").live('ajax:success', function(data, html, xhr) {
       $(this).parents(".stream_element").hide('blind', { direction: 'vertical' }, 300);
+    });
+  },
+
+  setUpAudioLinks: function(){
+    $(".stream a[target='_blank']").each(function(){
+      var link = $(this);
+      if(link.attr('href').match(/\.mp3$|\.ogg$/)) {
+        link.parent().append("<audio preload='none' src='" + this.href + "' controls='controls'>mom</audio>");
+        link.remove();
+      }
+    });
+  },
+
+  setUpImageLinks: function(){
+    $(".stream a[target='_blank']").each(function(){
+      var link = $(this);
+      if(link.attr('href').match(/\.gif$|\.jpg$|\.png$|\.jpeg$/)) {
+        link.parent().append("<img src='" + this.href + "'</img>");
+        link.remove();
+      }
     });
   },
 
