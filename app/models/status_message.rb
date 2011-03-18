@@ -40,7 +40,7 @@ class StatusMessage < Post
   end
 
   def post_control_content
-    self.control.content if respond_to?(:control) and control
+    respond_to?(:control) && control ? self.control.content : ''
   end
 
   def post_control_content=(text)
@@ -48,7 +48,7 @@ class StatusMessage < Post
       self.control.content = text
     else
       self.build_control({:content => text})
-    end if respond_to?(:control)
+    end if respond_to?(:control) and !text.blank?
   end
 
   def raw_message

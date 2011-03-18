@@ -222,6 +222,32 @@ STR
         @message.to_activity.should_not be_blank
       end
     end
+    
+    describe "with post control" do
+
+      before do
+        @message = Factory.create(:status_message, :text => "I hate WALRUSES!", :author => @user.person, :control_attributes => {:content => 'post control'})
+        @xml = @message.to_xml.to_s
+      end
+
+      it 'serializes the post_control' do
+        @xml.should include "<post_control_content>post control</post_control_content>"
+      end
+
+      describe '.from_xml' do
+
+        before do
+          @marshalled = StatusMessage.from_xml(@xml)
+        end
+
+        it 'marshals the post control' do
+          @marshalled.control.content.should == "post control"
+        end
+
+      end
+
+    end
+
   end
 
   describe 'youtube' do
