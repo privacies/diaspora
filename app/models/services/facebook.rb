@@ -21,45 +21,29 @@ class Services::Facebook < Service
 
   def finder(opts = {})
     Rails.logger.debug("event=friend_finder type=facebook sender_id=#{self.user_id}")
-    response = RestClient.get("https://graph.facebook.com/me/friends", {:params => {:access_token => self.access_token}})
-    data = JSON.parse(response.body)['data']
-
-    data_h = {}
-    data.each do |d|
-      data_h[d['id']] = {:name => d['name']}
+    if self.service_users == []
+      self.save_friends
+    else
+      Resque.enqueue(Job::UpdateServiceUsers, self.id)
     end
-
-    invitation_objects = Invitation.joins(:recipient).where(:sender_id => self.user_id,
-                                                            :users => {:invitation_service => 'facebook',
-                                                                       :invitation_identifier => data_h.keys})
-
-    invitation_objects.each do |inv|
-      data_h[inv.recipient.invitation_identifier][:invitation_id] = inv.id
-    end
-
-    service_objects = Services::Facebook.where(:uid => data_h.keys).includes(:user => {:person => :profile})
-    person_ids_and_uids = {}
-
-    service_objects.each do |s|
-      data_h[s.uid][:person] = s.user.person if s.user.person.profile.searchable
-      person_ids_and_uids[s.user.person.id] = s.uid
-    end
-
-    requests = Request.where(:recipient_id => self.user.person.id, :sender_id => person_ids_and_uids.keys).all
-    requests.each{|r| data_h[person_ids_and_uids[r.sender_id]][:request] = r}
-
-
-    contact_objects = Contact.unscoped.where(:user_id => self.user.id, :person_id => person_ids_and_uids.keys)
-    contact_objects.each{|c| data_h[person_ids_and_uids[c.person_id]][:contact] = c}
-
+    person = Person.arel_table
+    service_user = ServiceUser.arel_table
     if opts[:local]
-      data_h.delete_if {|key, value| value[:person].nil? }
+      ServiceUser.joins(:person).where(:service_id => self.id).where(person[:owner_id].not_eq(nil)).all
+    elsif opts[:remote]
+      ServiceUser.joins(:person).where(:service_id => self.id).where(person[:owner_id].eq(nil)).all
+    else
+      self.service_users
     end
+  end
 
-   if opts[:remote]
-      data_h.delete_if {|key, value| !value[:person].nil? }
-    end
-
-    data_h
+  def save_friends
+    url = "https://graph.facebook.com/me/friends?fields[]=name&fields[]=picture&access_token=#{URI.escape(self.access_token)}" 
+    response = RestClient.get(url)
+    data = JSON.parse(response.body)['data']
+    data.each{ |p|
+      ServiceUser.find_or_create_by_service_id_and_uid(:service_id => self.id, :name => p["name"],
+                         :uid => p["id"], :photo_url => p["picture"])
+    }
   end
 end
