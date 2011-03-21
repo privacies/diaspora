@@ -152,6 +152,7 @@ ru:
         zero: "no new messages"
     index: 
       create_a_new_message: "create a new message"
+      inbox: "Inbox"
       message_inbox: "Message Inbox"
       new_message: "New Message"
       no_conversation_selected: "no conversation selected"
@@ -228,6 +229,20 @@ ru:
       logout: "выйти"
       profile: "profile"
       settings: "settings"
+  likes: 
+    likes: 
+      people_dislike_this: 
+        few: "%{count} people disliked this"
+        many: "%{count} people disliked this"
+        one: "1 person disliked this"
+        other: "%{count} people disliked this"
+        zero: "no people disliked this"
+      people_like_this: 
+        few: "%{count} people liked this"
+        many: "%{count} people liked this"
+        one: "1 person liked this"
+        other: "%{count} people liked this"
+        zero: "no people liked this"
   more: "Подробнее"
   next: "далее"
   notifications: 
@@ -374,11 +389,6 @@ ru:
       notice: "Фотография загружена."
   posts: 
     doesnt_exist: "that post does not exist!"
-    index: 
-      nobody_talking: "Nobody is talking about %{tag} yet."
-      people_tagged_with: "People tagged with %{tag}"
-      posts_tagged_with: "Posts tagged with #%{tag}"
-      whatup: "What's happening on %{pod}"
   previous: "предыдущая"
   profile: "Профиль"
   profiles: 
@@ -509,6 +519,9 @@ ru:
       whats_on_your_mind: "о чём вы думаете?"
     reshare: 
       reshare: "Поделиться повторно"
+    stream_element: 
+      dislike: "I dislike this"
+      like: "I like this"
   status_messages: 
     create: 
       success: "Successfully mentioned: %{names}"
@@ -524,6 +537,11 @@ ru:
   stream_helper: 
     hide_comments: "скрыть комментарии"
     show_comments: "комментарии"
+  tags: 
+    show: 
+      nobody_talking: "Nobody is talking about %{tag} yet."
+      people_tagged_with: "People tagged with %{tag}"
+      posts_tagged_with: "Posts tagged with #%{tag}"
   the_world: "мир"
   username: "Пользователь"
   users: 

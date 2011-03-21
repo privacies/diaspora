@@ -24,8 +24,8 @@ class AspectsController < ApplicationController
     @selected_contacts.uniq!
 
     # redirect to signup
-    if (current_user.getting_started == true || @aspects.blank?) && !request.format.mobile?
-      redirect_to getting_started_path and return
+    if (current_user.getting_started == true || @aspects.blank?) && !request.format.mobile? && !request.format.js?
+      redirect_to getting_started_path
     else
       if params[:sort_order].blank? and session[:sort_order].blank?
          session[:sort_order] = 'updated_at'
@@ -36,7 +36,7 @@ class AspectsController < ApplicationController
       @aspect_ids = @aspects.map{|a| a.id}
 
       @posts = StatusMessage.joins(:aspects).where(:pending => false,
-               :aspects => {:id => @aspect_ids}).includes(:comments, :photos).select('DISTINCT `posts`.*').paginate(
+               :aspects => {:id => @aspect_ids}).includes(:comments, :photos, :likes, :dislikes).select('DISTINCT `posts`.*').paginate(
                :page => params[:page], :per_page => 15, :order => sort_order + ' DESC')
       @fakes = PostsFake.new(@posts)
 

@@ -152,6 +152,7 @@ nl:
         zero: "geen nieuwe berichten"
     index: 
       create_a_new_message: "maak een nieuw bericht"
+      inbox: "Inbox"
       message_inbox: "Berichten Inbox"
       new_message: "Nieuw Bericht"
       no_conversation_selected: "geen conversatie geselecteerd"
@@ -228,6 +229,20 @@ nl:
       logout: "log uit"
       profile: "profiel"
       settings: "instellingen"
+  likes: 
+    likes: 
+      people_dislike_this: 
+        few: "%{count} people disliked this"
+        many: "%{count} people disliked this"
+        one: "1 person disliked this"
+        other: "%{count} people disliked this"
+        zero: "no people disliked this"
+      people_like_this: 
+        few: "%{count} people liked this"
+        many: "%{count} people liked this"
+        one: "1 person liked this"
+        other: "%{count} people liked this"
+        zero: "no people liked this"
   more: "Meer"
   next: "volgende"
   notifications: 
@@ -374,11 +389,6 @@ nl:
       notice: "Foto succesvol veranderd."
   posts: 
     doesnt_exist: "die post bestaat niet!"
-    index: 
-      nobody_talking: "Er is nog niemand die het over %{tag} heeft gehad."
-      people_tagged_with: "Mensen getagged met %{tag}"
-      posts_tagged_with: "Posts getagged met #%{tag}"
-      whatup: "Nu op %{pod}"
   previous: "vorige"
   profile: "Profiel"
   profiles: 
@@ -509,6 +519,9 @@ nl:
       whats_on_your_mind: "waar denk je aan?"
     reshare: 
       reshare: "Herdeel"
+    stream_element: 
+      dislike: "I dislike this"
+      like: "I like this"
   status_messages: 
     create: 
       success: "Successfully mentioned: %{names}"
@@ -524,6 +537,11 @@ nl:
   stream_helper: 
     hide_comments: "verberg reacties"
     show_comments: "toon alle reacties"
+  tags: 
+    show: 
+      nobody_talking: "Nobody is talking about %{tag} yet."
+      people_tagged_with: "People tagged with %{tag}"
+      posts_tagged_with: "Posts tagged with #%{tag}"
   the_world: "de wereld"
   username: "Gebruikersnaam"
   users: 

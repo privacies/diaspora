@@ -11,11 +11,29 @@ And /^I expand the publisher$/ do
     ')
 end
 
+When /^I append "([^"]*)" to the publisher$/ do |stuff|
+  # Wait for the publisher to appear and all the elements to lay out
+  wait_until { evaluate_script("$('#status_message_fake_text').focus().length == 1") }
 
-When /^(?:|I )append "([^"]*)" with "([^"]*)"$/ do |field, value|
-  script = "$('#{ field }').val(function(index, value) {
-  return value + ' ' + '#{value}'; });"
-   page.execute_script(script)
+  # Write to the placeholder field and trigger a keyup to start the copy
+  page.execute_script <<-JS
+    $('#status_message_fake_text').val($('#status_message_fake_text').val() + '#{stuff}');
+    $('#status_message_fake_text').keyup();
+  JS
+
+  # Wait until the text appears in the placeholder
+  wait_until do
+    evaluate_script("$('#status_message_fake_text').val().match(/#{stuff}/) != null")
+  end
+
+  # WAIT FOR IT!...
+
+  # Wait until the text copy is finished
+  wait_until do
+    evaluate_script <<-JS
+      $('#status_message_text').val() && ($('#status_message_text').val().match(/#{stuff}/) != null)
+    JS
+  end
 end
 
 And /^I hover over the post$/ do
@@ -52,13 +70,13 @@ end
 
 When /^I press the first "([^"]*)"(?: within "([^"]*)")?$/ do |link_selector, within_selector|
   with_scope(within_selector) do
-   find(:css, link_selector).click
+    find(:css, link_selector).click
   end
 end
 
-When /^I press the ([\d])(nd|rd|st|th) "([^\"]*)"(?: within "([^\"]*)")?$/ do |number,rd, link_selector, within_selector|
+When /^I press the ([\d])(nd|rd|st|th) "([^\"]*)"(?: within "([^\"]*)")?$/ do |number, rd, link_selector, within_selector|
   with_scope(within_selector) do
-   find(:css, link_selector+":nth-child(#{number})").click
+    find(:css, link_selector+":nth-child(#{number})").click
   end
 end
 Then /^(?:|I )should see a "([^\"]*)"(?: within "([^\"]*)")?$/ do |selector, scope_selector|
@@ -113,4 +131,29 @@ end
 
 Then /^I should get download alert$/ do
   page.evaluate_script("window.alert = function() { return true; }")
+end
+
+When /^I search for "([^\"]*)"$/ do |search_term|
+  When "I fill in \"q\" with \"#{search_term}\""
+  page.execute_script <<-JS
+    var e = jQuery.Event("keypress");
+    e.keyCode = 13;
+    $("#q").trigger(e);
+  JS
+end
+
+Then /^I should( not)? see the contact dialog$/ do |not_see|
+  if not_see
+    wait_until { !page.find("#facebox").visible? }
+  else
+    wait_until { page.find("#facebox .share_with") && page.find("#facebox .share_with").visible? }
+  end
+end
+
+When /^I add the person to my first aspect$/ do
+  steps %Q{
+    And I press the first ".add.button" within "#facebox #aspects_list ul > li:first-child"
+    And I wait for the ajax to finish
+    Then I should see a ".added.button" within "#facebox #aspects_list ul > li:first-child"
+  }
 end

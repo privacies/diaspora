@@ -152,6 +152,7 @@ sk:
         zero: "no new messages"
     index: 
       create_a_new_message: "vytvoriť novú správu"
+      inbox: "Inbox"
       message_inbox: "Message Inbox"
       new_message: "Nová správa"
       no_conversation_selected: "no conversation selected"
@@ -228,6 +229,20 @@ sk:
       logout: "odhlásiť sa"
       profile: "profile"
       settings: "settings"
+  likes: 
+    likes: 
+      people_dislike_this: 
+        few: "%{count} people disliked this"
+        many: "%{count} people disliked this"
+        one: "1 person disliked this"
+        other: "%{count} people disliked this"
+        zero: "no people disliked this"
+      people_like_this: 
+        few: "%{count} people liked this"
+        many: "%{count} people liked this"
+        one: "1 person liked this"
+        other: "%{count} people liked this"
+        zero: "no people liked this"
   more: "Viac"
   next: "ďalej"
   notifications: 
@@ -374,11 +389,6 @@ sk:
       notice: "Fotka bola úspešne aktualizovaná."
   posts: 
     doesnt_exist: "that post does not exist!"
-    index: 
-      nobody_talking: "Nobody is talking about %{tag} yet."
-      people_tagged_with: "People tagged with %{tag}"
-      posts_tagged_with: "Posts tagged with #%{tag}"
-      whatup: "Čo sa deje na  %{pod}"
   previous: "Predchádzajúce"
   profile: "Profil"
   profiles: 
@@ -509,6 +519,9 @@ sk:
       whats_on_your_mind: "Čo máte na mysli?"
     reshare: 
       reshare: "Znovu zdieľať"
+    stream_element: 
+      dislike: "I dislike this"
+      like: "I like this"
   status_messages: 
     create: 
       success: "Successfully mentioned: %{names}"
@@ -524,6 +537,11 @@ sk:
   stream_helper: 
     hide_comments: "skyť komentáre"
     show_comments: "zobraziť komentáre"
+  tags: 
+    show: 
+      nobody_talking: "Nobody is talking about %{tag} yet."
+      people_tagged_with: "People tagged with %{tag}"
+      posts_tagged_with: "Posts tagged with #%{tag}"
   the_world: "svet"
   username: "Užívateľské meno"
   users: 

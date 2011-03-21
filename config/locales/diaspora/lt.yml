@@ -152,6 +152,7 @@ lt:
         zero: "no new messages"
     index: 
       create_a_new_message: "create a new message"
+      inbox: "Inbox"
       message_inbox: "Message Inbox"
       new_message: "New Message"
       no_conversation_selected: "no conversation selected"
@@ -228,6 +229,20 @@ lt:
       logout: "atsijungti"
       profile: "profile"
       settings: "settings"
+  likes: 
+    likes: 
+      people_dislike_this: 
+        few: "%{count} people disliked this"
+        many: "%{count} people disliked this"
+        one: "1 person disliked this"
+        other: "%{count} people disliked this"
+        zero: "no people disliked this"
+      people_like_this: 
+        few: "%{count} people liked this"
+        many: "%{count} people liked this"
+        one: "1 person liked this"
+        other: "%{count} people liked this"
+        zero: "no people liked this"
   more: "More"
   next: "next"
   notifications: 
@@ -374,11 +389,6 @@ lt:
       notice: "Nuotrauka atnaujinta sėkmingai."
   posts: 
     doesnt_exist: "that post does not exist!"
-    index: 
-      nobody_talking: "Nobody is talking about %{tag} yet."
-      people_tagged_with: "People tagged with %{tag}"
-      posts_tagged_with: "Posts tagged with #%{tag}"
-      whatup: "What's happening on %{pod}"
   previous: "previous"
   profile: "Profilis"
   profiles: 
@@ -509,6 +519,9 @@ lt:
       whats_on_your_mind: "what's on your mind?"
     reshare: 
       reshare: "Skelbti papildomai"
+    stream_element: 
+      dislike: "I dislike this"
+      like: "I like this"
   status_messages: 
     create: 
       success: "Successfully mentioned: %{names}"
@@ -524,6 +537,11 @@ lt:
   stream_helper: 
     hide_comments: "nascondi i commenti"
     show_comments: "show comments"
+  tags: 
+    show: 
+      nobody_talking: "Nobody is talking about %{tag} yet."
+      people_tagged_with: "People tagged with %{tag}"
+      posts_tagged_with: "Posts tagged with #%{tag}"
   the_world: "pasaulis"
   username: "Vartotojo vardas"
   users: 

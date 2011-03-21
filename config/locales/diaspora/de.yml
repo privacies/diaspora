@@ -152,6 +152,7 @@ de:
         zero: "Keine neuen Nachrichten"
     index: 
       create_a_new_message: "Erstelle neue Nachricht"
+      inbox: "Eingang"
       message_inbox: "Message Inbox"
       new_message: "Neue Nachricht"
       no_conversation_selected: "Keine Konversation ausgewählt"
@@ -228,6 +229,20 @@ de:
       logout: "Abmelden"
       profile: "Profil"
       settings: "Einstellungen"
+  likes: 
+    likes: 
+      people_dislike_this: 
+        few: "%{count} Personen gefällt das nicht"
+        many: "%{count} Personen gefällt das nicht"
+        one: "1 Person gefällt das nicht"
+        other: "%{count} Personen gefällt das nicht"
+        zero: "Keinem gefällt das nicht"
+      people_like_this: 
+        few: "%{count} Personen gefällt das"
+        many: "%{count} Personen gefällt das"
+        one: "1 Person gefällt das"
+        other: "%{count} Personen gefällt das"
+        zero: "Keinem gefällt das"
   more: "Mehr"
   next: "Nächste"
   notifications: 
@@ -374,11 +389,6 @@ de:
       notice: "Foto erfolgreich aktualisiert."
   posts: 
     doesnt_exist: "Dieser Post existiert nicht!"
-    index: 
-      nobody_talking: "Zurzeit spricht niemand über %{tag}."
-      people_tagged_with: "Personen getaggt mit %{tag}"
-      posts_tagged_with: "Posts, die mit #%{tag} getaggt sind"
-      whatup: "Was auf %{pod} passiert"
   previous: "Vorherige"
   profile: "Profil"
   profiles: 
@@ -395,7 +405,7 @@ de:
       your_photo: "Dein Profilbild"
       your_private_profile: "Dein privates Profil"
       your_public_profile: "Dein öffentliches Profil"
-      your_tags: "Du: in fünf #Tags"
+      your_tags: "Du in fünf #Tags"
       your_tags_placeholder: "Zum Beispiel: #Diaspora #bügeln #Kätzchen #Musik"
     update: 
       failed: "Fehler beim aktualisieren deines Profils"
@@ -509,6 +519,9 @@ de:
       whats_on_your_mind: "Woran denkst du gerade?"
     reshare: 
       reshare: "Erneut senden an"
+    stream_element: 
+      dislike: "Gefällt mir nicht"
+      like: "Gefällt mir"
   status_messages: 
     create: 
       success: "Erfolgreich erwähnt: %{names}"
@@ -524,28 +537,33 @@ de:
   stream_helper: 
     hide_comments: "Kommentare verbergen"
     show_comments: "alle Kommentare zeigen"
+  tags: 
+    show: 
+      nobody_talking: "Niemand hat bereits etwas über %{tag} gesagt."
+      people_tagged_with: "Personen die mit %{tag} getagt sind"
+      posts_tagged_with: "Beiträge die mit #%{tag} getagt sind"
   the_world: "Die Welt"
   username: "Benutzername"
   users: 
     destroy: "Konto erfolgreich geschlossen."
     edit: 
-      also_commented: "...jemand auch den Beitrag eines Kontaktes kommentiert hat?"
+      also_commented: "… jemand ebenfalls den Beitrag eines Kontaktes kommentiert hat?"
       change: "Ändern"
       change_language: "Sprache ändern"
       change_password: "Passwort ändern"
       close_account: "Konto schließen"
-      comment_on_post: "...jemand deinen Beitrag kommentiert?"
+      comment_on_post: "… jemand deinen Beitrag kommentiert hat?"
       current_password: "Derzeitiges Passwort"
       download_photos: "Meine Fotos herunterladen"
       download_xml: "Meine Daten herunterladen (XML)"
       edit_account: "Konto bearbeiten"
       export_data: "Daten exportieren"
-      mentioned: "...du in einem Beitrag erwähnt wirst?"
+      mentioned: "… du in einem Beitrag erwähnt wirst?"
       new_password: "Neues Passwort"
-      private_message: "...du eine private Nachricht erhälst?"
-      receive_email_notifications: "E-Mail-Benachrichtigungen empfangen wenn…"
-      request_acceptence: "...deine Teilen-Anfrage akzeptiert wurde?"
-      request_received: "...du eine neue Teilen-Anfrage erhalten hast?"
+      private_message: "… du eine private Nachricht erhältst?"
+      receive_email_notifications: "E-Mail-Benachrichtigungen empfangen, wenn …"
+      request_acceptence: "… deine Teilen-Anfrage akzeptiert wurde?"
+      request_received: "… du eine neue Teilen-Anfrage erhalten hast?"
       your_email: "Deine E-Mail-Adresse"
       your_handle: "Deine Diaspora* Adresse"
     getting_started: 

@@ -152,6 +152,7 @@ es:
         zero: "no hay nuevos mensajes"
     index: 
       create_a_new_message: "Crear un nuevo mensaje"
+      inbox: "Bandeja de Entrada"
       message_inbox: "Bandeja de entrada"
       new_message: "Nuevo Mensaje"
       no_conversation_selected: "ninguna conversación seleccionada"
@@ -228,6 +229,20 @@ es:
       logout: "Desconectarse"
       profile: "perfil"
       settings: "Configuración"
+  likes: 
+    likes: 
+      people_dislike_this: 
+        few: "%{count} people disliked this"
+        many: "%{count} people disliked this"
+        one: "1 person disliked this"
+        other: "%{count} people disliked this"
+        zero: "no people disliked this"
+      people_like_this: 
+        few: "%{count} people liked this"
+        many: "%{count} people liked this"
+        one: "1 person liked this"
+        other: "%{count} people liked this"
+        zero: "no people liked this"
   more: "Más"
   next: "Siguiente"
   notifications: 
@@ -374,11 +389,6 @@ es:
       notice: "Foto actualizada correctamente."
   posts: 
     doesnt_exist: "esa publicación no existe!"
-    index: 
-      nobody_talking: "Todavía nadie esta hablando sobre %{tag}."
-      people_tagged_with: "Personas etiquetadas con %{tag}"
-      posts_tagged_with: "La Publicación se ha etiquetado en #%{tag}"
-      whatup: "Que esta pasando en %{pod}"
   previous: "Anterior"
   profile: "Perfil"
   profiles: 
@@ -509,9 +519,12 @@ es:
       whats_on_your_mind: "¿Qué tal? ¡Qué pasa!"
     reshare: 
       reshare: "Publicar en..."
+    stream_element: 
+      dislike: "I dislike this"
+      like: "I like this"
   status_messages: 
     create: 
-      success: "Successfully mentioned: %{names}"
+      success: "Se ha mencionado con éxito a: %{names}"
     destroy: 
       failure: "Fallo elminando la publicación"
     helper: 
@@ -524,6 +537,11 @@ es:
   stream_helper: 
     hide_comments: "Ocultar comentarios"
     show_comments: "Mostrar comentarios"
+  tags: 
+    show: 
+      nobody_talking: "Nadie esta hablando de %{tag} todavía."
+      people_tagged_with: "Personas etiquetadas en %{tag}"
+      posts_tagged_with: "Publicaciones etiquetadas con #%{tag}"
   the_world: "el mundo"
   username: "Nombre de usuario"
   users: 
