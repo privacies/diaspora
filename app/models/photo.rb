@@ -4,7 +4,8 @@
 
 class Photo < Post
   require 'carrierwave/orm/activerecord'
-  mount_uploader :image, ImageUploader
+  mount_uploader :processed_image, ProcessedImage
+  mount_uploader :unprocessed_image, UnprocessedImage
 
   xml_attr :remote_photo_path
   xml_attr :remote_photo_name
@@ -32,24 +33,27 @@ class Photo < Post
   def self.diaspora_initialize(params = {})
     photo = super(params)
     image_file = params.delete(:user_file)
-    photo.random_string = gen_random_string(10)
-    photo.processed = false
-    photo.image.store! image_file
-    photo.update_photo_remote_path
+    photo.random_string = ActiveSupport::SecureRandom.hex(10)
+    photo.unprocessed_image.store! image_file
+    photo.update_remote_path
     photo
   end
 
   def not_processed?
-    !self.processed
+    processed_image.path.nil?
   end
 
-  def update_photo_remote_path
-    unless self.image.url.match(/^https?:\/\//)
+  def processed?
+    !processed_image.path.nil?
+  end
+
+  def update_remote_path
+    unless self.unprocessed_image.url.match(/^https?:\/\//)
       pod_url = AppConfig[:pod_url].dup
       pod_url.chop! if AppConfig[:pod_url][-1,1] == '/'
-      remote_path = "#{pod_url}#{self.image.url}"
+      remote_path = "#{pod_url}#{self.unprocessed_image.url}"
     else
-      remote_path = self.image.url
+      remote_path = self.unprocessed_image.url
     end
 
     name_start = remote_path.rindex '/'
@@ -70,13 +74,13 @@ class Photo < Post
   end
 
   def url(name = nil)
-    if self.not_processed? || (!self.image.path.blank? && self.image.path.include?('.gif'))
-      image.url
-    elsif remote_photo_path
+    if remote_photo_path
       name = name.to_s + '_' if name
       remote_photo_path + name.to_s + remote_photo_name
+    elsif not_processed?
+      unprocessed_image.url(name)
     else
-      image.url(name)
+      processed_image.url(name)
     end
   end
 
@@ -96,17 +100,15 @@ class Photo < Post
     Resque.enqueue(Job::ProcessPhoto, self.id)
   end
 
+  def process
+    return false if unprocessed_image.path.include?('.gif') || self.processed?
+    processed_image.store!(unprocessed_image) #Ultra naive
+    save!
+  end
+
   def mutable?
     true
   end
-
-  def self.gen_random_string(len)
-    chars = ("a".."z").to_a + ("A".."Z").to_a + ("0".."9").to_a
-    string = ""
-    1.upto(len) { |i| string << chars[rand(chars.size-1)] }
-    return string
-  end
-
 
   def as_json(opts={})
     {

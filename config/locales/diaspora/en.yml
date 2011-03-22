@@ -100,12 +100,6 @@ en:
       post_time: "post time"
     show:
       edit_aspect: "edit aspect"
-    no_contacts_message:
-      nobody: "Bring the people that matter in your life to Diaspora!"
-      nobody_in_aspect: "Your aspect '%{aspect_name}' is empty."
-      add_contact: "Add a contact"
-      add_contact_to: "Add someone to %{aspect_name}"
-      invite: "Invite someone to join Diaspora!"
     no_posts_message:
       start_talking: "Nobody has said anything yet.  Get the conversation started!"
     manage:
@@ -306,6 +300,7 @@ en:
     love: "love,"
     thanks: "Thanks,"
     diaspora: "the diaspora email robot"
+    manage_your_email_settings: "manage your email settings"
     single_admin:
         subject: "A message about your Diaspora account:"
         admin: "Your Diaspora administrator"
@@ -527,6 +522,7 @@ en:
       share_with: "share with"
       whats_on_your_mind: "what's on your mind?"
       publishing_to: "publishing to: "
+      public: "Public"
     add_contact:
       enter_a_diaspora_username: "Enter a Diaspora username:"
       your_diaspora_username_is: "Your Diaspora username is: %{diaspora_handle}"
@@ -566,6 +562,7 @@ en:
     show:
       destroy: "Delete"
       permalink: "permalink"
+      not_found: "Sorry, we couldn't find that post."
     helper:
       no_message_to_display: "No message to display."
     destroy:

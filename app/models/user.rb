@@ -37,7 +37,7 @@ class User < ActiveRecord::Base
   has_many :contacts
   has_many :contact_people, :through => :contacts, :source => :person
   has_many :services
-  has_many :user_preferences  
+  has_many :user_preferences
 
   before_destroy :disconnect_everyone, :remove_mentions, :remove_person
   before_save do
@@ -52,7 +52,7 @@ class User < ActiveRecord::Base
       self.disable_mail = false
       self.save
     end
-    
+
     pref_hash.keys.each do |key|
       if pref_hash[key] == 'true'
         self.user_preferences.find_or_create_by_email_type(key)
