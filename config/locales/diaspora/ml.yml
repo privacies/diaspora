@@ -33,6 +33,7 @@ ml:
             username: 
               taken: "നേരത്തേ എടുത്തിട്ടുണ്ട്."
   ago: "%{time} മുന്‍പ്"
+  all_aspects: "All aspects"
   application: 
     helper: 
       aspect_badge: 
@@ -98,12 +99,6 @@ ml:
     new_aspect: 
       create: "ഉണ്ടാക്കു"
       name: "പേര്"
-    no_contacts_message: 
-      add_contact: "ഒരു സമ്പര്‍ക്കം ചേര്‍ക്കുക"
-      add_contact_to: "%{aspect_name} ലേയ്ക്ക് ആരെയെങ്കിലും ചേര്‍ക്കുക"
-      invite: "ആരെയെങ്കിലും ഡയസ്പോറയില്‍ ചേരാന്‍ ക്ഷണിക്കുക!"
-      nobody: "Bring the people that matter in your life to Diaspora!"
-      nobody_in_aspect: "താങ്കളുടെ '%{aspect_name}' പരിചയം ശൂന്യമാണ്."
     no_posts_message: 
       start_talking: "ആരും ഒന്നും പറയുന്നില്ല. സംഭാഷണം തുടങ്ങിവെയ്ക്കു!"
     one: "ഒരു പരിചയം"
@@ -266,6 +261,7 @@ ml:
     mentioned: "has mentioned you in their"
     new_request: "offered to share with you."
     post: "കുറിപ്പ്"
+    private_message: "sent you a message."
     request_accepted: "താങ്കളുടെ പങ്കിടല്‍ അഭ്യര്‍ത്ഥന അംഗീകരിച്ചു."
   notifier: 
     also_commented: 
@@ -279,6 +275,7 @@ ml:
     diaspora: "ഡയസ്പോറ ഇമെയില്‍ ചാത്തന്‍"
     hello: "നമസ്‌കാരം %{name}!"
     love: "സ്നേഹപൂര്‍വ്വം,"
+    manage_your_email_settings: "manage your email settings"
     mentioned: 
       mentioned: "mentioned you in a post:"
       sign_in: "കാണാനായി അകത്ത് കയറുക."
@@ -306,6 +303,8 @@ ml:
   password: "അടയാളവാക്ക്"
   password_confirmation: "അടയാളവാക്ക് തിര്‍ച്ചപ്പെടുത്തുക"
   people: 
+    add_contact_small: 
+      add_contact_from_tag: "add contact from tag"
     aspect_list: 
       edit_membership: "പരിചയത്തിലെ അംഗത്വം തിരുത്തു"
     few: "%{count} ആളുകള്‍"
@@ -332,6 +331,7 @@ ml:
       edit_my_profile: "എന്റെ പ്രൊഫൈല്‍ തിരുത്തുക"
       gender: "ലിംഗം"
       in_aspects: "പരിചയത്തില്‍"
+      location: "location"
       remove_contact: "സമ്പര്‍ക്കം മാറ്റുക"
       remove_from: "%{name} നെ %{aspect} നിന്ന് മാറ്റട്ടേ?"
     show: 
@@ -402,6 +402,7 @@ ml:
       your_bio: "നിങ്ങളുടെ സ്വയം വിവരണം"
       your_birthday: "താങ്കളുടെ ജന്മദിനം"
       your_gender: "Your gender"
+      your_location: "Your location"
       your_name: "താങ്കളുടെ പേര്"
       your_photo: "താങ്കളുടെ ചിത്രം"
       your_private_profile: "Your private profile"
@@ -510,10 +511,11 @@ ml:
       add_photos: "ചിത്രങ്ങള്‍ ചേര്‍ക്കുക"
       all: "എല്ലാം"
       all_contacts: "എല്ലാ സമ്പര്‍ക്കവും"
+      click_to_share_with: "Click to share with: "
       make_public: "പൊതുവാക്കുക"
-      mention_helper_text: "to mention someone, press '@' and start typing their name"
       post_a_message_to: "%{aspect}ല്‍ ഒരു സന്ദേശം പ്രസിദ്ധീകരിക്കുക"
       posting: "കുറിക്കുന്നു..."
+      public: "Public"
       publishing_to: "publishing to: "
       share: "പങ്കുവെയ്ക്കുക"
       share_with: "പങ്കുവെയ്ക്കുക"
@@ -534,6 +536,7 @@ ml:
       mentioning: "Mentioning: %{person}"
     show: 
       destroy: "നീക്കം ചെയ്യുക"
+      not_found: "Sorry, we couldn't find that post."
       permalink: "സ്ഥിരം കണ്ണി"
   stream_helper: 
     hide_comments: "അഭിപ്രായങ്ങള്‍ മറയ്ക്കുക"
@@ -570,6 +573,7 @@ ml:
     getting_started: 
       connect_on_diaspora: "ഡയസ്പോറയില്‍ ബന്ധിപ്പിക്കു"
       connect_services: "താങ്കളുടെ മറ്റുള്ള സേവനങ്ങള്‍ ബന്ധിപ്പിക്കു"
+      could_not_find_anyone: "Could not find any friends on Diaspora*. Use the friend finder to invite them."
       edit_profile: "താങ്കളുടെ പ്രൊഫൈല്‍ തിരുത്തുക"
       finished: "തീര്‍ന്നു!"
       save_and_continue: "സൂക്ഷിച്ച ശേഷം തുടരു"

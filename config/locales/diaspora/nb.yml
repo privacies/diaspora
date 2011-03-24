@@ -33,6 +33,7 @@ nb:
             username: 
               taken: "er allerede tatt."
   ago: "%{time} siden"
+  all_aspects: "All aspects"
   application: 
     helper: 
       aspect_badge: 
@@ -98,12 +99,6 @@ nb:
     new_aspect: 
       create: "Opprett"
       name: "Navn"
-    no_contacts_message: 
-      add_contact: "Legg til en kontakt"
-      add_contact_to: "Legg til en kontakt i %{aspect_name}"
-      invite: "Inviter noen til Diaspora!"
-      nobody: "We know you know people — bring them to Diaspora!"
-      nobody_in_aspect: "Aspektet ditt '%{aspect_name}' er tomt."
     no_posts_message: 
       start_talking: "Ingen har sagt noe enda. Få samtalen i gang!"
     one: "1 aspekt"
@@ -266,6 +261,7 @@ nb:
     mentioned: "har nevnt deg i sin"
     new_request: "offered to share with you."
     post: "post"
+    private_message: "sent you a message."
     request_accepted: "accepted your share request."
   notifier: 
     also_commented: 
@@ -279,6 +275,7 @@ nb:
     diaspora: "the diaspora email robot"
     hello: "Hei %{name}!"
     love: "love,"
+    manage_your_email_settings: "manage your email settings"
     mentioned: 
       mentioned: "nevnte deg i et innlegg:"
       sign_in: "Sign in to view it."
@@ -306,6 +303,8 @@ nb:
   password: "Passord"
   password_confirmation: "Passord bekreftelse"
   people: 
+    add_contact_small: 
+      add_contact_from_tag: "add contact from tag"
     aspect_list: 
       edit_membership: "edit aspect membership"
     few: "%{count} people"
@@ -332,6 +331,7 @@ nb:
       edit_my_profile: "Endre profilen min"
       gender: "kjønn"
       in_aspects: "i aspekt"
+      location: "location"
       remove_contact: "fjern kontakt"
       remove_from: "Fjern %{name} fra %{aspect}?"
     show: 
@@ -402,6 +402,7 @@ nb:
       your_bio: "Om meg"
       your_birthday: "Din Fødselsdato"
       your_gender: "Ditt kjønn"
+      your_location: "Your location"
       your_name: "Ditt navn"
       your_photo: "Ditt profilbilde"
       your_private_profile: "Your private profile"
@@ -510,10 +511,11 @@ nb:
       add_photos: "legg til bilder"
       all: "all"
       all_contacts: "alle kontakter"
+      click_to_share_with: "Click to share with: "
       make_public: "gjør offentlig"
-      mention_helper_text: "for å nevne noen, skriv '@' og begynn å skriv navnet deres"
       post_a_message_to: "Post et innlegg til %{aspect}"
       posting: "Poster..."
+      public: "Public"
       publishing_to: "publishing to: "
       share: "Del"
       share_with: "Share with %{aspect}"
@@ -534,6 +536,7 @@ nb:
       mentioning: "Mentioning: %{person}"
     show: 
       destroy: "Utslett"
+      not_found: "Sorry, we couldn't find that post."
       permalink: "permalink"
   stream_helper: 
     hide_comments: "hide comments"
@@ -570,6 +573,7 @@ nb:
     getting_started: 
       connect_on_diaspora: "Connect on Diaspora"
       connect_services: "Connect your services"
+      could_not_find_anyone: "Could not find any friends on Diaspora*. Use the friend finder to invite them."
       edit_profile: "Rediger profilen"
       finished: "Ferdig!"
       save_and_continue: "Lagre og fortsett"

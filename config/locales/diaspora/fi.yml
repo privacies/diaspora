@@ -33,6 +33,7 @@ fi:
             username: 
               taken: "on jo varattu."
   ago: "%{time} sitten"
+  all_aspects: "All aspects"
   application: 
     helper: 
       aspect_badge: 
@@ -98,12 +99,6 @@ fi:
     new_aspect: 
       create: "Luo"
       name: "Nimi"
-    no_contacts_message: 
-      add_contact: "Lisää kontakti"
-      add_contact_to: "Lisää henkilö näkymään %{aspect_name}"
-      invite: "Kutsu ystäväsi Diasporan käyttäjäksi!"
-      nobody: "Tuo elämäsi tärkeät ihmiset Diasporaan!"
-      nobody_in_aspect: "Näkymäsi, '%{aspect_name}', on tyhjä."
     no_posts_message: 
       start_talking: "Kukaan ei ole sanonut vielä mitään. Aloita keskustelu!"
     one: "1 näkymä"
@@ -266,6 +261,7 @@ fi:
     mentioned: "on maininnut sinut heidän"
     new_request: "haluaa jakaa kanssasi."
     post: "viesti"
+    private_message: "sent you a message."
     request_accepted: "hyväksyi jakopyyntösi."
   notifier: 
     also_commented: 
@@ -279,6 +275,7 @@ fi:
     diaspora: "Diasporan sähköpostirobotti"
     hello: "Hei %{name}!"
     love: "Terveisin,"
+    manage_your_email_settings: "manage your email settings"
     mentioned: 
       mentioned: "mainitsi sinut viestissään:"
       sign_in: "Kirjaudu sisään nähdäksesi."
@@ -306,6 +303,8 @@ fi:
   password: "Salasana"
   password_confirmation: "Salasanan varmistus"
   people: 
+    add_contact_small: 
+      add_contact_from_tag: "add contact from tag"
     aspect_list: 
       edit_membership: "muokkaa näkymän jäsenyyttä."
     few: "%{count} people"
@@ -332,6 +331,7 @@ fi:
       edit_my_profile: "Muokkaa profiilia"
       gender: "Sukupuoli"
       in_aspects: "näkymissä"
+      location: "location"
       remove_contact: "poista kontakti"
       remove_from: "Poista %{name} näkymästä %{aspect}?"
     show: 
@@ -402,6 +402,7 @@ fi:
       your_bio: "Biografia"
       your_birthday: "Syntymäpäivä"
       your_gender: "Sukupuolesi"
+      your_location: "Your location"
       your_name: "Nimesi"
       your_photo: "Profiili kuva"
       your_private_profile: "Yksityinen profiilisi"
@@ -510,10 +511,11 @@ fi:
       add_photos: "lisää kuvia"
       all: "kaikki"
       all_contacts: "kaikki kontaktit"
+      click_to_share_with: "Click to share with: "
       make_public: "tee julkiseksi"
-      mention_helper_text: "mainitaksesi jonkun, valitse '@' ja kirjoita nimen alku"
       post_a_message_to: "Lähetä viesti näkymään %{aspect}"
       posting: "Lähetetään..."
+      public: "Public"
       publishing_to: "publishing to: "
       share: "Jaa"
       share_with: "Jaa"
@@ -534,6 +536,7 @@ fi:
       mentioning: "Mentioning: %{person}"
     show: 
       destroy: "Poista"
+      not_found: "Sorry, we couldn't find that post."
       permalink: "pysyvä linkki"
   stream_helper: 
     hide_comments: "piilota kommentit"
@@ -570,6 +573,7 @@ fi:
     getting_started: 
       connect_on_diaspora: "Yhdistä Diasporaan"
       connect_services: "Yhdistä muut palvelusi"
+      could_not_find_anyone: "Could not find any friends on Diaspora*. Use the friend finder to invite them."
       edit_profile: "Muokkaa profiiliasi"
       finished: "Valmis!"
       save_and_continue: "Tallenna ja jatka"

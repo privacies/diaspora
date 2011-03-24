@@ -25,7 +25,3 @@ eve.person.profile.update_attributes(:first_name => "Eve", :last_name => "Doe")
 
 connect_users(bob, bob.aspects.first, alice, alice.aspects.first)
 connect_users(bob, bob.aspects.first, eve, eve.aspects.first)
-
-alice.services << Services::Facebook.create(:user_id => alice.id, :uid => 'a1')
-bob.services << Services::Facebook.create(:user_id => bob.id, :uid => 'b2')
-eve.services << Services::Facebook.create(:user_id => eve.id, :uid => 'e3')

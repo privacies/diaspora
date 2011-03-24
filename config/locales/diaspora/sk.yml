@@ -33,6 +33,7 @@ sk:
             username: 
               taken: "je už obsadený."
   ago: "%{time} dozadu"
+  all_aspects: "All aspects"
   application: 
     helper: 
       aspect_badge: 
@@ -98,12 +99,6 @@ sk:
     new_aspect: 
       create: "Vytvoriť"
       name: "Meno"
-    no_contacts_message: 
-      add_contact: "Pridať kontakt"
-      add_contact_to: "Pridať niekoho k aspektu %{aspect_name}"
-      invite: "Prizvať niekoho k Diaspore!"
-      nobody: "Pozvite do Diaspory ľudí, na ktorých Vám záleží!"
-      nobody_in_aspect: "Váš aspekt '%{aspect_name}' je prázdny."
     no_posts_message: 
       start_talking: "Nikto nič nevraví. Začnite Vy!"
     one: "1 aspect"
@@ -266,6 +261,7 @@ sk:
     mentioned: "ťa spomenuli v ich"
     new_request: "offered to share with you."
     post: "príspevok"
+    private_message: "sent you a message."
     request_accepted: "Vaša požiadavka bola akceptovaná."
   notifier: 
     also_commented: 
@@ -279,6 +275,7 @@ sk:
     diaspora: "e-mail robot Diaspory"
     hello: "Ahoj %{name}!"
     love: "miluje,"
+    manage_your_email_settings: "manage your email settings"
     mentioned: 
       mentioned: "ťa spomenul v príspevku:"
       sign_in: "K prezeraniu sa prihlás."
@@ -306,6 +303,8 @@ sk:
   password: "Heslo"
   password_confirmation: "Potvrdenie hesla"
   people: 
+    add_contact_small: 
+      add_contact_from_tag: "add contact from tag"
     aspect_list: 
       edit_membership: "upraviť členstvo v Aspekte."
     few: "%{count} people"
@@ -332,6 +331,7 @@ sk:
       edit_my_profile: "Upraviť profil"
       gender: "pohlavie"
       in_aspects: "v aspektoch"
+      location: "location"
       remove_contact: "odstrániť kontakt"
       remove_from: "Odstrániť užívateľa %{name} z aspektu %{aspect}?"
     show: 
@@ -402,6 +402,7 @@ sk:
       your_bio: "Niečo o mne"
       your_birthday: "Dátum narodenia"
       your_gender: "Pohlavie"
+      your_location: "Your location"
       your_name: "Meno"
       your_photo: "Tvoja fotka"
       your_private_profile: "Your private profile"
@@ -510,10 +511,11 @@ sk:
       add_photos: "Pridať fotky"
       all: "všetko"
       all_contacts: "Všetky kontakty"
+      click_to_share_with: "Click to share with: "
       make_public: "Zverejniť"
-      mention_helper_text: "spomenúť niekoho, stlač '@' a začni písať jeho meno"
       post_a_message_to: "Poslať správu na aspekt %{aspect}"
       posting: "Posielam..."
+      public: "Public"
       publishing_to: "publishing to: "
       share: "Zdieľať"
       share_with: "Zdieľať s aspektom %{aspect}"
@@ -534,6 +536,7 @@ sk:
       mentioning: "Mentioning: %{person}"
     show: 
       destroy: "Zmazať"
+      not_found: "Sorry, we couldn't find that post."
       permalink: "permalink"
   stream_helper: 
     hide_comments: "skyť komentáre"
@@ -570,6 +573,7 @@ sk:
     getting_started: 
       connect_on_diaspora: "Connect on Diaspora"
       connect_services: "Pripojiť Vaše služby"
+      could_not_find_anyone: "Could not find any friends on Diaspora*. Use the friend finder to invite them."
       edit_profile: "Upraviť Váš profil"
       finished: "Dokončené!"
       save_and_continue: "Uložiť a pokračovať"

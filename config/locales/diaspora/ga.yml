@@ -33,6 +33,7 @@ ga:
             username: 
               taken: "is already taken."
   ago: "%{time} ó shin"
+  all_aspects: "All aspects"
   application: 
     helper: 
       aspect_badge: 
@@ -98,12 +99,6 @@ ga:
     new_aspect: 
       create: "Cruthaigh"
       name: "Ainm"
-    no_contacts_message: 
-      add_contact: "Cuir teagmháil leis"
-      add_contact_to: "Cuir teaghmháil le %{aspect_name}"
-      invite: "Seol cuireadh chuig duine chun comhcheangail le Diaspora!"
-      nobody: "Tóg na daoine i gceist i do saol chuig Diaspora!"
-      nobody_in_aspect: "Tá do gné '%{aspect_name}' folamh."
     no_posts_message: 
       start_talking: "Níor deireadh aon rud fós. Cuir tús leis an comhrá!"
     one: "1 aspect"
@@ -266,6 +261,7 @@ ga:
     mentioned: "has mentioned you in their"
     new_request: "ofráiladh chun roint leant"
     post: "póst"
+    private_message: "sent you a message."
     request_accepted: "glacadh le do iarratas roinnt"
   notifier: 
     also_commented: 
@@ -279,6 +275,7 @@ ga:
     diaspora: "an róbat ríomhpost diaspora"
     hello: "Haileo %{name}!"
     love: "le meas,"
+    manage_your_email_settings: "manage your email settings"
     mentioned: 
       mentioned: "mentioned you in a post:"
       sign_in: "Sign in to view it."
@@ -306,6 +303,8 @@ ga:
   password: "Pasfhocal"
   password_confirmation: "Deimhniú pasfhocal"
   people: 
+    add_contact_small: 
+      add_contact_from_tag: "add contact from tag"
     aspect_list: 
       edit_membership: "athraigh ballraíocht gné"
     few: "%{count} people"
@@ -332,6 +331,7 @@ ga:
       edit_my_profile: "Athraigh mo próifíl"
       gender: "inscne"
       in_aspects: "i gnéithe"
+      location: "location"
       remove_contact: "fhaíl ré le teagmháil"
       remove_from: "Fháil ré le %{name} ó %{aspect}?"
     show: 
@@ -402,6 +402,7 @@ ga:
       your_bio: "Your bio"
       your_birthday: "Your birthday"
       your_gender: "Your gender"
+      your_location: "Your location"
       your_name: "Your name"
       your_photo: "Your photo"
       your_private_profile: "Your private profile"
@@ -510,10 +511,11 @@ ga:
       add_photos: "cuir pictiúrí le"
       all: "gach rud"
       all_contacts: "gach teagmháil"
+      click_to_share_with: "Click to share with: "
       make_public: "dean phoiblí"
-      mention_helper_text: "to mention someone, press '@' and start typing their name"
       post_a_message_to: "Chuir teachtaireach chuig %{aspect}"
       posting: "Póstáil..."
+      public: "Public"
       publishing_to: "publishing to: "
       share: "Roinn"
       share_with: "Roinn le %{aspect}"
@@ -534,6 +536,7 @@ ga:
       mentioning: "Mentioning: %{person}"
     show: 
       destroy: "Scrios"
+      not_found: "Sorry, we couldn't find that post."
       permalink: "nasc-buan"
   stream_helper: 
     hide_comments: "folaigh nótaí tráchta"
@@ -570,6 +573,7 @@ ga:
     getting_started: 
       connect_on_diaspora: "Connect on Diaspora"
       connect_services: "Ceangailt do seirbhísí eile"
+      could_not_find_anyone: "Could not find any friends on Diaspora*. Use the friend finder to invite them."
       edit_profile: "Athraigh do próifíl"
       finished: "Críochnaithe!"
       save_and_continue: "Sáibháil agus leanúint ar aghaidh"

@@ -21,7 +21,7 @@ class Services::Facebook < Service
 
   def finder(opts = {})
     Rails.logger.debug("event=friend_finder type=facebook sender_id=#{self.user_id}")
-    if self.service_users == []
+    if self.service_users.blank?
       self.save_friends
     else
       Resque.enqueue(Job::UpdateServiceUsers, self.id)
@@ -38,7 +38,7 @@ class Services::Facebook < Service
   end
 
   def save_friends
-    url = "https://graph.facebook.com/me/friends?fields[]=name&fields[]=picture&access_token=#{URI.escape(self.access_token)}" 
+    url = "https://graph.facebook.com/me/friends?fields[]=name&fields[]=picture&access_token=#{URI.escape(self.access_token)}"
     response = RestClient.get(url)
     data = JSON.parse(response.body)['data']
     data.each{ |p|

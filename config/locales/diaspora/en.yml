@@ -30,6 +30,7 @@ en:
   next: "next"
   previous: "previous"
   _comments: "Comments"
+  all_aspects: "All aspects"
 
 
   #for reference translation, the real activerecord english transations are actually
@@ -276,6 +277,7 @@ en:
   notifications:
     request_accepted: "accepted your share request."
     new_request: "offered to share with you."
+    private_message: "sent you a message."
     comment_on_post: "commented on your"
     also_commented: "also commented on %{post_author}'s"
     mentioned: "has mentioned you in their"
@@ -369,6 +371,7 @@ en:
       remove_contact: "remove contact"
       edit_my_profile: "Edit my profile"
       bio: "bio"
+      location: "location"
       gender: "gender"
       born: "birthday"
       in_aspects: "in aspects"
@@ -379,6 +382,8 @@ en:
       people_on_pod_are_aware_of: " people on pod are aware of"
     aspect_list:
       edit_membership: "edit aspect membership"
+    add_contact_small:
+      add_contact_from_tag: "add contact from tag"
 
   photos:
     show:
@@ -431,6 +436,7 @@ en:
       your_tags: "You: in 5 #tags"
       your_tags_placeholder: "i.e. #diaspora #ironing #kittens #music"
       your_bio: "Your bio"
+      your_location: "Your location"
       your_photo: "Your photo"
       update_profile: "Update Profile"
       allow_search: "Allow for people to search for you within Diaspora"
@@ -511,7 +517,6 @@ en:
 
   shared:
     publisher:
-      mention_helper_text: "to mention someone, press '@' and start typing their name"
       posting: "Posting..."
       share: "Share"
       post_a_message_to: "Post a message to %{aspect}"
@@ -523,6 +528,7 @@ en:
       whats_on_your_mind: "what's on your mind?"
       publishing_to: "publishing to: "
       public: "Public"
+      click_to_share_with: "Click to share with: "
     add_contact:
       enter_a_diaspora_username: "Enter a Diaspora username:"
       your_diaspora_username_is: "Your Diaspora username is: %{diaspora_handle}"
@@ -609,6 +615,7 @@ en:
       finished: "Finished!"
       skip: "skip getting started"
       save_and_continue: "Save and continue"
+      could_not_find_anyone: "Could not find any friends on Diaspora*. Use the friend finder to invite them."
       step_3:
         finish: "Finish"
         people_already_on_diaspora: "People already on Diaspora"

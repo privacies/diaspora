@@ -33,6 +33,7 @@ eu:
             username: 
               taken: "erabilpenean dago jada."
   ago: "%{time} d(ir)ela"
+  all_aspects: "Alderdi guztiak"
   application: 
     helper: 
       aspect_badge: 
@@ -74,7 +75,7 @@ eu:
       remove_aspect: "Alderdi hau ezabatu"
       rename: "berrizendatu"
       update: "eguneratu"
-      updating: "updating"
+      updating: "eguneratzen"
     few: "%{count} alderdi"
     helper: 
       are_you_sure: "Ziur al zaude alderdi hau ezabatu nahi duzunaz?"
@@ -98,12 +99,6 @@ eu:
     new_aspect: 
       create: "Sortu"
       name: "Izena"
-    no_contacts_message: 
-      add_contact: "Adiskidea gehitu"
-      add_contact_to: "Norbait gehitu %{aspect_name}(r)a"
-      invite: "Gonbidatu norbait Diasporara!"
-      nobody: "Ekar ezazu zure bizitzako jende garrantzitsua Diasporara!"
-      nobody_in_aspect: "Zure alderdi '%{aspect_name}' hutsik dago."
     no_posts_message: 
       start_talking: "Oraindik inork ez du ezer esan. Izan zaitez lehenengoa!"
     one: "alderdi 1"
@@ -123,7 +118,7 @@ eu:
     few: "%{count} iruzkin"
     many: "%{count} iruzkin"
     new_comment: 
-      comment: "Iruzkindu"
+      comment: "iruzkindu"
       commenting: "Iruzkintzen..."
     one: "iruzkin 1"
     other: "%{count} iruzkin"
@@ -266,6 +261,7 @@ eu:
     mentioned: "aipatu zaituzte bere"
     new_request: "(e)k zurekin partekatu nahi du."
     post: "mezua"
+    private_message: "(e)k mezu bat bidali dizu."
     request_accepted: "zure partekatze eskaera onartu du."
   notifier: 
     also_commented: 
@@ -279,6 +275,7 @@ eu:
     diaspora: "diasporaren e-posta robota"
     hello: "Kaixo, %{name}!"
     love: "ikusi arte,"
+    manage_your_email_settings: "kudeatu zure e-posta ezarpenak"
     mentioned: 
       mentioned: "zu aipatu zaituzte mezu batean:"
       sign_in: "Sartu ikusteko."
@@ -306,6 +303,8 @@ eu:
   password: "Pasahitza"
   password_confirmation: "Pasahitz baieztapena"
   people: 
+    add_contact_small: 
+      add_contact_from_tag: "gehitu adiskidea etiketatik abiatuta"
     aspect_list: 
       edit_membership: "aldatu alderdiaren bazkidetza"
     few: "%{count} pertsona"
@@ -323,8 +322,8 @@ eu:
     person: 
       add_contact: "adiskidea gehitu"
       already_connected: "Dagoeneko harremanetan"
-      pending_request: "onarpenaren zain"
-      thats_you: "zu zeu zara!"
+      pending_request: "Onarpenaren zain"
+      thats_you: "Zu zeu zara!"
     profile_sidebar: 
       bio: "niri buruz"
       born: "jaioteguna"
@@ -332,6 +331,7 @@ eu:
       edit_my_profile: "Nire profila aldatu"
       gender: "sexua"
       in_aspects: "alderdietan"
+      location: "kokalekua"
       remove_contact: "adiskidea ezabatu"
       remove_from: "%{name} ezabatu %{aspect} alderditik?"
     show: 
@@ -402,6 +402,7 @@ eu:
       your_bio: "Zuri buruz"
       your_birthday: "Zure urtemuga"
       your_gender: "Zure sexua"
+      your_location: "Zure kokalekua"
       your_name: "Zure izena"
       your_photo: "Zure argazkia"
       your_private_profile: "Zure profil pribatua"
@@ -510,10 +511,11 @@ eu:
       add_photos: "argazkiak gehitu"
       all: "guztiak"
       all_contacts: "adiskide guztiak"
+      click_to_share_with: "Sakatu hauekin partekatzeko:"
       make_public: "publikoa egin"
-      mention_helper_text: "norbait aipatzeko, sakatu '@' eta hasi adiskidearen izena idazten"
       post_a_message_to: "%{aspect}(e)n mezu bat partekatu"
       posting: "Partekatzen..."
+      public: "Publikoa"
       publishing_to: "hemen partekatzen:"
       share: "Partekatu"
       share_with: "honekin partekatu:"
@@ -534,6 +536,7 @@ eu:
       mentioning: "Aipatzen: %{person}"
     show: 
       destroy: "Suntsitu"
+      not_found: "Barkatu, baina ezin izan dugu mezu hori aurkitu."
       permalink: "permalink"
   stream_helper: 
     hide_comments: "iruzkinak ezkutatu"
@@ -570,6 +573,7 @@ eu:
     getting_started: 
       connect_on_diaspora: "Konektatu Diasporan"
       connect_services: "Beste zerbitzu batzuekin lotu"
+      could_not_find_anyone: "Ezin izan da adiskiderik aurkitu Diasporan. Erabili adiskide bilatzailea norbait gonbidatzeko."
       edit_profile: "Zure profila aldatu"
       finished: "Bukatua!"
       save_and_continue: "Gorde eta jarraitu"

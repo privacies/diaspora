@@ -33,6 +33,7 @@ fr:
             username: 
               taken: "est déjà pris."
   ago: "Il y a %{time}"
+  all_aspects: "All aspects"
   application: 
     helper: 
       aspect_badge: 
@@ -98,12 +99,6 @@ fr:
     new_aspect: 
       create: "Créer"
       name: "Nom"
-    no_contacts_message: 
-      add_contact: "Ajouter un contact"
-      add_contact_to: "Ajouter quelqu'un à %{aspect_name}"
-      invite: "Inviter quelqu'un à rejoindre Diaspora !"
-      nobody: "Invitez les personnes qui comptent dans votre vie sur Diaspora !"
-      nobody_in_aspect: "Votre aspect « %{aspect_name} » est vide."
     no_posts_message: 
       start_talking: "Personne n’a encore rien dit.  Engagez dès à présent la conversation !"
     one: "1 aspect"
@@ -266,6 +261,7 @@ fr:
     mentioned: "vous a mentionné(e) dans son"
     new_request: "a proposé de partager avec vous."
     post: "message"
+    private_message: "sent you a message."
     request_accepted: "a accepté votre demande de partage."
   notifier: 
     also_commented: 
@@ -279,6 +275,7 @@ fr:
     diaspora: "le robot de messagerie électronique de Diaspora"
     hello: "Bonjour %{name} !"
     love: "affectueusement,"
+    manage_your_email_settings: "manage your email settings"
     mentioned: 
       mentioned: "vous a mentionné(e) dans un message :"
       sign_in: "Connectez-vous pour le/la voir."
@@ -306,6 +303,8 @@ fr:
   password: "Mot de passe"
   password_confirmation: "Confirmation du mot de passe"
   people: 
+    add_contact_small: 
+      add_contact_from_tag: "add contact from tag"
     aspect_list: 
       edit_membership: "modifier l'appartenance à vos aspects"
     few: "%{count} personnes"
@@ -332,6 +331,7 @@ fr:
       edit_my_profile: "Modifier mon profil"
       gender: "sexe"
       in_aspects: "dans les aspects"
+      location: "location"
       remove_contact: "supprimer le contact"
       remove_from: "Supprimer %{name} de %{aspect} ?"
     show: 
@@ -402,6 +402,7 @@ fr:
       your_bio: "Votre biographie"
       your_birthday: "Votre anniversaire"
       your_gender: "Votre sexe"
+      your_location: "Your location"
       your_name: "Votre nom"
       your_photo: "Votre photo"
       your_private_profile: "Votre profil privé"
@@ -510,10 +511,11 @@ fr:
       add_photos: "ajouter des photos"
       all: "tous"
       all_contacts: "tous les contacts"
+      click_to_share_with: "Click to share with: "
       make_public: "rendre public"
-      mention_helper_text: "pour mentionner quelqu'un, insérez un « @ » et commencez à écrire son nom"
       post_a_message_to: "Publier un message dans %{aspect}"
       posting: "Publication…"
+      public: "Public"
       publishing_to: "publication vers : "
       share: "Partager"
       share_with: "Partager avec"
@@ -534,6 +536,7 @@ fr:
       mentioning: "Mentionne : %{person}"
     show: 
       destroy: "Supprimer"
+      not_found: "Sorry, we couldn't find that post."
       permalink: "permalien"
   stream_helper: 
     hide_comments: "masquer les commentaires"
@@ -570,6 +573,7 @@ fr:
     getting_started: 
       connect_on_diaspora: "Se connecter sur Diaspora"
       connect_services: "Connectez vos autres services"
+      could_not_find_anyone: "Could not find any friends on Diaspora*. Use the friend finder to invite them."
       edit_profile: "Modifiez votre profil"
       finished: "Terminé !"
       save_and_continue: "Enregistrer et continuer"

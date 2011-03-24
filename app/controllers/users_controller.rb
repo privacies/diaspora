@@ -13,14 +13,14 @@ class UsersController < ApplicationController
   def edit
     @aspect = :user_edit
     @user   = current_user
-    @email_prefs = Hash.new(true) 
+    @email_prefs = Hash.new(true)
     @user.user_preferences.each do |pref|
       @email_prefs[pref.email_type] = false
     end
   end
 
   def update
-    
+
     u = params[:user]
     @user = current_user
 
@@ -58,7 +58,7 @@ class UsersController < ApplicationController
         render :nothing => true, :status => 204
       }
       format.all{
-        redirect_to edit_user_path(@user)
+        redirect_to edit_user_path
       }
     end
   end
@@ -101,13 +101,15 @@ class UsersController < ApplicationController
 
     if @step == 3
       @requests = Request.where(:recipient_id => @person.id).includes(:sender => :profile).all
-      @friends = service ? service.finder(:local => true) : {}
-      @friends.delete_if{|key, value| @requests.any?{ |r| r.sender_id == value[:person].id} }
+      @friends = service ? service.finder(:local => true) : []
+      @friends ||= []
+      @friends.delete_if{|f| @requests.any?{ |r| r.sender_id == f.person.id} }
     end
 
 
     if @step == 3 && @requests.length == 0 && @friends.length == 0
       @user.update_attributes(:getting_started => false)
+      flash[:notice] = I18n.t('users.getting_started.could_not_find_anyone')
       redirect_to root_path
     else
       render "users/getting_started"

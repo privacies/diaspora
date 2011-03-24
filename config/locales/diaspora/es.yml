@@ -33,6 +33,7 @@ es:
             username: 
               taken: "ya está ocupado."
   ago: "hace %{time} "
+  all_aspects: "Todos los Aspectos"
   application: 
     helper: 
       aspect_badge: 
@@ -98,12 +99,6 @@ es:
     new_aspect: 
       create: "Crear"
       name: "Nombre"
-    no_contacts_message: 
-      add_contact: "Añadir un contacto"
-      add_contact_to: "Añadir a alguien a %{aspect_name}"
-      invite: "¡Invita a otros a unirse a Diaspora*!"
-      nobody: "Segúramente conozcas más gente, ¡tráelos a Diaspora*!"
-      nobody_in_aspect: "El Aspecto '%{aspect_name}' está vacío."
     no_posts_message: 
       start_talking: "Nadie dijo nada todavía. ¡Inicia la conversación!"
     one: "1 aspecto"
@@ -266,6 +261,7 @@ es:
     mentioned: "te nombró en su"
     new_request: "quisiera compartir contigo."
     post: "publicación"
+    private_message: "te envió un mensaje."
     request_accepted: "aceptó tu solicitud de contacto."
   notifier: 
     also_commented: 
@@ -279,6 +275,7 @@ es:
     diaspora: "Email robot de Diaspora*"
     hello: "¡Hola %{name}!"
     love: "¡Qué pasa!"
+    manage_your_email_settings: "Gestiona tus configuraciones de correo"
     mentioned: 
       mentioned: "te nombró en una publicación:"
       sign_in: "Conéctate para verlo."
@@ -306,6 +303,8 @@ es:
   password: "Contraseña"
   password_confirmation: "Confirmación de contraseña"
   people: 
+    add_contact_small: 
+      add_contact_from_tag: "añadir contacto desde una etiqueta"
     aspect_list: 
       edit_membership: "editar el Aspecto donde está el contacto"
     few: "%{count} personas"
@@ -332,6 +331,7 @@ es:
       edit_my_profile: "Editar mi Perfil"
       gender: "genero / sexo"
       in_aspects: "en Aspectos"
+      location: "Ubicación "
       remove_contact: "eliminar contacto"
       remove_from: "¿Eliminar a %{name} de %{aspect}?"
     show: 
@@ -402,6 +402,7 @@ es:
       your_bio: "Tu Biografía"
       your_birthday: "Tu Cumpleaños"
       your_gender: "Tu Género / Sexo"
+      your_location: "Tú ubicación"
       your_name: "Tu Nombre"
       your_photo: "Tu Foto"
       your_private_profile: "Tu perfil privado"
@@ -510,10 +511,11 @@ es:
       add_photos: "Añadir fotos"
       all: "todo"
       all_contacts: "Todos los contactos"
+      click_to_share_with: "Haz click para compartir con: "
       make_public: "Publicar"
-      mention_helper_text: "para nombrar a alguien, usa \"@\" justo antes"
       post_a_message_to: "Enviar un mensaje a %{aspect}"
       posting: "Publicando..."
+      public: "Publico"
       publishing_to: "publicar en: "
       share: "Compartir"
       share_with: "compartir con"
@@ -534,6 +536,7 @@ es:
       mentioning: "Mencionar a: %{person}"
     show: 
       destroy: "Eliminar"
+      not_found: "Lo sentimos, no pudimos encontrar esa publicación."
       permalink: "Enlace permanente"
   stream_helper: 
     hide_comments: "Ocultar comentarios"
@@ -570,6 +573,7 @@ es:
     getting_started: 
       connect_on_diaspora: "Conectar en Diaspora*"
       connect_services: "Conectar con otros Servicios"
+      could_not_find_anyone: "No se pudo encontrar a ningún amigo en Diaspora*. Use el buscador de amigos para invitarlos."
       edit_profile: "Editar tu Perfil"
       finished: "¡Finalizado!"
       save_and_continue: "Guardar y continuar"

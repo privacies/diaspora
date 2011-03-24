@@ -33,6 +33,7 @@ zh:
             username: 
               taken: "is already taken."
   ago: "%{time}以前"
+  all_aspects: "All aspects"
   application: 
     helper: 
       aspect_badge: 
@@ -98,12 +99,6 @@ zh:
     new_aspect: 
       create: "创建"
       name: "名称"
-    no_contacts_message: 
-      add_contact: "增加一个联系人"
-      add_contact_to: "把某人加入%{aspect_name}这个分组"
-      invite: "邀请人们加入Diaspora!"
-      nobody: "Bring the people that matter in your life to Diaspora!"
-      nobody_in_aspect: "您的'%{aspect_name}'是个空白分组。"
     no_posts_message: 
       start_talking: "还没人冒泡，说点什么吧！"
     one: "1 aspect"
@@ -266,6 +261,7 @@ zh:
     mentioned: "has mentioned you in their"
     new_request: "offered to share with you."
     post: "发布"
+    private_message: "sent you a message."
     request_accepted: "accepted your share request."
   notifier: 
     also_commented: 
@@ -279,6 +275,7 @@ zh:
     diaspora: "diaspora email机器人"
     hello: "你好%{name}！"
     love: "爱，"
+    manage_your_email_settings: "manage your email settings"
     mentioned: 
       mentioned: "mentioned you in a post:"
       sign_in: "Sign in to view it."
@@ -306,6 +303,8 @@ zh:
   password: "密码"
   password_confirmation: "密码确认"
   people: 
+    add_contact_small: 
+      add_contact_from_tag: "add contact from tag"
     aspect_list: 
       edit_membership: "edit aspect membership"
     few: "%{count} people"
@@ -332,6 +331,7 @@ zh:
       edit_my_profile: "编辑我的个人资料"
       gender: "性别"
       in_aspects: "在分组中"
+      location: "location"
       remove_contact: "删除联系人"
       remove_from: "真的要把%{name}从%{aspect}中删除吗？"
     show: 
@@ -402,6 +402,7 @@ zh:
       your_bio: "Your bio"
       your_birthday: "Your birthday"
       your_gender: "Your gender"
+      your_location: "Your location"
       your_name: "Your name"
       your_photo: "Your photo"
       your_private_profile: "Your private profile"
@@ -510,10 +511,11 @@ zh:
       add_photos: "增加照片"
       all: "所有"
       all_contacts: "所有联系人"
+      click_to_share_with: "Click to share with: "
       make_public: "改为公开"
-      mention_helper_text: "to mention someone, press '@' and start typing their name"
       post_a_message_to: "发送信息给%{aspect}这个分组的所有人"
       posting: "发布中"
+      public: "Public"
       publishing_to: "publishing to: "
       share: "分享"
       share_with: "和%{aspect}这个分组中的人分享"
@@ -534,6 +536,7 @@ zh:
       mentioning: "Mentioning: %{person}"
     show: 
       destroy: "删除"
+      not_found: "Sorry, we couldn't find that post."
       permalink: "永久链接"
   stream_helper: 
     hide_comments: "隐藏评论"
@@ -570,6 +573,7 @@ zh:
     getting_started: 
       connect_on_diaspora: "Connect on Diaspora"
       connect_services: "关联您的其他服务"
+      could_not_find_anyone: "Could not find any friends on Diaspora*. Use the friend finder to invite them."
       edit_profile: "编辑您的个人资料"
       finished: "结束！"
       save_and_continue: "保存并继续"

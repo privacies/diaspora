@@ -400,11 +400,11 @@ header
 
 
   .delete
-    :opacity 0.6
+    @include opacity(0.6)
     :padding 5px
 
     &:hover
-      :opacity 1
+      @include opacity(1)
 
 .time,
 .timeago
@@ -946,13 +946,13 @@ label
       :shadow 0 1px 0 #eee
 
     img
+      @include opacity(0.4)
+
       :display inline-block
       :margin 0
       :padding 0
       :margin
         :bottom -3px
-
-      :opacity 0.4
 
     &:hover
       :background
@@ -961,16 +961,16 @@ label
 
       :color #666
       img
-        :opacity 0.6
+        @include opacity(0.6)
 
     &:active
       :text-shadow 0 1px 0 #fafafa
       :color #ccc
       img
-        :opacity 0.1
+        @include opacity(0.1)
 
     &.loading
-      :opacity 0.5
+      @include opacity(0.5)
 
 #publisher_textarea_wrapper
   :position relative
@@ -1035,7 +1035,7 @@ label
     :display inline
 
 .dim
-  :opacity 0.3
+  @include opacity(0.3)
 
 img.thumb_small
   :max-height 50px
@@ -1614,6 +1614,18 @@ h3 span.current_gs_step
   :padding 12px
   :color #fff
 
+  :vertical
+    :align middle
+
+  .avatar
+    :display inline-block
+    :height 20px
+    :width 20px
+    :margin
+      :right 5px
+    :vertical
+      :align middle
+
 .bottom_notification
   :position fixed
   :bottom 0
@@ -1814,13 +1826,13 @@ ul#request_result
           :right 4px
           :left 4px
         &.added
-          @include linear-gradient(rgb(92,199,86),rgb(158,255,153))
+          @include linear-gradient(rgb(158,255,153), rgb(92,199,86))
 
         &.added.remove
-          @include linear-gradient(rgb(199,86,86),rgb(255,153,153))
+          @include linear-gradient(rgb(255,153,153), rgb(199,86,86))
 
           &:active
-            @include linear-gradient(rgb(130,55,55),rgb(199,119,119))
+            @include linear-gradient(rgb(199,119,119), rgb(130,55,55))
 
 .aspect_list
   :height 300px
@@ -2071,7 +2083,7 @@ h3,h4
   :top 3px
 
   &:hover
-    :opacity 0.5
+    @include opacity(0.5)
 
 #edit_aspect_trigger
   :font
@@ -2168,10 +2180,11 @@ h3,h4
 
   .stream_element
     .aspect_badges
-      :opacity 0.5
+      @include opacity(0.5)
+
     &:hover
       .aspect_badges
-        :opacity 1
+        @include opacity(1)
 
   .aspect_badge
     :position relative
@@ -2695,7 +2708,7 @@ div.dislikes
     :right 5px
 
 #contact_visibility_padlock:hover
-  :opacity 0.7
+  @include opacity(0.7)
 
 .side_stream
   .stream_element

@@ -45,7 +45,7 @@ module ApplicationHelper
     if !link
       str << link_to(aspect.name, "#", 'data-guid' => aspect.id, :class => 'hard_aspect_link').html_safe
     else 
-      str << link_for_aspect(aspect, 'data-guid' => aspect.id, :class => 'hard_aspect_link').html_safe
+      str << link_for_aspect(aspect).html_safe
     end
     str << "</span>"
   end
@@ -108,17 +108,6 @@ module ApplicationHelper
 
   def how_long_ago(obj)
     timeago(obj.created_at)
-  end
-
-  def person_url(person)
-    case person.class.to_s
-      when "User"
-        user_path(person)
-      when "Person"
-        person_path(person)
-      else
-        I18n.t('application.helper.unknown_person')
-    end
   end
 
   def profile_photo(person)
