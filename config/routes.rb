@@ -15,7 +15,7 @@ Diaspora::Application.routes.draw do
   match "api/:request", :to => 'api#call', :defaults => { :format => 'json' }
 
   resources :status_messages, :only => [:new, :create, :destroy, :show]
-  resources :comments,        :only => [:create]
+  resources :comments,        :only => [:create, :destroy]
   resources :requests,        :only => [:destroy, :create]
   resource :likes,            :only => [:create]
 
@@ -98,6 +98,21 @@ Diaspora::Application.routes.draw do
   match 'update_tps_links', :to => 'third_party_services#update_links'
 
   match 'localize', :to => "localize#show"
+
+  scope '/api/v0' do
+    match '/statuses/public_timeline', :to => 'apis#public_timeline'
+    match '/statuses/home_timeline',   :to => 'apis#home_timeline'
+    match '/statuses/show/:guid',      :to => 'apis#statuses'
+    match '/statuses/user_timeline',   :to => 'apis#user_timeline'
+
+    match '/users/show',             :to => 'apis#users'
+    match '/users/search',           :to => 'apis#users_search'
+    match '/users/profile_image', :to => 'apis#users_profile_image'
+
+    match '/tags_posts/:tag', :to => 'apis#tag_posts'
+    match '/tags_people/:tag', :to => 'apis#tag_people'
+  end
+
   match 'mobile/toggle', :to => 'home#toggle_mobile', :as => 'toggle_mobile'
   #root
   root :to => 'home#show'

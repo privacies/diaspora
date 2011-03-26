@@ -218,10 +218,14 @@ class User < ActiveRecord::Base
 
   ######### Posts and Such ###############
   def retract(post)
-    aspects = post.aspects
-
-    retraction = Retraction.for(post)
-    post.unsocket_from_user(self, :aspect_ids => aspects.map { |a| a.id.to_s }) if post.respond_to? :unsocket_from_user
+    if post.respond_to?(:relayable?) && post.relayable?
+      aspects = post.parent.aspects
+      retraction = RelayableRetraction.build(self, post)
+    else
+      aspects = post.aspects
+      retraction = Retraction.for(post)
+    end
+    retraction.perform(self)
     mailman = Postzord::Dispatch.new(self, retraction)
     mailman.post
 

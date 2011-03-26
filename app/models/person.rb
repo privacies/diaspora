@@ -43,9 +43,7 @@ class Person < ActiveRecord::Base
 
   scope :searchable, joins(:profile).where(:profiles => {:searchable => true})
 
-  def self.search(query, user)
-    return [] if query.to_s.blank? || query.to_s.length < 3
-
+  def self.search_query_string(query)
     where_clause = <<-SQL
       profiles.first_name LIKE ? OR
       profiles.last_name LIKE ? OR
@@ -65,16 +63,24 @@ class Person < ActiveRecord::Base
       tokens.concat([token, token, token])
       tokens.concat([up_token, up_token])
     end
-#SELECT `people`.* FROM people
-#  INNER JOIN `profiles` ON `profiles`.person_id = `people`.id
-#  LEFT OUTER JOIN `contacts` ON (`contacts`.user_id = #{user.id} AND `contacts`.person_id = `people`.id)
-#  WHERE `profiles`.searchable = true AND
-#  `profiles`.first_name LIKE '%Max%'
-#  ORDER BY `contacts`.user_id DESC
+    [sql, tokens] 
+  end
+  
+  def self.search(query, user)
+    return [] if query.to_s.blank? || query.to_s.length < 3
+
+    sql, tokens = self.search_query_string(query)
     Person.searchable.where(sql, *tokens).joins(
       "LEFT OUTER JOIN `contacts` ON `contacts`.user_id = #{user.id} AND `contacts`.person_id = `people`.id"
     ).joins("LEFT OUTER JOIN `requests` ON `requests`.recipient_id = #{user.person.id} AND `requests`.sender_id = `people`.id"
     ).order("contacts.user_id DESC", "requests.recipient_id DESC", "profiles.last_name ASC", "profiles.first_name ASC")
+  end
+
+
+  def self.public_search(query, opts={})
+    return [] if query.to_s.blank? || query.to_s.length < 3
+    sql, tokens = self.search_query_string(query)
+    Person.searchable.where(sql, *tokens)
   end
 
   def name(opts = {})
@@ -180,7 +186,26 @@ class Person < ActiveRecord::Base
   end
 
   def as_json(opts={})
-   {:id => self.guid, :name => self.name, :avatar => self.profile.image_url(:thumb_small), :handle => self.diaspora_handle, :url => "/people/#{self.id}"}
+    opts ||= {}
+    if(opts[:format] == :twitter)
+      {
+        :id => self.guid,
+        :screen_name => self.diaspora_handle,
+        :name => self.name,
+        :created_at => self.created_at,
+        :profile_image_url => self.profile.image_url(:thumb_small),
+        :profile => self.profile.as_json(opts)
+      }
+    else
+      {:id => self.guid,
+       :name => self.name,
+       :avatar => self.profile.image_url(:thumb_small),
+       :handle => self.diaspora_handle,
+       :url => "/people/#{self.id}"}
+    end
+  end
+
+  def to_twitter(format=:json)
   end
 
   protected
