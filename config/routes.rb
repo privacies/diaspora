@@ -5,7 +5,6 @@
 Diaspora::Application.routes.draw do
 
   # TODO make it generic
-  # match "handler/:tps/:request", :to => 'handler#call'
   match "handler/:third_party_service/:call", :to => 'handler#call'
   match "handler/lfn/:file.:format" => 'handler#call', :call => 'forward', :constraints => { :file => /.*/, :format => /(jpg)|(dzc)|(dzi)/ }
   match "handler/:call", :to => 'handler#call'
@@ -19,79 +18,82 @@ Diaspora::Application.routes.draw do
   resources :requests,        :only => [:destroy, :create]
   resource :likes,            :only => [:create]
 
-  match 'tags/:name' => 'tags#show'
-  resources :tags, :only => [:show]
+  # Posting and Reading
 
-  resource :profile
-  match 'services/inviter/:provider' => 'services#inviter', :as => 'service_inviter'
-  match 'services/finder/:provider' => 'services#finder', :as => 'friend_finder'
-  resources :services
-
-  match 'admins/user_search' => 'admins#user_search'
-  match 'admins/admin_inviter' => 'admins#admin_inviter'
-
-  match 'notifications/read_all' => 'notifications#read_all'
-  resources :notifications,   :only => [:index, :update]
-  resources :posts,           :only => [:show], :path => '/p/'
-
-  resources :contacts
-  resources :aspect_memberships, :only => [:destroy, :create]
-
-
-  resources :conversations do
-    resources :messages, :only => [:create, :show]
-    resource :conversation_visibility, :only => [:destroy], :path => '/visibility/'
+  resources :aspects do
+    collection do
+      match 'move_contact'       => :move_contact
+      match 'add_to_aspect'      => :add_to_aspect
+      match 'remove_from_aspect' => :remove_from_aspect
+      match 'manage'             => :manage
+    end
+    match 'toggle_contact_visibility' => :toggle_contact_visibility
   end
 
-  resources :people, :except => [:edit, :update] do
-    resources :status_messages
-    resources :photos
-  end
-
-  match '/people/by_handle' => 'people#retrieve_remote', :as => 'person_by_handle'
-  match '/auth/:provider/callback' => 'services#create'
-  match '/auth/failure' => 'services#failure'
+  resources :status_messages, :only => [:new, :create, :destroy, :show]
+  get 'p/:id' => 'posts#show', :as => 'post'
 
   match 'photos/make_profile_photo' => 'photos#make_profile_photo'
   resources :photos, :except => [:index]
 
-  resource :user, :only => [:edit, :update, :destroy]
+  resources :comments, :only => [:create, :destroy]
+
+  get 'tags/:name' => 'tags#show', :as => 'tag'
+
+  resource :like, :only => [:create]
+
+  resources :conversations do
+    resources :messages, :only => [:create, :show]
+    delete 'visibility' => 'conversation_visibilities#destroy'
+  end
+
+  resources :notifications, :only => [:index, :update] do
+    get 'read_all' => :read_all, :on => :collection
+  end
+
+
+  # Users and people
+
+  resource :user, :only => [:edit, :update, :destroy], :shallow => true do
+    get :export
+    get :export_photos
+  end
+
+  controller :users do
+    get 'public/:username'          => :public,          :as => 'users_public'
+    match 'getting_started'         => :getting_started, :as => 'getting_started'
+    get 'getting_started_completed' => :getting_started_completed
+  end
 
   # This is a hack to overide a route created by devise.
   # I couldn't find anything in devise to skip that route, see Bug #961
-  match '/users/edit' => redirect('/user/edit')
+  match 'users/edit' => redirect('/user/edit')
 
   devise_for :users, :controllers => {:registrations => "registrations",
                                       :password      => "devise/passwords",
                                       :sessions      => "sessions",
                                       :invitations   => "invitations"} do
-
     get 'invitations/resend/:id' => 'invitations#resend', :as => 'invitation_resend'
-                                      end
+  end
+  get 'login' => redirect('/users/sign_in')
 
-
-  # added public route to user
-  match 'public/:username',          :to => 'users#public', :as => 'users_public'
-  match 'getting_started',           :to => 'users#getting_started', :as => 'getting_started'
-  match 'getting_started_completed', :to => 'users#getting_started_completed'
-  match 'users/export',              :to => 'users#export'
-  match 'users/export_photos',       :to => 'users#export_photos'
-  match 'login'                      => redirect('/users/sign_in')
-
-  match 'aspects/move_contact',      :to => 'aspects#move_contact', :as => 'move_contact'
-  match 'aspects/add_to_aspect',     :to => 'aspects#add_to_aspect', :as => 'add_to_aspect'
-  match 'aspects/remove_from_aspect',:to => 'aspects#remove_from_aspect', :as => 'remove_from_aspect'
-  match 'aspects/manage',            :to => 'aspects#manage'
-  resources :aspects do
-    match '/toggle_contact_visibility', :to => 'aspects#toggle_contact_visibility'
+  scope 'admins' do
+    match 'user_search'   => 'admins#user_search'
+    match 'admin_inviter' => 'admins#admin_inviter'
   end
 
-  #public routes
-  match 'webfinger',            :to => 'publics#webfinger'
-  match 'hcard/users/:guid',      :to => 'publics#hcard'
-  match '.well-known/host-meta',:to => 'publics#host_meta'
-  match 'receive/users/:guid',    :to => 'publics#receive'
-  match 'hub',                  :to => 'publics#hub'
+  resource :profile
+
+  resources :requests, :only => [:destroy, :create]
+
+  resources :contacts, :except => [:index, :update]
+  resources :aspect_memberships, :only => [:destroy, :create]
+
+  resources :people, :except => [:edit, :update] do
+    resources :status_messages
+    resources :photos
+  end
+  match 'people/by_handle' => 'people#retrieve_remote', :as => 'person_by_handle'
 
   # route for third party services
   match 'tps/:action/:service_name', :to => 'third_party_services#:action', :as => :tps
@@ -99,21 +101,48 @@ Diaspora::Application.routes.draw do
 
   match 'localize', :to => "localize#show"
 
-  scope '/api/v0' do
-    match '/statuses/public_timeline', :to => 'apis#public_timeline'
-    match '/statuses/home_timeline',   :to => 'apis#home_timeline'
-    match '/statuses/show/:guid',      :to => 'apis#statuses'
-    match '/statuses/user_timeline',   :to => 'apis#user_timeline'
+  # Federation
 
-    match '/users/show',             :to => 'apis#users'
-    match '/users/search',           :to => 'apis#users_search'
-    match '/users/profile_image', :to => 'apis#users_profile_image'
-
-    match '/tags_posts/:tag', :to => 'apis#tag_posts'
-    match '/tags_people/:tag', :to => 'apis#tag_people'
+  controller :publics do
+    get 'webfinger'             => :webfinger
+    get 'hcard/users/:guid'     => :hcard
+    get '.well-known/host-meta' => :host_meta
+    get 'receive/users/:guid'   => :receive
+    get 'hub'                   => :hub
   end
 
+  # External
+
+  resources :services, :only => [:index, :destroy]
+  controller :services do
+    match '/auth/:provider/callback' => :create
+    match '/auth/failure'            => :failure
+    scope 'services' do
+      match 'inviter/:provider' => :inviter, :as => 'service_inviter'
+      match 'finder/:provider'  => :finder,  :as => 'friend_finder'
+    end
+  end
+
+  scope 'api/v0', :controller => :apis do
+    match 'statuses/public_timeline' => :public_timeline
+    match 'statuses/home_timeline'   => :home_timeline
+    match 'statuses/show/:guid'      => :statuses
+    match 'statuses/user_timeline'   => :user_timeline
+
+    match 'users/show'               => :users
+    match 'users/search'             => :users_search
+    match 'users/profile_image'      => :users_profile_image
+
+    match 'tags_posts/:tag'          => :tag_posts
+    match 'tags_people/:tag'         => :tag_people
+  end
+
+
+  # Mobile site
   match 'mobile/toggle', :to => 'home#toggle_mobile', :as => 'toggle_mobile'
-  #root
+
+
+  # Startpage
+
   root :to => 'home#show'
 end
