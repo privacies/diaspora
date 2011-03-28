@@ -21,20 +21,16 @@ Diaspora::Application.routes.draw do
   # Posting and Reading
 
   resources :aspects do
-    collection do
-      match 'move_contact'       => :move_contact
-      match 'add_to_aspect'      => :add_to_aspect
-      match 'remove_from_aspect' => :remove_from_aspect
-      match 'manage'             => :manage
-    end
-    match 'toggle_contact_visibility' => :toggle_contact_visibility
+    get 'manage'                    => :manage, :on => :collection
+    put 'toggle_contact_visibility' => :toggle_contact_visibility
   end
 
   resources :status_messages, :only => [:new, :create, :destroy, :show]
   get 'p/:id' => 'posts#show', :as => 'post'
 
-  match 'photos/make_profile_photo' => 'photos#make_profile_photo'
-  resources :photos, :except => [:index]
+  resources :photos, :except => [:index] do
+    put 'make_profile_photo' => :make_profile_photo
+  end
 
   resources :comments, :only => [:create, :destroy]
 
@@ -77,9 +73,9 @@ Diaspora::Application.routes.draw do
   end
   get 'login' => redirect('/users/sign_in')
 
-  scope 'admins' do
-    match 'user_search'   => 'admins#user_search'
-    match 'admin_inviter' => 'admins#admin_inviter'
+  scope 'admins', :controller => :admins do
+    match 'user_search' => :user_search
+    get 'admin_inviter' => :admin_inviter
   end
 
   resource :profile
@@ -87,13 +83,13 @@ Diaspora::Application.routes.draw do
   resources :requests, :only => [:destroy, :create]
 
   resources :contacts, :except => [:index, :update]
-  resources :aspect_memberships, :only => [:destroy, :create]
+  resources :aspect_memberships, :only => [:destroy, :create, :update]
 
   resources :people, :except => [:edit, :update] do
     resources :status_messages
     resources :photos
+    post 'by_handle' => :retrieve_remote, :on => :collection, :as => 'person_by_handle'
   end
-  match 'people/by_handle' => 'people#retrieve_remote', :as => 'person_by_handle'
 
   # route for third party services
   match 'tps/:action/:service_name', :to => 'third_party_services#:action', :as => :tps
@@ -107,7 +103,7 @@ Diaspora::Application.routes.draw do
     get 'webfinger'             => :webfinger
     get 'hcard/users/:guid'     => :hcard
     get '.well-known/host-meta' => :host_meta
-    get 'receive/users/:guid'   => :receive
+    post 'receive/users/:guid'  => :receive
     get 'hub'                   => :hub
   end
 
@@ -137,12 +133,9 @@ Diaspora::Application.routes.draw do
     match 'tags_people/:tag'         => :tag_people
   end
 
-
   # Mobile site
-  match 'mobile/toggle', :to => 'home#toggle_mobile', :as => 'toggle_mobile'
-
+  get 'mobile/toggle', :to => 'home#toggle_mobile', :as => 'toggle_mobile'
 
   # Startpage
-
   root :to => 'home#show'
 end

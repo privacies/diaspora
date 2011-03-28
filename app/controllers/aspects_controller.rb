@@ -172,5 +172,4 @@ class AspectsController < ApplicationController
 
     render :text => response_hash.to_json
   end
-
 end
