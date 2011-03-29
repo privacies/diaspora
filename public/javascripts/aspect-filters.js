@@ -129,7 +129,7 @@ $(document).ready(function(){
   }
 
   function updateUIComponentLinks(home){
-    var updateURL = '/update_uic_links?';
+    var updateURL = '/update_tps_links?';
     // generate new url
     if(home == 'home'){
       updateURL += 'aspect_ids=all';

@@ -31,7 +31,7 @@
           #publisher_textarea_wrapper
             %ul#photodropzone
             = status.text_area :fake_text, :rows => 2, :value => h(params[:prefill]), :tabindex => 1
-            = status.hidden_field :post_id, :value => params[:post_id]
+            = status.hidden_field :post_id, :value => params[:post_id] if params[:post_id]
             = status.hidden_field :text, :value => '', :class => 'clear_on_submit'
 
       - for aspect_id in aspect_ids

@@ -43,8 +43,8 @@ class StatusMessagesController < ApplicationController
     end
 
     # TODO refactor put this on model when real re-tweet has been done
-    if params[:post_id].present? and previous_message = StatusMessage.find(params[:post_id])
-      params[:status_message][:control_attributes] = previous_message.control.try(:clone).try(:attributes) || {}
+    if params[:status_message] and params[:status_message][:post_id].present? and previous_message = StatusMessage.find(params[:status_message][:post_id])
+      params[:status_message][:control_attributes] = previous_message.control.try(:attributes).try(:slice, 'content', 'parameters') || {}
     end
 
     params[:status_message][:text] = params[:status_message][:message] if params[:status_message] and params[:status_message][:message]
