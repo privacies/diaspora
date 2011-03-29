@@ -147,27 +147,6 @@ class AspectsController < ApplicationController
     @aspect.save
   end
 
-<<<<<<< HEAD
-  def move_contact
-    @person = Person.find(params[:person_id])
-    @from_aspect = current_user.aspects.where(:id => params[:from]).first
-    @to_aspect = current_user.aspects.where(:id => params[:to][:to]).first
-
-    response_hash = { }
-
-    unless current_user.move_contact( @person, @to_aspect, @from_aspect)
-      flash[:error] = I18n.t 'aspects.move_contact.error',:inspect => params.inspect
-    end
-    if aspect = current_user.aspects.where(:id => params[:to][:to]).first
-      response_hash[:notice] = I18n.t 'aspects.move_contact.success'
-      response_hash[:success] = true
-    else
-      response_hash[:notice] = I18n.t 'aspects.move_contact.failure'
-      response_hash[:success] = false
-    end
-
-    render :text => response_hash.to_json
-=======
   protected
 
   def save_sort_order
@@ -178,6 +157,5 @@ class AspectsController < ApplicationController
     else
       session[:sort_order] = (session[:sort_order] == 'created_at') ? 'created_at' : 'updated_at'
     end
->>>>>>> d54a8428d3052a139aab9526e8cb1252f7bdd490
   end
 end
