@@ -35,6 +35,7 @@ Diaspora::Application.routes.draw do
   resources :comments, :only => [:create, :destroy]
 
   get 'tags/:name' => 'tags#show', :as => 'tag'
+  resources :tags, :only => [:index]
 
   resource :like, :only => [:create]
 
@@ -78,6 +79,7 @@ Diaspora::Application.routes.draw do
     get 'admin_inviter' => :admin_inviter
   end
 
+  get 'bookmarklet' => 'status_messages#bookmarklet'
   resource :profile
 
   resources :requests, :only => [:destroy, :create]
