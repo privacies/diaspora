@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110323213655) do
+ActiveRecord::Schema.define(:version => 20110329051143) do
 
   create_table "aspect_memberships", :force => true do |t|
     t.integer  "aspect_id",  :null => false
@@ -202,6 +202,7 @@ ActiveRecord::Schema.define(:version => 20110323213655) do
     t.text     "content"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "parameters"
   end
 
   create_table "post_visibilities", :force => true do |t|

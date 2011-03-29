@@ -26,6 +26,7 @@ class StatusMessagesController < ApplicationController
   end
 
   def create
+
     if params[:aspect_ids].present?
       target_aspect_ids = params[:aspect_ids]
     elsif params[:status_message] and params[:status_message][:aspect_ids].present?
@@ -34,13 +35,11 @@ class StatusMessagesController < ApplicationController
       target_aspect_ids = 'all'
     end
 
-    # TODO remove when the LSC will be updated
-    if params[:PostControl].present?
-      params[:status_message][:control_attributes] = {}
-      params[:status_message][:control_attributes][:content] = params[:PostControl]
-      params.delete(:PostControl)
+    # TODO refactor put this on model when real re-tweet has been done
+    if params[:post_id].present? and previous_message = StatusMessage.find(params[:post_id])
+      params[:status_message][:control_attributes] = previous_message.control.try(:clone).try(:attributes) || {}
     end
-    
+
     params[:status_message][:text] = params[:status_message][:message] if params[:status_message] and params[:status_message][:message]
 
     target_aspect_ids = current_user.aspects.collect{|x| x.id} if target_aspect_ids == "all"

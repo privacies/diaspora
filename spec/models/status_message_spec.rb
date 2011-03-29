@@ -226,12 +226,13 @@ STR
     describe "with post control" do
 
       before do
-        @message = Factory.create(:status_message, :text => "I hate WALRUSES!", :author => @user.person, :control_attributes => {:content => 'post control'})
+        @message = Factory.create(:status_message, :text => "I hate WALRUSES!", :author => @user.person, :control_attributes => {:content => 'post control', :parameters => {:key => 123, :second_key => 345}})
+
         @xml = @message.to_xml.to_s
       end
 
-      it 'serializes the post_control' do
-        @xml.should include "<post_control_content>post control</post_control_content>"
+      it 'serializes the post_control as json' do
+        @xml.should include "<post_control>#{@message.control.to_json}</post_control>"
       end
 
       describe '.from_xml' do
@@ -242,6 +243,8 @@ STR
 
         it 'marshals the post control' do
           @marshalled.control.content.should == "post control"
+          @marshalled.control.parameters["key"].should == 123
+          @marshalled.control.parameters["second_key"].should == 345
         end
 
       end
