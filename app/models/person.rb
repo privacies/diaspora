@@ -63,9 +63,9 @@ class Person < ActiveRecord::Base
       tokens.concat([token, token, token])
       tokens.concat([up_token, up_token])
     end
-    [sql, tokens] 
+    [sql, tokens]
   end
-  
+
   def self.search(query, user)
     return [] if query.to_s.blank? || query.to_s.length < 3
 
@@ -73,6 +73,7 @@ class Person < ActiveRecord::Base
     Person.searchable.where(sql, *tokens).joins(
       "LEFT OUTER JOIN `contacts` ON `contacts`.user_id = #{user.id} AND `contacts`.person_id = `people`.id"
     ).joins("LEFT OUTER JOIN `requests` ON `requests`.recipient_id = #{user.person.id} AND `requests`.sender_id = `people`.id"
+    ).includes(:profile
     ).order("contacts.user_id DESC", "requests.recipient_id DESC", "profiles.last_name ASC", "profiles.first_name ASC")
   end
 
@@ -84,11 +85,12 @@ class Person < ActiveRecord::Base
   end
 
   def name(opts = {})
-    @name ||= if profile.nil? || profile.first_name.nil? || profile.first_name.blank?
-                self.diaspora_handle
-              else
-                "#{profile.first_name.to_s} #{profile.last_name.to_s}"
-              end
+    @name ||= Person.name_from_attrs(self.profile.first_name, self.profile.last_name, self.diaspora_handle)
+  
+  end
+
+  def self.name_from_attrs(first_name, last_name, diaspora_handle)
+    first_name.blank? ? diaspora_handle : "#{first_name.to_s} #{last_name.to_s}"
   end
 
   def first_name

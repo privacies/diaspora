@@ -1,7 +1,7 @@
 class ConversationsController < ApplicationController
   before_filter :authenticate_user!
 
-  respond_to :html, :json
+  respond_to :html, :json, :js
 
   def index
     @conversations = Conversation.joins(:conversation_visibilities).where(
@@ -32,7 +32,7 @@ class ConversationsController < ApplicationController
     if @conversation = Conversation.create(params[:conversation])
       Postzord::Dispatch.new(current_user, @conversation).post
 
-      flash[:notice] = "Message sent"
+      flash[:notice] = I18n.t('conversations.create.sent')
       if params[:profile]
         redirect_to person_path(params[:profile])
       else
@@ -44,21 +44,19 @@ class ConversationsController < ApplicationController
   def show
     @conversation = Conversation.joins(:conversation_visibilities).where(:id => params[:id],
                                                                          :conversation_visibilities => {:person_id => current_user.person.id}).first
-
     if @visibility = ConversationVisibility.where(:conversation_id => params[:id], :person_id => current_user.person.id).first
       @visibility.unread = 0
       @visibility.save
     end
 
-    if @conversation
-      render :layout => false
-    else
-      redirect_to conversations_path
-    end
+    respond_with @conversation
   end
 
   def new
-    @all_contacts_and_ids = current_user.contacts.map { |c| {:value => c.id, :name => c.person.name} }
+    @all_contacts_and_ids = Contact.connection.execute(current_user.contacts.joins(:person => :profile).select("contacts.id, profiles.first_name, profiles.last_name, profiles.diaspora_handle").to_sql).map do |r|
+      {:value => r[0], :name => Person.name_from_attrs(r[1], r[2], r[3])}
+    end
+
     @contact = current_user.contacts.find(params[:contact_id]) if params[:contact_id]
     render :layout => false
   end

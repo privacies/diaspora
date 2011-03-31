@@ -125,7 +125,7 @@ class StatusMessage < Post
     <title>#{x(self.formatted_message(:plain_text => true))}</title>
     <content>#{x(self.formatted_message(:plain_text => true))}</content>
     <link rel="alternate" type="text/html" href="#{self.author.url}p/#{self.id}"/>
-    <id>#{self.author.url}posts/#{self.id}</id>
+    <id>#{self.author.url}p/#{self.id}</id>
     <published>#{self.created_at.xmlschema}</published>
     <updated>#{self.updated_at.xmlschema}</updated>
     <activity:verb>http://activitystrea.ms/schema/1.0/post</activity:verb>
@@ -152,6 +152,17 @@ class StatusMessage < Post
     else
       super(opts)
     end
+  end
+
+  def socket_to_user(user_or_id, opts={})
+    unless opts[:aspect_ids]
+      user_id = user_or_id.instance_of?(Fixnum) ? user_or_id : user_or_id.id
+      aspect_ids = AspectMembership.connection.execute(
+        AspectMembership.joins(:contact).where(:contacts => {:user_id => user_id, :person_id => self.author_id}).select('aspect_memberships.aspect_id').to_sql
+      ).map{|r| r.first}
+      opts.merge!(:aspect_ids => aspect_ids)
+    end
+    super(user_or_id, opts)
   end
 
   protected

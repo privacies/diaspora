@@ -43,9 +43,6 @@ class AspectsController < ApplicationController
 
   def create
     @aspect = current_user.aspects.create(params[:aspect])
-    # hack, we don't know why mass assignment is not working
-    @aspect.contacts_visible = params[:aspect][:contacts_visible]
-    @aspect.save
 
     if @aspect.valid?
       flash[:notice] = I18n.t('aspects.create.success', :name => @aspect.name)
@@ -103,12 +100,22 @@ class AspectsController < ApplicationController
 
   def edit
     @aspect = current_user.aspects.where(:id => params[:id]).includes(:contacts => {:person => :profile}).first
-    @contacts = current_user.contacts.includes(:person => :profile).all.sort! { |x, y| x.person.name <=> y.person.name }.reverse!
+
+    @contacts_in_aspect = @aspect.contacts.includes(:person => :profile).all.sort! { |x, y| x.person.name <=> y.person.name }
+    c = Contact.arel_table
+    if @contacts_in_aspect.empty?
+      @contacts_not_in_aspect = current_user.contacts.includes(:person => :profile).all.sort! { |x, y| x.person.name <=> y.person.name }
+    else
+      @contacts_not_in_aspect = current_user.contacts.where(c[:id].not_in(@contacts_in_aspect.map(&:id))).includes(:person => :profile).all.sort! { |x, y| x.person.name <=> y.person.name }
+    end
+
+    @contacts = @contacts_in_aspect + @contacts_not_in_aspect
+
     unless @aspect
       render :file => "#{Rails.root}/public/404.html", :layout => false, :status => 404
     else
       @aspect_ids = [@aspect.id]
-      @aspect_contacts_count = @aspect.contacts.length
+      @aspect_contacts_count = @aspect.contacts.size
       render :layout => false
     end
   end
@@ -124,9 +131,6 @@ class AspectsController < ApplicationController
     @aspect = current_user.aspects.where(:id => params[:id]).first
 
     if @aspect.update_attributes!(params[:aspect])
-      #hack, we don't know why mass assignment is not working
-      @aspect.contacts_visible = params[:aspect][:contacts_visible]
-      @aspect.save
       flash[:notice] = I18n.t 'aspects.update.success', :name => @aspect.name
     else
       flash[:error] = I18n.t 'aspects.update.failure', :name => @aspect.name
