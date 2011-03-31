@@ -7,16 +7,12 @@ $(document).ready(function(){
   var selectedGUIDS = [],
       requests = 0;
 
-  $("#aspect_nav li").each(function(){
-    var button = $(this),
-        guid = button.attr('data-guid');
-
-    if(guid && location.href.search("a_ids..="+guid+"(&|$)") != -1){
-      button.addClass('selected');
-      selectedGUIDS.push(guid);
-    }
+  // popstate
+  $(window).bind("popstate", function(){
+    $.getScript(location.href);
+    setGUIDS();
+    return false;
   });
-
 
   $("a.hard_aspect_link").live("click", function(e){
     var link = $(this);
@@ -88,19 +84,23 @@ $(document).ready(function(){
   function generateURL(){
     var baseURL = location.href.split("?")[0];
 
-    // generate new url
-    baseURL = baseURL.replace('#','');
-    baseURL += '?';
-    for(i=0; i < selectedGUIDS.length; i++){
-      baseURL += 'a_ids[]='+ selectedGUIDS[i] +'&';
-    }
+    if(selectedGUIDS.length != $('li', '#aspect_nav').length-2) {
+      // generate new url
+      baseURL = baseURL.replace('#','');
+      baseURL += '?';
+      for(i=0; i < selectedGUIDS.length; i++){
+        baseURL += 'a_ids[]='+ selectedGUIDS[i] +'&';
+      }
 
-    if(!$("#publisher").hasClass("closed")) {
-      // open publisher
-      baseURL += "op=true";
+      if(!$("#publisher").hasClass("closed")) {
+        // open publisher
+        baseURL += "op=true";
+      } else {
+        // slice last '&'
+        baseURL = baseURL.slice(0,baseURL.length-1);
+      }
     } else {
-      // slice last '&'
-      baseURL = baseURL.slice(0,baseURL.length-1);
+      selectedGUIDS = [];
     }
     return baseURL;
   }
@@ -163,6 +163,7 @@ $(document).ready(function(){
     // some browsers (Firefox for example) don't support pushState
     if (typeof(history.pushState) == 'function') {
       history.pushState(null, document.title, newURL);
+      setGUIDS();
     }
 
     $.ajax({
@@ -204,6 +205,19 @@ $(document).ready(function(){
       }
     });
 
+  }
+
+  function setGUIDS(){
+    selectedGUIDS = [];
+    $("li", "#aspect_nav").each(function(){
+      var button = $(this),
+          guid = button.attr('data-guid');
+      if(guid && location.href.search("a_ids..="+guid+"(&|$)") != -1){
+        button.addClass('selected');
+        selectedGUIDS.push(guid);
+      }
+    });
+    console.log(selectedGUIDS);
   }
 
 });

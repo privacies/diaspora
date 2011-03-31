@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110330175950) do
+ActiveRecord::Schema.define(:version => 20110331004720) do
 
   create_table "aspect_memberships", :force => true do |t|
     t.integer  "aspect_id",  :null => false
@@ -101,6 +101,8 @@ ActiveRecord::Schema.define(:version => 20110330175950) do
     t.datetime "updated_at"
   end
 
+  add_index "conversations", ["author_id"], :name => "conversations_author_id_fk"
+
   create_table "invitations", :force => true do |t|
     t.text     "message"
     t.integer  "sender_id",    :null => false
@@ -152,6 +154,7 @@ ActiveRecord::Schema.define(:version => 20110330175950) do
   end
 
   add_index "messages", ["author_id"], :name => "index_messages_on_author_id"
+  add_index "messages", ["conversation_id"], :name => "messages_conversation_id_fk"
 
   create_table "mongo_notifications", :force => true do |t|
     t.string   "mongo_id"
@@ -217,14 +220,16 @@ ActiveRecord::Schema.define(:version => 20110330175950) do
   end
 
   create_table "post_visibilities", :force => true do |t|
-    t.integer  "post_id",    :null => false
+    t.integer  "post_id",                       :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "contact_id", :null => false
+    t.boolean  "hidden",     :default => false, :null => false
+    t.integer  "contact_id",                    :null => false
   end
 
   add_index "post_visibilities", ["contact_id", "post_id"], :name => "index_post_visibilities_on_contact_id_and_post_id", :unique => true
   add_index "post_visibilities", ["contact_id"], :name => "index_post_visibilities_on_contact_id"
+  add_index "post_visibilities", ["post_id", "hidden", "contact_id"], :name => "index_post_visibilities_on_post_id_and_hidden_and_contact_id", :unique => true
   add_index "post_visibilities", ["post_id"], :name => "index_post_visibilities_on_post_id"
 
   create_table "posts", :force => true do |t|
@@ -394,11 +399,19 @@ ActiveRecord::Schema.define(:version => 20110330175950) do
 
   add_foreign_key "contacts", "people", :name => "contacts_person_id_fk", :dependent => :delete
 
+  add_foreign_key "conversation_visibilities", "conversations", :name => "conversation_visibilities_conversation_id_fk", :dependent => :delete
+  add_foreign_key "conversation_visibilities", "people", :name => "conversation_visibilities_person_id_fk", :dependent => :delete
+
+  add_foreign_key "conversations", "people", :name => "conversations_author_id_fk", :column => "author_id", :dependent => :delete
+
   add_foreign_key "invitations", "users", :name => "invitations_recipient_id_fk", :column => "recipient_id", :dependent => :delete
   add_foreign_key "invitations", "users", :name => "invitations_sender_id_fk", :column => "sender_id", :dependent => :delete
 
   add_foreign_key "likes", "people", :name => "likes_author_id_fk", :column => "author_id"
   add_foreign_key "likes", "posts", :name => "likes_post_id_fk"
+
+  add_foreign_key "messages", "conversations", :name => "messages_conversation_id_fk", :dependent => :delete
+  add_foreign_key "messages", "people", :name => "messages_author_id_fk", :column => "author_id", :dependent => :delete
 
   add_foreign_key "notification_actors", "notifications", :name => "notification_actors_notification_id_fk", :dependent => :delete
 

@@ -24,6 +24,25 @@ Feature: posting
         And I follow "All Aspects"
       Then I should see "I am eating a yogurt" within ".stream_element"
 
+    Scenario: hide a post
+      Given I expand the publisher
+      When I fill in "status_message_fake_text" with "Here is a post for you to hide"
+        And I press "Share"
+        And I wait for the ajax to finish
+
+        And I log out
+        And I sign in as "alice@alice.alice"
+        And I am on "bob@bob.bob"'s page
+
+        And I hover over the post
+        And I preemptively confirm the alert
+        And I click to delete the first post
+        And I wait for the ajax to finish
+        And I go to "bob@bob.bob"'s page
+        Then I should not see "Here is a post for you to hide"
+        And I follow "All Aspects"
+        Then I should not see "Here is a post for you to hide"
+
     Scenario: delete a post
       Given I expand the publisher
       When I fill in "status_message_fake_text" with "I am eating a yogurt"
