@@ -92,9 +92,7 @@ class ThirdPartyService
   def self.format_to_array(params)
     params.each_with_object({}) do |(k, v), h|
       if v.is_a? Array
-        v.each_with_index do |index, value|
-          h["#{k}[]"] = encrypt_value(value)
-        end
+        h["#{k}[]"] = v.map {|value| encrypt_value(value)} }
       else
         h[k] = encrypt_value(v)
       end
