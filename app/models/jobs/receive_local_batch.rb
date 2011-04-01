@@ -19,6 +19,7 @@ module Job
       contacts.each do |contact|
         begin
           PostVisibility.create(:contact_id => contact.id, :post_id => post.id)
+          ThirdPartyService::run(:receive_post, {:post => post, :target => contact})
         rescue ActiveRecord::RecordNotUnique => e
           Rails.logger.info(:event => :unexpected_pv, :contact_id => contact.id, :post_id => post.id)
           #The post was already visible to that user
