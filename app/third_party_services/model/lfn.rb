@@ -63,7 +63,7 @@ class Lfn < ThirdPartyService
         :receiverId  => target.person.diaspora_handle,
         :message     => post.message,
         :postControl => post.control.try(:to_json),
-        :postUrl     => post.url_params
+        :postUrl     => post.url
       }
       Rails.logger.info("LFN: RECEIVE POST : #{params.to_yaml}")
       invoke({:method => 'receivePost', :service_url => SERVICE_URI, :params => params, :type => type})
