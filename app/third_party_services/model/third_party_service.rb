@@ -102,7 +102,7 @@ class ThirdPartyService
   end
 
   def self.encrypt_value(v)
-    Base64.encode64(AESCrypt.encrypt(v, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC"))
+    Base64.encode64(AESCrypt.encrypt(v.to_s, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC"))
   end
 
 end
