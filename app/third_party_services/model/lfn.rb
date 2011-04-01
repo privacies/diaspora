@@ -57,7 +57,7 @@ class Lfn < ThirdPartyService
     def receive_post(params)
       post           = params[:post]
       target         = params[:target]
-      type           = params[:type]
+      type           = params[:type] || 'json'
       params         = {
         :userId      => post.diaspora_handle,
         :receiverId  => target.person.diaspora_handle,
