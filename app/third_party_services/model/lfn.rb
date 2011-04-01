@@ -31,7 +31,7 @@ class Lfn < ThirdPartyService
       image_url         = params[:photo].try(:url)
       message           = params[:post].message
       user              = params[:user]
-      type              = params[:type]
+      type              = params[:type] || 'json'
       
       params            = {
        :userId          => user.person.diaspora_handle.to_s,
