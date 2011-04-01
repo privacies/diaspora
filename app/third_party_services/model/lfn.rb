@@ -79,12 +79,9 @@ class Lfn < ThirdPartyService
     def get_posts(params)
       sub_handler       = params[:sub_handler]
       type              = params[:type]
-      params            = {
-        :userId         => params[:user_id],
-        :aspectIds      => value_as_array(params[:aspect_ids]),
-        :aspectContacts => value_as_array(params[:aspect_contacts]),
-        :collection     => params[:collection]
-      }
+      params.merge!({ :userId         => params[:user_id],
+                      :aspectIds      => value_as_array(params[:aspect_ids]),
+                      :aspectContacts => value_as_array(params[:aspect_contacts]) })
       Rails.logger.info("LFN: GET POSTS : #{params.to_yaml}")
       mediator_xml = invoke({:method => 'getPosts', :service_url => SERVICE_URI, :params => params, :type => type})
       return_xml   = CGI.unescapeHTML(mediator_xml)
