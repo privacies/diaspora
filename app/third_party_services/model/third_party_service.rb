@@ -81,13 +81,23 @@ class ThirdPartyService
 
   def self.format_to_json(params)
     params.map do |k, v|
-      {'param' => k, 'value' => encrypt_value(v)}
+      if v.is_a? Array
+        {'param' => k, 'value' => v.map {|value| encrypt_value(value)} }
+      else
+        {'param' => k, 'value' => encrypt_value(v)}
+      end
     end.to_json
   end
 
   def self.format_to_array(params)
     params.each_with_object({}) do |(k, v), h|
-      h[k] = encrypt_value(v)
+      if v.is_a? Array
+        v.each_with_index do |index, value|
+          h["#{k}[]"] = encrypt_value(value)
+        end
+      else
+        h[k] = encrypt_value(v)
+      end
     end
   end
 

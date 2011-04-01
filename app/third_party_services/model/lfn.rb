@@ -30,15 +30,13 @@ class Lfn < ThirdPartyService
     def create_post(params)
       image_url         = params[:photo].try(:url)
       message           = params[:post].message
-      target_aspect_ids = params[:target_aspect_ids]
       user              = params[:user]
       type              = params[:type]
       
-      target_aspect_ids = target_aspect_ids.join(",") if target_aspect_ids.is_a? Array
       params            = {
        :userId          => user.person.diaspora_handle.to_s,
-       :aspectIds       => target_aspect_ids,
-       :aspectContacts  => get_aspect_contacts_from_ids(target_aspect_ids, user).join(','),
+       :aspectIds       => value_as_array(params[:target_aspect_ids]),
+       :aspectContacts  => get_aspect_contacts_from_ids(target_aspect_ids, user),
        :message         => message,
        :postControl     => params[:post].control.try(:to_json),
        :postUrl         => image_url
@@ -77,8 +75,8 @@ class Lfn < ThirdPartyService
       type              = params[:type]
       params            = {
         :userId         => params[:user_id],
-        :aspectIds      => params[:aspect_ids],
-        :aspectContacts => params[:aspect_contacts]
+        :aspectIds      => value_as_array(params[:aspect_ids]),
+        :aspectContacts => value_as_array(params[:aspect_contacts])
       }
       Rails.logger.info("LFN: GET POSTS : #{params.to_yaml}")
       mediator_xml = invoke({:method => 'getPosts', :service_url => SERVICE_URI, :params => params, :type => type})
@@ -106,6 +104,11 @@ class Lfn < ThirdPartyService
     #remove the xml encoding for the lfn
     def format_response(response)
       response.gsub('<?xml version="1.0" encoding="utf-8"?>', '')
+    end
+
+    def value_as_array(value)
+      value = value.split(",") if target_aspect_ids.is_a? String
+      value
     end
 
   end

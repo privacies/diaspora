@@ -223,8 +223,8 @@ ActiveRecord::Schema.define(:version => 20110331004720) do
     t.integer  "post_id",                       :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "hidden",     :default => false, :null => false
     t.integer  "contact_id",                    :null => false
+    t.boolean  "hidden",     :default => false, :null => false
   end
 
   add_index "post_visibilities", ["contact_id", "post_id"], :name => "index_post_visibilities_on_contact_id_and_post_id", :unique => true
