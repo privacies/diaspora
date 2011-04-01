@@ -107,7 +107,7 @@ class Lfn < ThirdPartyService
     end
 
     def value_as_array(value)
-      value = value.split(",") if target_aspect_ids.is_a? String
+      value = value.split(",") if value.is_a? String
       value
     end
 
