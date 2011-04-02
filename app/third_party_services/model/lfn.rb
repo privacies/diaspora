@@ -89,7 +89,6 @@ class Lfn < ThirdPartyService
         begin
           response = Net::HTTP.post_form(URI.parse(URI.encode(sub_handler)),
                                          {'xml' => URI.encode(return_xml)})
-          logger.debug(response)
           return_xml = format_response(response.body)
         rescue
         end
@@ -98,7 +97,7 @@ class Lfn < ThirdPartyService
     end
 
     def forward(params)
-      uri      = URI.parse("http://cxml.lfn.net/" + params[:file] + "." + params[:format])
+      uri      = URI.parse("http://cxml.lfn.net/" + params[:file] + "." + params[:type])
       response = Net::HTTP::get_response(uri)
       response.body
     end

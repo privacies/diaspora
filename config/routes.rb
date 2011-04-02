@@ -5,8 +5,8 @@
 Diaspora::Application.routes.draw do
 
   # TODO make it generic
+  match "handler/lfn/:file.:type" => 'handler#call', :call => 'forward', :third_party_service => 'lfn', :constraints => { :file => /.*/, :type => /(jpg)|(dzc)|(dzi)/ }
   match "handler/:third_party_service/:call", :to => 'handler#call'
-  match "handler/lfn/:file.:format" => 'handler#call', :call => 'forward', :constraints => { :file => /.*/, :format => /(jpg)|(dzc)|(dzi)/ }
   match "handler/:call", :to => 'handler#call'
 
   post "mediator/invoke", :to => 'handler#invoke'

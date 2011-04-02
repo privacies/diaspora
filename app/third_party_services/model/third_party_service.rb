@@ -76,6 +76,7 @@ class ThirdPartyService
 
     doc = Document.new(response.body)
     doc.each_element('//Column') { |column| column.text = AESCrypt.decrypt(Base64.decode64(column.text, AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC")) }
+
     doc.to_s
   end
 
