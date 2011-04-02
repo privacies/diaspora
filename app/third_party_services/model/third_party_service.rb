@@ -74,13 +74,13 @@ class ThirdPartyService
     # TODO change the verb
     response = Net::HTTP.post_form(URI.parse(service_url), {:method => method, :params => encrypted_values})
 
-    Rails.logger.info("Response before decrypt : #{CGI::unescapeHTML(response.body)}")
+    Rails.logger.info("Response before decrypt : #{response.body}")
 
-    doc = Document.new(CGI::unescapeHTML(response.body))
+    doc = Document.new(response.body)
 
     doc.each_element('//Column') { |column| column.text = AESCrypt.decrypt(Base64.decode64(column.text.to_s), AppConfig[:encryption_key], AppConfig[:iv], "AES-256-CBC") unless column.text.blank? }
 
-    Rails.logger.info("Response after decrypt : #{CGI::unescapeHTML(doc.to_s)}")
+    Rails.logger.info("Response after decrypt : #{doc.to_s}")
 
     doc.to_s
   end
