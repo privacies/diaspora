@@ -17,6 +17,8 @@ ca:
   ok: "D'acord"
   cancel: "Canceŀla"
   delete: "Suprimeix"
+  hide: "Amaga"
+  undo: "Voleu desfer-ho?"
   or: "o"
   ago: "fa %{time}"
   username: "Nom d'usuari"
@@ -140,6 +142,7 @@ ca:
     index:
       handle_explanation: "Aquest és el vostre identificador de Diàspora. Com les adreces de correu, podeu donar això a la gent per a que us contacte."
       no_contacts: "Cap contacte"
+      post_a_message: "publica un missatge »"
 
 
   aspect_memberships:
@@ -271,10 +274,9 @@ ca:
       powered_by: "FUNCIONA AMB DIÀSPORA*"
       whats_new: "què és nou?"
       have_a_problem: "Teniu un problema? Trobeu aquí una resposta"
-      your_aspects: "els vostres aspectes"
-      logged_in_as: "autenticat com a %{name}"
       toggle: "commuta el lloc per a mòbils"
       public_feed: "Canal públic del Diàspora per a %{name}"
+      your_aspects: "els vostres aspectes"
 
 
   likes:
@@ -448,6 +450,11 @@ ca:
     doesnt_exist: "aquesta publicació no existeix!"
 
 
+  post_visibilites:
+    update:
+      post_hidden: "S'ha amagat la publicació de %{name}."
+
+
   profiles:
     edit:
       your_public_profile: "El vostre perfil públic"
@@ -495,7 +502,7 @@ ca:
       manage_within: "Gestiona els contactes inclosos"
       existing: "Existing contacts"
     destroy:
-      success: "Ara sou amics."
+      success: "Ara esteu compartint."
       error: "Seleccioneu un aspecte!"
       ignore: "S'ha omès la petició de contacte."
     create:
@@ -569,7 +576,7 @@ ca:
       invitations_left: "(en queden %{count})"
       dont_have_now: "No en teniu cap ara mateix, però aviat arribaran més invitacions!"
       invites_closed: "Actualment, les invitacions són tancades a aquesta beina de Diàspora"
-      invite_your_friends: "Convideu el vostres amics"
+      invite_your_friends: "Cerqueu el vostres amics"
       from_facebook: "Des del Facebook"
       by_email: "per correu electrònic"
     reshare:
@@ -587,6 +594,9 @@ ca:
     stream_element:
       like: "M'agrada"
       dislike: "No m'agrada"
+    footer:
+      logged_in_as: "autenticat com a %{name}"
+      your_aspects: "els vostres aspectes"
 
 
   status_messages:

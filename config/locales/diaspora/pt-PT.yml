@@ -82,6 +82,7 @@ pt-PT:
     index: 
       handle_explanation: "Esta é a tua chave do Diaspora. Tal como um email, podes dar esta chave às pessoas para que te possam contactar."
       no_contacts: "Nenhum contacto"
+      post_a_message: "post a message >>"
     manage: 
       add_a_new_aspect: "Adicionar um novo grupo"
       add_a_new_contact: "Adicionar um novo contacto"
@@ -179,6 +180,7 @@ pt-PT:
       correct_the_following_errors_and_try_again: "Corrige os seguintes erros e tenta novamente."
       invalid_fields: "Campos Inválidos"
   fill_me_out: "Informa-me"
+  hide: "Hide"
   home: 
     show: 
       already_account: "já tens uma conta?"
@@ -218,7 +220,6 @@ pt-PT:
   layouts: 
     application: 
       have_a_problem: "Problema? Encontre uma resposta aqui"
-      logged_in_as: "entrou como %{name}"
       powered_by: "POWERED BY DIASPORA*"
       public_feed: "Feed Diaspora público para %{name}"
       toggle: "toggle mobile site"
@@ -395,6 +396,9 @@ pt-PT:
     update: 
       error: "Falha ao editar a fotografia"
       notice: "Fotografia adicionada com sucesso."
+  post_visibilites: 
+    update: 
+      post_hidden: "%{name}'s post has been hidden."
   posts: 
     doesnt_exist: "that post does not exist!"
   previous: "anterior"
@@ -498,6 +502,9 @@ pt-PT:
     contact_list: 
       all_contacts: "Todos os contactos"
       cannot_remove: "Impossível remover esta pessoa do último Grupo. (Se quiseres desligar-te desta pessoa terás que remover o contacto.)"
+    footer: 
+      logged_in_as: "logged in as %{name}"
+      your_aspects: "your aspects"
     invitations: 
       by_email: "por Email"
       dont_have_now: "Não tens nenhum agora, mas terás mais convites brevemente!"
@@ -554,6 +561,7 @@ pt-PT:
       people_tagged_with: "People tagged with %{tag}"
       posts_tagged_with: "Posts tagged with #%{tag}"
   the_world: "o mundo"
+  undo: "Undo?"
   username: "Nome de Utilizador"
   users: 
     destroy: "Conta encerrada com sucesso"

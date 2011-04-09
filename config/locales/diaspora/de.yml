@@ -82,6 +82,7 @@ de:
     index: 
       handle_explanation: "Das ist deine Diaspora*-Adresse. Du kannst sie wie eine E-Mail-Adresse weitergeben, damit andere Nutzer mit dir Kontakt aufnehmen können."
       no_contacts: "Keine Kontakte"
+      post_a_message: "schreibe eine Nachricht >>"
     manage: 
       add_a_new_aspect: "Neuen Aspekt hinzufügen"
       add_a_new_contact: "Neuen Kontakt hinzufügen"
@@ -143,9 +144,9 @@ de:
     zero: "Keine Kontakte"
   conversations: 
     create: 
-      sent: "Message sent"
+      sent: "Nachricht versendet"
     destroy: 
-      success: "Conversation successfully removed"
+      success: "Nachricht wurde entfernt"
     helper: 
       new_messages: 
         few: "%{count} neue Nachrichten"
@@ -179,6 +180,7 @@ de:
       correct_the_following_errors_and_try_again: "Korrigiere die folgenden Fehler und versuche es erneut."
       invalid_fields: "Ungültige Felder"
   fill_me_out: "Fülle mich aus"
+  hide: "Ausblenden"
   home: 
     show: 
       already_account: "bereits registriert?"
@@ -218,7 +220,6 @@ de:
   layouts: 
     application: 
       have_a_problem: "Du hast ein Problem? Finde hier eine Antwort (Englisch)"
-      logged_in_as: "Angemeldet als %{name}"
       powered_by: "BETRIEBEN MIT DIASPORA*"
       public_feed: "Öffentlicher Diaspora Feed von %{name}"
       toggle: "Mobile Ansicht umschalten"
@@ -247,7 +248,7 @@ de:
         zero: "Keinem gefällt das"
   more: "Mehr"
   next: "Nächste"
-  no_results: "No Results Found"
+  no_results: "Du musst nach etwas suchen."
   notifications: 
     also_commented: "kommentierte auch %{post_author}s"
     also_commented_deleted: "kommentierte einen gelöschten Beitrag"
@@ -395,6 +396,9 @@ de:
     update: 
       error: "Bearbeiten des Fotos fehlgeschlagen."
       notice: "Foto erfolgreich aktualisiert."
+  post_visibilites: 
+    update: 
+      post_hidden: "%{name}'s Beitrag wurde ausgeblendet."
   posts: 
     doesnt_exist: "Dieser Post existiert nicht!"
   previous: "Vorherige"
@@ -498,6 +502,9 @@ de:
     contact_list: 
       all_contacts: "Alle Kontakte"
       cannot_remove: "Kontakt kann nicht aus dem letzten Aspekt entfernt werden. (Wenn du nicht länger verbunden sein willst, lösche den Kontakt.)"
+    footer: 
+      logged_in_as: "Angemeldet als %{name}"
+      your_aspects: "Deine Aspekte"
     invitations: 
       by_email: "per E-Mail"
       dont_have_now: "Du hast im Moment keine Einladungen zur Verfügung, aber es wird bald wieder neue geben!"
@@ -554,6 +561,7 @@ de:
       people_tagged_with: "Personen die mit %{tag} getagt sind"
       posts_tagged_with: "Beiträge die mit #%{tag} getagt sind"
   the_world: "Die Welt"
+  undo: "Rückgängig machen?"
   username: "Benutzername"
   users: 
     destroy: "Konto erfolgreich geschlossen."

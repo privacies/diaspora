@@ -82,6 +82,7 @@ eu:
     index: 
       handle_explanation: "Hau da zure Diaspora erabiltzailea. Zure adiskideei emaiezu zu aurkitzearren."
       no_contacts: "Adiskiderik ez"
+      post_a_message: "mezu bat bidali >>"
     manage: 
       add_a_new_aspect: "Alderdi berri bat sortu"
       add_a_new_contact: "Adiskide berria gehitu"
@@ -112,7 +113,7 @@ eu:
     zero: "alderdirik ez"
   back: "Atzera"
   bookmarklet: 
-    explanation: "%{link} edozein lekutik esteka hau markagailuetarantz herresta eginez."
+    explanation: "%{link} edozein lekutik esteka hau laster-marketarantz herresta eginez."
     explanation_link_text: "Diasporan partekatu"
     post_something: "Partekatu zerbait Diasporan"
     post_success: "Bidalia! Irteten!"
@@ -179,6 +180,7 @@ eu:
       correct_the_following_errors_and_try_again: "Zuzendu honako akatsak eta saiatu berriro."
       invalid_fields: "Eremu akasdunak"
   fill_me_out: "Bete nazazu"
+  hide: "Ezkutatu"
   home: 
     show: 
       already_account: "kontua duzu jada?"
@@ -218,7 +220,6 @@ eu:
   layouts: 
     application: 
       have_a_problem: "Arazoren bat? Aurkitu erantzuna hemen"
-      logged_in_as: "%{name} zara."
       powered_by: "DIASPORAK ESKAINIA"
       public_feed: "%{name}(r)en Diaspora Feed publikoa"
       toggle: "aldatu mugikorreko orrialdera"
@@ -269,7 +270,7 @@ eu:
     new_request: "(e)k zurekin partekatu nahi du."
     post: "mezua"
     private_message: "(e)k mezu bat bidali dizu."
-    request_accepted: "zure partekatze eskaera onartu du."
+    request_accepted: "(e)k zure partekatze eskaera onartu du."
   notifier: 
     also_commented: 
       commented: "(e)k ere iruzkindu du %{post_author}(r)en mezuan:"
@@ -353,7 +354,7 @@ eu:
       recent_posts: "Mezu Berrienak"
       recent_public_posts: "Azken berri publikoak"
       return_to_aspects: "Zure alderdi orrialdera itzuli"
-      similar_contacts: "antzeko adiskideak"
+      similar_contacts: "antzeko adiskide"
       start_sharing: "harremanetan hasi"
       to_accept_or_ignore: "onartu edo utzi."
       you_have_no_tags: "ez duzu etiketarik!"
@@ -395,6 +396,9 @@ eu:
     update: 
       error: "Huts argazkia aldatzean."
       notice: "Argazkia arrakastaz eguneratua."
+  post_visibilites: 
+    update: 
+      post_hidden: "%{name}(r)en mezua ezkutatua izan da."
   posts: 
     doesnt_exist: "mezu hori ez dago!"
   previous: "aurrekoa"
@@ -498,13 +502,16 @@ eu:
     contact_list: 
       all_contacts: "Adiskide Guztiak"
       cannot_remove: "Ezin izan da pertsona azken alderditik ezabatu. (Pertsona honekin harremanak nahi ez badituzu, adiskidea ezabatu behar duzu.)"
+    footer: 
+      logged_in_as: "%{name} zara"
+      your_aspects: "zure alderdiak"
     invitations: 
       by_email: "e-posta bidez"
       dont_have_now: "Bukatu egin zaizkizu, baina gonbidapen gehiago iritsiko dira laister!"
       from_facebook: "Facebooketik"
       invitations_left: "(%{count} geratzen zai(zki)zu)"
       invite_someone: "Norbait gonbidatu"
-      invite_your_friends: "Zure lagunak gonbidatu"
+      invite_your_friends: "Zure lagunak aurkitu"
       invites: "Gonbidapenak"
       invites_closed: "Gonbidapenak itxita daude orain Diaspora zerbitzari hontan"
     notification: 
@@ -554,6 +561,7 @@ eu:
       people_tagged_with: "%{tag} etiketadun jendea"
       posts_tagged_with: "#%{tag} etiketadun mezuak"
   the_world: "mundua"
+  undo: "Desegin?"
   username: "Erabiltzailea"
   users: 
     destroy: "Kontua arrakastaz ezabatua."

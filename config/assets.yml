@@ -8,10 +8,9 @@ javascripts:
     - public/javascripts/vendor/swfobject.js
     - public/javascripts/vendor/web_socket.js
   jquery:
-    - public/javascripts/vendor/jquery144.min.js
+    - public/javascripts/vendor/jquery152.min.js
   main:
     - public/javascripts/rails.js
-    - public/javascripts/vendor/jquery.infieldlabel.js
     - public/javascripts/vendor/jquery.tipsy.js
     - public/javascripts/vendor/jquery.hotkeys.js
     - public/javascripts/vendor/jquery.autoresize.min.js
@@ -22,6 +21,7 @@ javascripts:
     - public/javascripts/vendor/Mustache.js
     - public/javascripts/vendor/charCount.js
     - public/javascripts/jquery.autocomplete-custom.js
+    - public/javascripts/jquery.infieldlabel-custom.js
     - public/javascripts/fileuploader-custom.js
     - public/javascripts/keycodes.js
     - public/javascripts/diaspora.js
@@ -31,16 +31,16 @@ javascripts:
     - public/javascripts/widgets/timeago.js
     - public/javascripts/view.js
     - public/javascripts/stream.js
-    - public/javascripts/application.js
     - public/javascripts/search.js
+    - public/javascripts/infinite-scroll.js
   mobile:
-    - public/javascripts/vendor/jquery144.min.js
+    - public/javascripts/vendor/jquery152.min.js
     - public/javascripts/custom-mobile-scripting.js
-    - public/javascripts/vendor/jquery.mobile-1.0a3.min.js
+    - public/javascripts/vendor/jquery.mobile-1.0a4.js
     - public/javascripts/vendor/jquery.infinitescroll.min.js
     - public/javascripts/diaspora.js
-    - public/javascripts/mobile.js
-    - public/javascripts/application.js
+    - public/javascripts/widgets/i18n.js
+    - public/javascripts/infinite-scroll.js
     - public/javascripts/rails.js
   mailchimp:
     - public/javascripts/vendor/mailchimp/jquery.form.js

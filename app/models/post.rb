@@ -14,8 +14,8 @@ class Post < ActiveRecord::Base
   xml_attr :created_at
 
   has_many :comments, :order => 'created_at ASC'
-  has_many :likes, :conditions => '`likes`.`positive` = 1', :dependent => :delete_all
-  has_many :dislikes, :conditions => '`likes`.`positive` = 0', :class_name => 'Like', :dependent => :delete_all
+  has_many :likes, :conditions => {:positive => true}, :dependent => :delete_all
+  has_many :dislikes, :conditions => {:positive => false}, :class_name => 'Like', :dependent => :delete_all
 
   has_many :aspect_visibilities
   has_many :aspects, :through => :aspect_visibilities
@@ -91,11 +91,14 @@ class Post < ActiveRecord::Base
         return local_post
       end
     elsif !local_post
-      self.save
-      user.contact_for(person).receive_post(self)
-      user.notify_if_mentioned(self)
-      Rails.logger.info("event=receive payload_type=#{self.class} update=false status=complete sender=#{self.diaspora_handle}")
-      return self
+      if self.save
+        user.contact_for(person).receive_post(self)
+        user.notify_if_mentioned(self)
+        Rails.logger.info("event=receive payload_type=#{self.class} update=false status=complete sender=#{self.diaspora_handle}")
+        return self
+      else
+        Rails.logger.info("event=receive payload_type=#{self.class} update=false status=abort sender=#{self.diaspora_handle} reason=#{self.errors.full_messages}")
+      end
     else
       Rails.logger.info("event=receive payload_type=#{self.class} update=true status=abort sender=#{self.diaspora_handle} reason='update not from post owner' existing_post=#{self.id}")
     end

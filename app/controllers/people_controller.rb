@@ -4,13 +4,14 @@
 
 class PeopleController < ApplicationController
   before_filter :authenticate_user!, :except => [:show]
+  before_filter :ensure_page, :only => :show
 
   respond_to :html
   respond_to :json, :only => [:index, :show]
 
   def index
     @aspect = :search
-    params[:q] ||= params[:term]
+    params[:q] ||= params[:term] || ''
 
     if (params[:q][0] == 35 || params[:q][0] == '#') && params[:q].length > 1
       redirect_to "/tags/#{params[:q].gsub("#", "")}"
@@ -25,7 +26,7 @@ class PeopleController < ApplicationController
         render :json => @people
       end
 
-      format.html do
+      format.all do
         @people = Person.search(params[:q], current_user).paginate :page => params[:page], :per_page => limit
         @hashes = hashes_for_people(@people, @aspects)
 
@@ -76,7 +77,7 @@ class PeopleController < ApplicationController
         @incoming_request = current_user.request_from(@person)
         @contact = current_user.contact_for(@person)
         @aspects_with_person = []
-        if @contact
+        if @contact && !params[:only_posts]
           @aspects_with_person = @contact.aspects
           @aspect_ids = @aspects_with_person.map(&:id)
           @contacts_of_contact = @contact.contacts
@@ -86,19 +87,23 @@ class PeopleController < ApplicationController
           @contacts_of_contact = []
         end
 
-        if (@person != current_user.person) && (!@contact || @contact.pending)
+        if (@person != current_user.person) && (!@contact || !@contact.persisted? || @contact.pending)
           @commenting_disabled = true
         else
           @commenting_disabled = false
         end
-        @posts = current_user.posts_from(@person).where(:type => "StatusMessage").paginate(:per_page => 15, :page => params[:page])
+        @posts = current_user.posts_from(@person).where(:type => "StatusMessage").includes(:comments).limit(15).offset(15*(params[:page]-1))
       else
         @commenting_disabled = true
-        @posts = @person.posts.where(:type => "StatusMessage", :public => true).paginate(:per_page => 15, :page => params[:page], :order => 'created_at DESC')
+        @posts = @person.posts.where(:type => "StatusMessage", :public => true).includes(:comments).limit(15).offset(15*(params[:page]-1))
       end
 
-      @fakes = PostsFake.new(@posts)
-      respond_with @person, :locals => {:post_type => :all}
+      @posts = PostsFake.new(@posts)
+      if params[:only_posts]
+        render :partial => 'shared/stream', :locals => {:posts => @posts}
+      else
+        respond_with @person, :locals => {:post_type => :all}
+      end
 
     else
       flash[:error] = I18n.t 'people.show.does_not_exist'

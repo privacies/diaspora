@@ -198,7 +198,7 @@ class User < ActiveRecord::Base
   ######### Mailer #######################
   def mail(job, *args)
     pref = job.to_s.gsub('Job::Mail', '').underscore
-    unless self.disable_mail || self.user_preferences.exists?(:email_type => pref)
+    if(self.disable_mail == false && !self.user_preferences.exists?(:email_type => pref))
       Resque.enqueue(job, *args)
     end
   end
@@ -212,9 +212,11 @@ class User < ActiveRecord::Base
       aspects = post.aspects
       retraction = Retraction.for(post)
     end
-    retraction.perform(self)
+
     mailman = Postzord::Dispatch.new(self, retraction)
     mailman.post
+
+    retraction.perform(self)
 
     retraction
   end

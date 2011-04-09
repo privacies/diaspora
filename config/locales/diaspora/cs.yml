@@ -82,6 +82,7 @@ cs:
     index: 
       handle_explanation: "Toto je váš Diaspora identifikátor. Podobně jako e-mailovou adresu ho můžete dál lidem a budete na něm dostupní."
       no_contacts: "Žádné kontakty"
+      post_a_message: "odeslat příspěvek >>"
     manage: 
       add_a_new_aspect: "Přidat aspekt"
       add_a_new_contact: "Přidat nový kontakt"
@@ -143,9 +144,9 @@ cs:
     zero: "žádné kontakty"
   conversations: 
     create: 
-      sent: "Message sent"
+      sent: "Zpráva byla odeslána"
     destroy: 
-      success: "Conversation successfully removed"
+      success: "Konverzace úspěšně odstraněna"
     helper: 
       new_messages: 
         few: "%{count} nové zprávy"
@@ -179,6 +180,7 @@ cs:
       correct_the_following_errors_and_try_again: "Opravte následující chyby a zkuste to znovu."
       invalid_fields: "Neplatná pole"
   fill_me_out: "Vyplňte"
+  hide: "Skrýt"
   home: 
     show: 
       already_account: "máte již účet?"
@@ -218,7 +220,6 @@ cs:
   layouts: 
     application: 
       have_a_problem: "Máte problém? Zde najdete odpověď"
-      logged_in_as: "přihlášen jako %{name}"
       powered_by: "POWERED BY DIASPORA*"
       public_feed: "Veřejný Diaspora feed %{name}"
       toggle: "přepnout mobilní stránku"
@@ -247,7 +248,7 @@ cs:
         zero: "žádná kladná hodnocení"
   more: "Více"
   next: "další"
-  no_results: "No Results Found"
+  no_results: "Nebyly nalezeny žádné výsledky"
   notifications: 
     also_commented: "také komentoval v %{post_author}"
     also_commented_deleted: "komentován smazaný příspěvek"
@@ -395,6 +396,9 @@ cs:
     update: 
       error: "Nepodařilo se upravit fotku."
       notice: "Fotka úspěšně aktualizována."
+  post_visibilites: 
+    update: 
+      post_hidden: "Příspěvek od uživatele %{name} byl skryt."
   posts: 
     doesnt_exist: "tento příspěvek neexistuje!"
   previous: "předchozí"
@@ -498,13 +502,16 @@ cs:
     contact_list: 
       all_contacts: "Všechny kontakty"
       cannot_remove: "Nelze odstranit osobu z posledního aspektu. (Pokud se chcete odpojit od této osoby, musíte odstranit její kontakt.)"
+    footer: 
+      logged_in_as: "přihlášen jako %{name}"
+      your_aspects: "vaše aspekty"
     invitations: 
       by_email: "pomocí emailu"
       dont_have_now: "Již nemáte žádné, ale další brzy přibudou!"
       from_facebook: "z Facebooku"
       invitations_left: "(%{count} zbývá)"
       invite_someone: "Pozvěte někoho"
-      invite_your_friends: "Pozvěte vaše přátele"
+      invite_your_friends: "Najděte vaše přátele"
       invites: "Pozvánky"
       invites_closed: "Pozvánky jsou aktuálně uzavřeny na tomto Diaspora podu"
     notification: 
@@ -554,6 +561,7 @@ cs:
       people_tagged_with: "Lidé označeni %{tag}"
       posts_tagged_with: "Příspěvky označené #%{tag}"
   the_world: "svět"
+  undo: "Vrátit?"
   username: "Uživatelské jméno"
   users: 
     destroy: "Účet byl úspěšně uzavřen."

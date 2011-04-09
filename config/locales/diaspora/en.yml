@@ -15,6 +15,7 @@ en:
   cancel: "Cancel"
   delete: "Delete"
   hide: "Hide"
+  undo: "Undo?"
   or: "or"
   ago: "%{time} ago"
   username: "Username"
@@ -73,7 +74,6 @@ en:
       unknown_person: "unknown person"
       video_title:
         unknown: "Unknown Video Title"
-
   aspects:
     zero: "no aspects"
     one: "1 aspect"
@@ -139,6 +139,7 @@ en:
     index:
       handle_explanation: "This is your diaspora handle. Like an email address, you can give this to people to reach you."
       no_contacts: "No contacts"
+      post_a_message: "post a message >>"
 
   aspect_memberships:
     destroy:
@@ -262,11 +263,9 @@ en:
       powered_by: "POWERED BY DIASPORA*"
       whats_new: "what's new?"
       have_a_problem: "Have a problem? Find an answer here"
-      your_aspects: "your aspects"
-      logged_in_as: "logged in as %{name}"
       toggle: "toggle mobile site"
       public_feed: "Public Diaspora Feed for %{name}"
-
+      your_aspects: "your aspects"
 
   likes:
     likes:
@@ -289,7 +288,7 @@ en:
     private_message: "sent you a message."
     comment_on_post: "commented on your"
     also_commented: "also commented on %{post_author}'s"
-    mentioned: "has mentioned you in their"
+    mentioned: "has mentioned you in a post"
     post: "post"
     deleted: "deleted"
     also_commented_deleted: "commented on a deleted post"
@@ -433,9 +432,9 @@ en:
   posts:
     doesnt_exist: "that post does not exist!"
 
-  post_visibility:
-    destroy:
-      success: "Post successfully hidden"
+  post_visibilites:
+    update:
+      post_hidden: "%{name}'s post has been hidden."
 
   profiles:
     edit:
@@ -482,7 +481,7 @@ en:
       manage_within: "Manage contacts within"
       existing: "Existing contacts"
     destroy:
-      success: "You are now friends."
+      success: "You are now sharing."
       error: "Please select an aspect!"
       ignore: "Ignored contact request."
     create:
@@ -554,7 +553,7 @@ en:
       invitations_left: "(%{count} left)"
       dont_have_now: "You don't have any right now, but more invites are coming soon!"
       invites_closed: "Invites are currently closed on this Diaspora pod"
-      invite_your_friends: "Invite your friends"
+      invite_your_friends: "Find your friends"
       from_facebook: "From Facebook"
       by_email: "by Email"
     reshare:
@@ -572,7 +571,9 @@ en:
     stream_element:
       like: "I like this"
       dislike: "I dislike this"
-
+    footer:
+      logged_in_as: "logged in as %{name}"
+      your_aspects: "your aspects"
   status_messages:
     new:
       mentioning: "Mentioning: %{person}"

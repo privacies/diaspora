@@ -15,18 +15,8 @@
       :javascript
         Diaspora.widgets.i18n.loadLocale(#{get_javascript_strings_for(current_user.language).to_json}, "#{current_user.language}");
 
-    = stylesheet_link_tag 'vendor/jquery.mobile-1.0a3.min', 'mobile'
+    = stylesheet_link_tag 'vendor/jquery.mobile-1.0a4.min', 'mobile'
     = csrf_meta_tag
-
-    :javascript
-      $(document).ready(Mobile.initialize);
-      $(document).ready( function() {
-        $("#menu_button").bind('tap', function(e){
-          e.preventDefault();
-          $("#content").hide();
-          $("#menu").show();
-        });
-      });
 
     = yield(:head)
 
@@ -55,7 +45,7 @@
 
 
   %body
-    #content{:data => {:role => 'page'}}
+    #content{:data => {:role => 'page', :theme => 'c'}}
       #header
         - if current_user
           .left
@@ -63,45 +53,25 @@
 
           .right
             = link_to(image_tag('icons/search_white.png'), people_path)
-        = link_to(image_tag('white.png'), aspects_path)
+        = link_to(image_tag('white@2x.png', :height => 22, :width => 136), aspects_path)
 
       = yield
 
-      #footer
-        - if current_user
-          logged in as
-          = link_to current_user.name, current_user.person
-
-          %br
-          %br
-          %b= t('.your_aspects')
-          %br
-          - for aspect in @all_aspects
-            = link_to aspect, aspects_path('a_ids[]' => aspect.id)
-            |
-          %br
-
-          %br
-          = link_to t('layouts.header.logout'), destroy_user_session_path
-
-          %br
-          %br
-          = link_to t('layouts.application.toggle'), toggle_mobile_path
+      = render :partial =>'shared/footer' if user_signed_in?
 
     -if current_user
-      #menu{:data => {:role => 'page'}}
+      #menu{:data => {:role => 'page', :theme => 'c'}}
         #header
           .right
             = link_to(image_tag('icons/search_white.png'), people_path)
           = link_to(image_tag('white.png'), aspects_path)
 
-        %div{:data => {:role => 'content'}}
+        #content{:data => {:role => 'content'}}
+
           %h2
             = current_user.name
 
           %ul{:data => {:role => 'listview', :inset => 'true'}}
-            %li
-              = link_to t('profiles.edit.your_profile'), edit_profile_path
             %li
               = link_to t('notifications.index.notifications'), notifications_path
               .ui-li-count
@@ -112,25 +82,13 @@
 
           %ul{:data => {:role => 'listview', :inset => 'true'}}
             %li
-              = link_to t('application.helper.aspect_badge.all_aspects'), aspects_path
+              = link_to t('all_aspects'), aspects_path
             - for aspect in @all_aspects
               %li
                 = link_to aspect, aspects_path('a_ids[]' => aspect.id)
 
 
-        #footer
-          = link_to t('.logged_in_as', :name => current_user.name), current_user.person
+        = render :partial =>'shared/footer'
 
-          %br
-          %br
-          %b= t('.your_aspects')
-          %br
-          - for aspect in @all_aspects
-            = link_to aspect, aspects_path('a_ids[]' => aspect.id)
-            |
-          %br
-          %br
-          = link_to t('layouts.header.logout'), destroy_user_session_path
-          %br
-          %br
-          = link_to t('layouts.application.toggle'), toggle_mobile_path
+  = yield :subpages
+

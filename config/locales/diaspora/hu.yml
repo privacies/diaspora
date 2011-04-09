@@ -6,7 +6,7 @@
 hu: 
   _comments: "Hozzászólások"
   _home: "Kezdőlap"
-  _photos: "Képek"
+  _photos: "képek"
   _services: "Szolgáltatások"
   account: "Felhasználói fiók"
   activerecord: 
@@ -73,7 +73,7 @@ hu:
       remove_aspect: "Csoport törlése"
       rename: "átnevezés"
       update: "frissítés"
-      updating: "Frissítés"
+      updating: "frissítés"
     few: "%{count} csoport"
     helper: 
       are_you_sure: "Biztos, hogy törlöd a csoportot?"
@@ -82,6 +82,7 @@ hu:
     index: 
       handle_explanation: "Ez a Te Diaspora felhasználóneved. Megadhatod elérhetőségként, mint egy email címet."
       no_contacts: "Nincs ismerős"
+      post_a_message: "üzenet küldése >>"
     manage: 
       add_a_new_aspect: "Új csoport hozzáadása"
       add_a_new_contact: "Új ismerős hozzáadása"
@@ -112,10 +113,10 @@ hu:
     zero: "nincs csoport"
   back: "Vissza"
   bookmarklet: 
-    explanation: "%{link} from anywhere by bookmarking this link."
-    explanation_link_text: "Post to Diaspora"
-    post_something: "Post something to Diaspora"
-    post_success: "Posted! Closing!"
+    explanation: "Hivatkozz rá: %{link} bárhonnan, azzal, hogy hozzáadod a könyvjelzőkhöz!"
+    explanation_link_text: "Posztolás a Diasporára"
+    post_something: "Írj valamit a Diasporára"
+    post_success: "Elküldve! Bezárás!"
   cancel: "Mégsem"
   comments: 
     few: "%{count} hozzászólás"
@@ -143,9 +144,9 @@ hu:
     zero: "nincs ismerős"
   conversations: 
     create: 
-      sent: "Message sent"
+      sent: "Üzenet elküldve"
     destroy: 
-      success: "Conversation successfully removed"
+      success: "Üzenetváltás sikeresen el lett távolítva"
     helper: 
       new_messages: 
         few: "%{count} új üzenet"
@@ -176,9 +177,10 @@ hu:
   email: "Email"
   error_messages: 
     helper: 
-      correct_the_following_errors_and_try_again: "Javítsd a következő hibákat, és próbáljd újra."
+      correct_the_following_errors_and_try_again: "Javítsd a következő hibákat, és próbáld újra."
       invalid_fields: "Érvénytelen adatok"
-  fill_me_out: "Tölts ki engem!"
+  fill_me_out: "Tölts ki"
+  hide: "Elrejt"
   home: 
     show: 
       already_account: "már van fiókod?"
@@ -218,11 +220,10 @@ hu:
   layouts: 
     application: 
       have_a_problem: "Problémád van?"
-      logged_in_as: "bejelentkezve, mint %{name}"
       powered_by: "DIASPORA* fordította ADAMEX"
       public_feed: "Nyílvános Diaspora hírfolyam neki: %{name}"
       toggle: "mobil változat"
-      whats_new: "Újdonságok"
+      whats_new: "belépés"
       your_aspects: "csoportjaid"
     header: 
       blog: "blog"
@@ -247,7 +248,7 @@ hu:
         zero: "senki nem kedveli"
   more: "Bővebben"
   next: "következő"
-  no_results: "No Results Found"
+  no_results: "Nincs eredmény"
   notifications: 
     also_commented: "hozzászólt még az övéhez is:"
     also_commented_deleted: "hozzászólt egy már törölt bejegyzéshez"
@@ -332,8 +333,8 @@ hu:
       pending_request: "Folyamatban lévő kérelem"
       thats_you: "Ez vagy Te!"
     profile_sidebar: 
-      bio: "Személyes"
-      born: "született"
+      bio: "személyes"
+      born: "születésnap"
       cannot_remove: "Nem tudod törölni %{name}-t az utolsó csoportodból. (Ha nem kívánsz az ismerőse lenni, törölnöd kell a kapcsolatot.)"
       edit_my_profile: "Profilom szerkesztése"
       gender: "nem"
@@ -363,8 +364,8 @@ hu:
   photos: 
     create: 
       integrity_error: "Kép feltöltése nem sikerült. Biztos vagy benne, hogy ez egy kép?"
-      runtime_error: "Kép feltöltése nem sikerült. Biztos vagy benne, hogy ez egy kép?"
-      type_error: "Kép feltöltése nem sikerült. Biztos vagy benne, hogy ez egy kép?"
+      runtime_error: "Kép feltöltése nem sikerült. Szerver nem válaszol!"
+      type_error: "Kép feltöltése nem sikerült. Biztos vagy benne, hogy jelöltél ki képet?"
     destroy: 
       notice: "Kép törölve."
     edit: 
@@ -372,9 +373,9 @@ hu:
     new: 
       back_to_list: "Vissza a listához"
       new_photo: "Új kép"
-      post_it: "Posztolom!"
+      post_it: "Elküld!"
     new_photo: 
-      empty: "{file} egy üres fájl, hagyd ki a feltöltésből."
+      empty: "{file} egy üres fájl, válaszd ki újra a fájlokat {file} kivételéve!"
       invalid_ext: "{file} érvénytelen kiterjesztés. Csak {extensions} kiterjesztések megengedettek."
       size_error: "{file} túl nagy, maximum fájlméret {sizeLimit}."
     new_profile_photo: 
@@ -395,6 +396,9 @@ hu:
     update: 
       error: "Nem sikerült szerkeszteni a képet."
       notice: "Kép szerkesztése sikerült."
+  post_visibilites: 
+    update: 
+      post_hidden: "%{name} bejegyzése elrejtve."
   posts: 
     doesnt_exist: "ez a bejegyzés nem létezik!"
   previous: "előző"
@@ -414,8 +418,8 @@ hu:
       your_photo: "Fényképem"
       your_private_profile: "Személyes profilod"
       your_public_profile: "Nyilvános profilod"
-      your_tags: "Te: 5 #címkében"
-      your_tags_placeholder: "pl: #diaspora #buli #cica #zene"
+      your_tags: "5 tulajdonság(#címke) rólad:"
+      your_tags_placeholder: "pl: #film #buli #cica #zene"
     update: 
       failed: "Profil frissítése sikertelen"
       updated: "Profil frissítve"
@@ -440,11 +444,11 @@ hu:
   requests: 
     create: 
       sending: "Küldés"
-      sent: "Megosztásra kért %{name}. A következő belépésük alkalmával láthatják a megosztásaid."
+      sent: "%{name} megosztásra kért(ek) fel. A következő belépésük alkalmával láthatják a megosztásaid."
     destroy: 
       error: "Kérlek válassz egy csoportot!"
       ignore: "Elutasított kapcsolati felkérés."
-      success: "Barátok lettek."
+      success: "Mostantól ismerősök vagytok."
     helper: 
       new_requests: 
         few: "%{count} új felkérés!"
@@ -475,8 +479,8 @@ hu:
       invite_your_friends_from: "Hívd meg a barátaidat innen: %{service}"
       not_connected: "nem kapcsolódik"
     index: 
-      connect_to_facebook: "Csatlakozás Facebook-hoz"
-      connect_to_twitter: "Csatlakozás Twitter-hez"
+      connect_to_facebook: "Csatlakozás facebook-hoz"
+      connect_to_twitter: "Csatlakozás twitter-hez"
       disconnect: "Megszakít"
       edit_services: "Szolgáltatások szerkesztése"
       logged_in_as: "Bejelentkezve, mint"
@@ -490,14 +494,17 @@ hu:
   settings: "Beállítások"
   shared: 
     add_contact: 
-      create_request: "Keress Diaspora felhasználónév alapján"
-      diaspora_handle: "Diaspora felhasználónév"
-      enter_a_diaspora_username: "Add meg a Diaspora felhasználónevet:"
+      create_request: "Keresés Diaspora felhasználónév alapján"
+      diaspora_handle: "diaspora@handle.org"
+      enter_a_diaspora_username: "Diaspora felhasználónév:"
       know_email: "Tudod az e-mail címüket? Hívd meg őket!"
       your_diaspora_username_is: "Diaspora felhasználóneved: %{diaspora_handle}"
     contact_list: 
       all_contacts: "Összes kapcsolat"
       cannot_remove: "Nem törölheted az utolsó csoportot. (Ha nem akarsz a személy ismerőse lenni, töröld a kapcsolatot.)"
+    footer: 
+      logged_in_as: "bejelentkezve, mint %{name}"
+      your_aspects: "csoportjaid"
     invitations: 
       by_email: "emailben"
       dont_have_now: "Nincs több meghívód, de hamarosan kapsz még!"
@@ -508,14 +515,14 @@ hu:
       invites: "Meghívók"
       invites_closed: "A meghívás jelenleg szünetel erre a Diaspora* kiszolgálóra."
     notification: 
-      new: "Új %{type}. Feladó: %{from}"
+      new: "Új %{type} %{from}-tól/től"
     public_explain: 
       logged_in: "bejelentkezve ide: %{service}"
       manage: "kapcsolódó szolgáltatások kezelése"
       outside: "A publikus üzeneteket a Diaspora-n kívüli személyek is láthatják."
       title: "Publikus üzenetet fogsz megjelentetni!"
     publisher: 
-      add_photos: "Képek hozzáadása"
+      add_photos: "képek hozzáadása"
       all: "összes"
       all_contacts: "összes kapcsolat"
       click_to_share_with: "Kattints, hogy megoszd vele:"
@@ -525,7 +532,7 @@ hu:
       public: "Nyilvános"
       publishing_to: "Publikálás:"
       share: "Megosztás"
-      share_with: "Megosztás vele: %{aspect}"
+      share_with: "megosztás vele"
       whats_on_your_mind: "Mi jár a fejedben?"
     reshare: 
       reshare: "Újraosztás"
@@ -554,6 +561,7 @@ hu:
       people_tagged_with: "Személy felcímkézve: %{tag}"
       posts_tagged_with: "Bejegyzések felcímkézve: #%{tag}"
   the_world: "a világ"
+  undo: "Visszavonod?"
   username: "Felhasználónév"
   users: 
     destroy: "Fiók sikeresen lezárult."
@@ -585,7 +593,7 @@ hu:
       finished: "Kész!"
       save_and_continue: "Mentés és folytatás"
       signup_steps: "Utolsó 3 lépés:"
-      skip: "ugrás a kezdetekhez"
+      skip: "átugrás"
       step_2: 
         find_your_friends_on_diaspora: "Meg szeretnéd találni a Facebook ismerőseidet a Diaspora-n?"
         skip: "Átugrom"

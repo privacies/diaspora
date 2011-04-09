@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
 
   def set_header_data
     if user_signed_in?
-      if request.format.html?
+      if request.format.html? && !params[:only_posts]
         @aspect = nil
         @object_aspect_ids = []
         @notification_count = Notification.for(current_user, :unread =>true).count
@@ -38,6 +38,9 @@ class ApplicationController < ActionController::Base
     @request_count = Request.where(:recipient_id => current_user.person.id).count if current_user
   end
 
+  def ensure_page
+    params[:page] = params[:page] ? params[:page].to_i : 1
+  end
   def set_invites
     if user_signed_in?
       @invites = current_user.invites

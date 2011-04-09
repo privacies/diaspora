@@ -82,6 +82,7 @@ ga:
     index: 
       handle_explanation: "This is your diaspora handle. Like an email address, you can give this to people to reach you."
       no_contacts: "No contacts"
+      post_a_message: "post a message >>"
     manage: 
       add_a_new_aspect: "Cuir gné nua leis"
       add_a_new_contact: "Cuir teagmháil leis"
@@ -179,6 +180,7 @@ ga:
       correct_the_following_errors_and_try_again: "Ceartaigh na botún seo a leanas agus bain trial eile as"
       invalid_fields: "Réimsí Neambhaillí"
   fill_me_out: "Líon mé amach"
+  hide: "Hide"
   home: 
     show: 
       already_account: "cúntas agat cheanna féin?"
@@ -218,7 +220,6 @@ ga:
   layouts: 
     application: 
       have_a_problem: "Have a problem? Find an answer here"
-      logged_in_as: "logged in as %{name}"
       powered_by: "AG ÚSÁID DIASPORA*"
       public_feed: "Public Diaspora Feed for %{name}"
       toggle: "toggle mobile site"
@@ -395,6 +396,9 @@ ga:
     update: 
       error: "Níor d'éirigh le aithrú an pictiúr."
       notice: "Pictiure Uaslódaithe."
+  post_visibilites: 
+    update: 
+      post_hidden: "%{name}'s post has been hidden."
   posts: 
     doesnt_exist: "that post does not exist!"
   previous: "roimhhe"
@@ -498,6 +502,9 @@ ga:
     contact_list: 
       all_contacts: "All contacts"
       cannot_remove: "Ní féidir leat fháil ré leis an duine seo ón gné déarnach. (Má tá tú ag iarradh dínascadh ón duine seo, tá ort fháil ré le teagmháil.)"
+    footer: 
+      logged_in_as: "logged in as %{name}"
+      your_aspects: "your aspects"
     invitations: 
       by_email: "by Email"
       dont_have_now: "Níl aon cinn agat fós, ach tá níos mó le teacht!"
@@ -554,6 +561,7 @@ ga:
       people_tagged_with: "People tagged with %{tag}"
       posts_tagged_with: "Posts tagged with #%{tag}"
   the_world: "an domhain"
+  undo: "Undo?"
   username: "Ainm úsáideora"
   users: 
     destroy: "D'eirigh le dúna do cúntas"
