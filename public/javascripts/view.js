@@ -68,6 +68,9 @@ var View = {
       $(this).unbind('click'); //everytime you click unbind the past event handled.
       $(this).facebox();
     });
+    $(document).bind('reveal.facebox', function() {
+      Diaspora.widgets.directionDetector.updateBinds();
+    });
 
     /* facebox 'done' buttons */
     $("a[rel*=close]").live('click', function(){ $.facebox.close() });
@@ -159,7 +162,7 @@ var View = {
     addAspect: {
       bind: function() {
         $(".add_aspect_button", "#aspect_nav").tipsy({
-          gravity:"w"
+          gravity: ($('html').attr('dir') == 'rtl')? "e" : "w"
         });
       }
     },
@@ -226,18 +229,16 @@ var View = {
 
   userMenu: {
     click: function(evt) {
-      if(!$(View.userMenu.selector).hasClass("active")) {
-        evt.preventDefault();
-      }
-      $(this).toggleClass("active");
+      $(this).parent().toggleClass("active");
+      evt.preventDefault();
     },
     removeFocus: function(evt) {
       var $target = $(evt.target);
-      if(!$target.closest("#user_menu").length) {
-        $(View.userMenu.selector).removeClass("active");
+      if(!$target.closest("#user_menu").length || ($target.attr('href') != undefined && $target.attr('href') != '#')) {
+        $(View.userMenu.selector).parent().removeClass("active");
       }
     },
-    selector: "#user_menu"
+    selector: "#user_menu li:first-child"
   },
 
   webFingerForm: {

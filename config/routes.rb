@@ -55,6 +55,7 @@ Diaspora::Application.routes.draw do
     get :export
     get :export_photos
   end
+  match '/people/:id/contacts' => 'people#contacts'
 
   controller :users do
     get 'public/:username'          => :public,          :as => 'users_public'
