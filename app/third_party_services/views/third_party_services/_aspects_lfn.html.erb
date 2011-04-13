@@ -61,7 +61,7 @@ var slDIV = document.getElementById('silverlightControlHost');
     }
 }
 
-function ChangeState(controlIdStr) {
+function ChangeState(control) {
     
     //CODE TO LOAD THE XAP FILE ON THE FLY - YOU MAY HAVE TO MODIFY IT ACCORDING TO DIASPORA
     
@@ -72,24 +72,14 @@ function ChangeState(controlIdStr) {
         LoadSilverlight();
     }
 
-    var controlsIdArr = controlIdStr.split(',');
+    controlValString = "";
+    $(control).parents('.post-control').first().find(':input').each(function(){
+      if ($(this).val()) {
+        controlValString += $(this).attr('class') + "#$#" + $(this).val();
+        controlValString += "#$#$#";
+      }
+    });
 
-    //Variable to store the control values
-    var controlValString = "";
-
-    //Foreach control get its value (given by the user)
-    for (var controlId in controlsIdArr) {
-			  controlId = controlsIdArr[controlId]
-        var controlObj = document.getElementById(controlId);
-        if (controlObj != null) {
-            //add control value in - controlName$controlValue format
-            controlValString += controlId + "#$#" + controlObj.value;
-
-            //for multilple values use $$ as separator
-            controlValString += "#$#$#";
-        }
-    }
-    
     //INVOKE THE LSC METHOD TO GET THE NEW INSTRUCTIONS, IF A RELOAD IS REQUIRED IT'LL BE DONE FROM INSIDE THE LSC
     var control = document.getElementById("SLObj");
     control.Content.Page.GetInstructions(controlValString);
