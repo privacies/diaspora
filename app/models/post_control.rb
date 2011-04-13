@@ -5,7 +5,7 @@ class PostControl < ActiveRecord::Base
   serialize :parameters
 
   def usable_for(user)
-    parameters.try(:public) or status_message.diaspora_handle == user.diaspora_handle
+    parameters[:public] or status_message.diaspora_handle == user.diaspora_handle
   end
 
   #TODO refactor
