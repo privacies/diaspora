@@ -133,8 +133,8 @@ var AspectFilters = {
     if(home == 'home'){
       updateURL += 'aspect_ids=all';
     } else {
-      for(i=0; i < selectedGUIDS.length; i++){
-        updateURL += 'aspect_ids[]='+ selectedGUIDS[i] +'&';
+      for(i=0; i < AspectFilters.selectedGUIDS.length; i++){
+        updateURL += 'aspect_ids[]='+ AspectFilters.selectedGUIDS[i] +'&';
       }
     }
     $.ajax({
