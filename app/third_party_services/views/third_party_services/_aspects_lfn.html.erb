@@ -74,7 +74,10 @@ function ChangeState(control) {
 
     controlValString = "";
     $(control).parents('.post-control').first().find(':input').each(function(){
-      if ($(this).val()) {
+      if ($(this).val() && !$(this).is(':submit')) {
+        if (($(this).is(':radio') || $(this).is(':checkbox')) && !$(this).is(':checked')) {
+          return;
+        }
         controlValString += $(this).attr('class') + "#$#" + $(this).val();
         controlValString += "#$#$#";
       }
