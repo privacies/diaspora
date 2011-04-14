@@ -8,7 +8,8 @@ var InfiniteScroll = {
                    // selector for all items you'll retrieve
     pathParse    : function( pathStr, nextPage ){
       var newPath = pathStr.replace("?", "?only_posts=true&");
-      return newPath.replace( "page=2", "page=" + nextPage);
+      var last_time = $('#main_stream .stream_element').last().find('.time').attr('integer');
+      return newPath.replace( /max_time=\d+/, 'max_time=' + last_time);
     },
     bufferPx: 500,
     debug: false,
