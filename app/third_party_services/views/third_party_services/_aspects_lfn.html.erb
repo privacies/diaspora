@@ -2,7 +2,7 @@
 
 <script type="text/javascript">
 
-var aspect_contacts = <%= json_aspect_contacts %>;
+var aspect_contacts = <%= raw json_aspect_contacts %>;
 var user_id         = "<%= current_user.diaspora_handle %>";
 
 function onSilverlightError(sender, args) {
