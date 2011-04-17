@@ -48,3 +48,5 @@ dump.rdb
 
 #Rubinius's JIT
 *.rbc
+
+.console_history
