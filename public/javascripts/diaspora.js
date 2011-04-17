@@ -3,33 +3,53 @@
 *   the COPYRIGHT file.
 */
 
-var Diaspora = Diaspora || {};
+(function() {
+  if(typeof window.Diaspora !== "undefined") {
+    return;
+  }
 
-Diaspora.widgetCollection = function() {
-  this.initialized = false;
-  this.collection = {};
-};
+  var Diaspora = { };
 
-Diaspora.widgetCollection.prototype.add = function(widgetId, widget) {
+  Diaspora.WidgetCollection = function() {
+    this.initialized = false;
+    this.collection = { };
+    this.eventsContainer = $({});
+  };
+
+  Diaspora.WidgetCollection.prototype.add = function(widgetId, widget) {
     this[widgetId] = this.collection[widgetId] = new widget();
     if(this.initialized) {
       this.collection[widgetId].start();
     }
   };
 
-Diaspora.widgetCollection.prototype.remove = function(widgetId) {
+  Diaspora.WidgetCollection.prototype.remove = function(widgetId) {
     delete this.collection[widgetId];
-};
+  };
 
-Diaspora.widgetCollection.prototype.init = function() {
-  this.initialized = true;
-  for(var widgetId in this.collection) {
-    this.collection[widgetId].start();
-  }
-}
+  Diaspora.WidgetCollection.prototype.init = function() {
+    this.initialized = true;
+    
+    for(var widgetId in this.collection) {
+      if(this.collection[widgetId].hasOwnProperty("start")) {
+        this.collection[widgetId].start();
+      }
+    }
+  };
 
-Diaspora.widgets = Diaspora.widgets || new Diaspora.widgetCollection();
+  Diaspora.WidgetCollection.prototype.subscribe = function(id, callback) {
+    this.eventsContainer.bind(id, callback);
+  };
 
-$(document).ready(function() {
-  Diaspora.widgets.init();
-});
+  Diaspora.WidgetCollection.prototype.publish = function(id) {
+    this.eventsContainer.trigger(id);
+  };
+
+  Diaspora.widgets = new Diaspora.WidgetCollection();
+  
+  window.Diaspora = Diaspora;
+})();
+
+
+$(document).ready(Diaspora.widgets.init);
+
