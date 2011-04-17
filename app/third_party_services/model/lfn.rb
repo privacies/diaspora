@@ -10,6 +10,7 @@ class Lfn < ThirdPartyService
       aspect_contacts     = get_aspect_contacts(aspect_id, user)
 
       aspect_contacts     = aspect_contacts.join(",").to_s if aspect_contacts.is_a? Array
+      aspect_id           = user.aspects.collect(&:id) unless aspect_id
       aspect_id           = aspect_id.join(',') if aspect_id.is_a? Array
 
       url_params = { :userId => user.person.diaspora_handle.to_s,
