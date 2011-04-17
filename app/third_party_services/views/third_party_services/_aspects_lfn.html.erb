@@ -100,7 +100,7 @@ function ChangeState(control) {
     concat_aspect_contacts = []
     for (i = 0; i < target_aspect_ids.length; i++){
       if (aspect_contacts[target_aspect_ids[i]] != null)
-        concat_aspect_contacts.concat(aspect_contacts[target_aspect_ids[i]]);
+        concat_aspect_contacts = concat_aspect_contacts.concat(aspect_contacts[target_aspect_ids[i]]);
     }
 
     controlValString     += "aspectContacts#$#" + concat_aspect_contacts.join(",") + "#$#$#";
