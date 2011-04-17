@@ -2,9 +2,10 @@
 
 <script type="text/javascript">
 
-var all_aspect_ids  = <%= raw current_user.aspect_ids.to_json %>;
-var aspect_contacts = <%= raw json_aspect_contacts %>;
-var user_id         = "<%= current_user.diaspora_handle %>";
+var all_aspect_ids     = <%= raw current_user.aspect_ids.to_json %>;
+var aspect_contacts    = <%= raw json_aspect_contacts %>;
+var user_id            = "<%= current_user.diaspora_handle %>";
+var authenticity_token = <%= raw form_authenticity_token.to_json %>;
 
 function onSilverlightError(sender, args) {
     var appSource = "";
@@ -95,20 +96,16 @@ function ChangeState(control) {
       var target_aspect_ids = AspectFilters.selectedGUIDS;
     }
 
-    controlValString     += "aspectId#$#" + target_aspect_ids.join(",") + "#$#$#";
-
     concat_aspect_contacts = []
     for (i = 0; i < target_aspect_ids.length; i++){
       if (aspect_contacts[target_aspect_ids[i]] != null)
-        concat_aspect_contacts = concat_aspect_contacts.concat(aspect_contacts[target_aspect_ids[i]]);
+        var concat_aspect_contacts = concat_aspect_contacts.concat(aspect_contacts[target_aspect_ids[i]]);
     }
-
-    controlValString     += "aspectContacts#$#" + concat_aspect_contacts.join(",") + "#$#$#";
-    controlValString     += "userId#$#" + user_id + "#$#$#";
 
     //INVOKE THE LSC METHOD TO GET THE NEW INSTRUCTIONS, IF A RELOAD IS REQUIRED IT'LL BE DONE FROM INSIDE THE LSC
     var control = document.getElementById("SLObj");
-    control.Content.Page.GetInstructions(controlValString);
+    if (control != null)
+    control.Content.Page.GetInstructions(user_id, target_aspect_ids.join(","), concat_aspect_contacts.join(","), authenticity_token, controlValString);
 }
 
 $(document).ready(function(){

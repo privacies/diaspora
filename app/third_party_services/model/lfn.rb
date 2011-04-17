@@ -3,20 +3,6 @@ class Lfn < ThirdPartyService
 
     SERVICE_URI = "http://lam.lfn.net/LAMService/invoke"
 
-    # Get the url params for the link
-    def url_params(params = {})
-      user                = params[:user]
-      aspect_id           = params[:aspect_id] ? params[:aspect_id] : user.aspect_ids
-      aspect_contacts     = get_aspect_contacts_from_ids(aspect_id)
-
-      aspect_contacts     = aspect_contacts.join(",").to_s if aspect_contacts.is_a? Array
-      aspect_id           = aspect_id.join(',') if aspect_id.is_a? Array
-
-      url_params = { :userId => user.person.diaspora_handle.to_s,
-                     :aspectId => aspect_id.to_s,
-                     :aspectContacts => aspect_contacts }
-    end
-
     ####################################################################################
     # Privacies Code
     # This function is responsible for sending createdPost call to mediator. This is what it does:
