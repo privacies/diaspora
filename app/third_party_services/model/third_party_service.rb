@@ -27,7 +27,7 @@ class ThirdPartyService
     return nil if target_contacts.empty?
     target_contacts.collect do |contact|
       contact.person.diaspora_handle
-    end
+    end.compact.uniq
   end
 
   # TODO instead of this maybe use ActiveSupport::Notifications

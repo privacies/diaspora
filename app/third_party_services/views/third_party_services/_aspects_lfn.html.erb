@@ -2,6 +2,7 @@
 
 <script type="text/javascript">
 
+var all_aspect_ids  = <%= raw current_user.aspect_ids.to_json %>;
 var aspect_contacts = <%= raw json_aspect_contacts %>;
 var user_id         = "<%= current_user.diaspora_handle %>";
 
@@ -87,11 +88,19 @@ function ChangeState(control) {
       }
     });
 
-    controlValString     += "aspectId#$#" + AspectFilters.selectedGUIDS.join(",") + "#$#$#";
+    if (AspectFilters.selectedGUIDS.length == 0) {
+      var target_aspect_ids = all_aspect_ids;
+    }
+    else {
+      var target_aspect_ids = AspectFilters.selectedGUIDS;
+    }
+
+    controlValString     += "aspectId#$#" + target_aspect_ids.join(",") + "#$#$#";
 
     concat_aspect_contacts = []
-    for (i = 0; i < AspectFilters.selectedGUIDS.length; i++){
-      concat_aspect_contacts.push(AspectContacts[AspectFilters.selectedGUIDS[i]]);
+    for (i = 0; i < target_aspect_ids.length; i++){
+      if (aspect_contacts[target_aspect_ids[i]] != null)
+        concat_aspect_contacts.concat(aspect_contacts[target_aspect_ids[i]]);
     }
 
     controlValString     += "aspectContacts#$#" + concat_aspect_contacts.join(",") + "#$#$#";

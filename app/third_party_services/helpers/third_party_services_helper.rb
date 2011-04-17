@@ -10,7 +10,9 @@ module ThirdPartyServicesHelper
   end
 
   def json_aspect_contacts
-    ThirdPartyService::get_aspect_contacts_from_ids(current_user.aspect_ids).to_json
+    current_user.aspect_ids.each_with_object({}) do |a_id, h|
+      h[a_id] = ThirdPartyService::get_aspect_contacts_from_ids(a_id)
+    end.to_json
   end
 
 end
