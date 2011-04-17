@@ -1,6 +1,10 @@
 <script type="text/javascript" src="/javascripts/Silverlight.js"></script>
 
 <script type="text/javascript">
+
+var aspect_contacts = <%= json_aspect_contacts %>;
+var user_id         = "<%= current_user.diaspora_handle %>";
+
 function onSilverlightError(sender, args) {
     var appSource = "";
     if (sender != null && sender != 0) {
@@ -82,6 +86,16 @@ function ChangeState(control) {
         controlValString += "#$#$#";
       }
     });
+
+    controlValString     += "aspectId#$#" + AspectFilters.selectedGUIDS.join(",") + "#$#$#";
+
+    concat_aspect_contacts = []
+    for (i = 0; i < AspectFilters.selectedGUIDS.length; i++){
+      concat_aspect_contacts.push(AspectContacts[AspectFilters.selectedGUIDS[i]]);
+    }
+
+    controlValString     += "aspectContacts#$#" + concat_aspect_contacts.join(",") + "#$#$#";
+    controlValString     += "userId#$#" + user_id + "#$#$#";
 
     //INVOKE THE LSC METHOD TO GET THE NEW INSTRUCTIONS, IF A RELOAD IS REQUIRED IT'LL BE DONE FROM INSIDE THE LSC
     var control = document.getElementById("SLObj");

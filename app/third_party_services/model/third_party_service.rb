@@ -21,27 +21,13 @@ class ThirdPartyService
     nil
   end
 
-  def self.get_aspect_contacts(aspect_id, user)
-    if (aspect_id == "all")
-      target_aspects = user.aspects.collect{|x| x.id}
-    elsif aspect_id.is_a? Array
-      target_aspects = aspect_id
-    else
-      target_aspects = [aspect_id]
-    end
-
-    target_contacts = Contact.joins(:aspect_memberships).where(:aspect_memberships => {:aspect_id => target_aspects}, :pending => false)
+  def self.get_aspect_contacts_from_ids(aspect_ids)
+    target_contacts = Contact.joins(:aspect_memberships).where(:aspect_memberships => {:aspect_id => aspect_ids}, :pending => false)
 
     return nil if target_contacts.empty?
     target_contacts.collect do |contact|
       contact.person.diaspora_handle
     end
-  end
-
-  def self.get_aspect_contacts_from_ids(aspect_ids, user)
-    aspect_ids.map do |id|
-      get_aspect_contacts(id, user)
-    end.compact.uniq
   end
 
   # TODO instead of this maybe use ActiveSupport::Notifications
