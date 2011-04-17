@@ -78,7 +78,7 @@ function ChangeState(control) {
         if (($(this).is(':radio') || $(this).is(':checkbox')) && !$(this).is(':checked')) {
           return;
         }
-        controlValString += $(this).attr('class') + "#$#" + $(this).val();
+        controlValString += $(this).data('field') + "#$#" + $(this).val();
         controlValString += "#$#$#";
       }
     });
@@ -87,6 +87,15 @@ function ChangeState(control) {
     var control = document.getElementById("SLObj");
     control.Content.Page.GetInstructions(controlValString);
 }
+
+$(document).ready(function(){
+  $('.post-control input[type=radio]').live('click', function(){
+    var group = $(this).data('radio-group');
+    $(this).parents('.post-control').find(':radio[data-radio-group='+ group +']').attr('checked', false);
+    $(this).attr('checked', 'checked');
+  });
+});
+
 </script>
 
 <div id="silverlightControlHost">
