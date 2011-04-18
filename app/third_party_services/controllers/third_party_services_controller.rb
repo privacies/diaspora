@@ -19,11 +19,17 @@ class ThirdPartyServicesController < ApplicationController
 
   def load_aspect_ids
     if params[:aspect_ids] == 'all' || !params[:aspect_ids].present?
+      @aspect     = :all
       @aspect_ids = current_user.aspect_ids
     else
       @aspect_ids = params[:aspect_ids].split(',')
     end
-    @object_aspect_ids = params[:aspect_ids]
+
+    if params[:aspect_ids] && params[:aspect_ids].is_a?(Array)
+      @object_aspect_ids = params[:aspect_ids].map(&:to_i)
+    else
+      @object_aspect_ids = []
+    end
   end
 
 end
