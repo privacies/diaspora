@@ -15,7 +15,7 @@ module ThirdPartyServicesHelper
     aspect_contacts = aspect_ids.each_with_object({}) do |a_id, h|
       h[a_id] = ThirdPartyService::get_aspect_contacts_from_ids(a_id)
     end
-    return aspect_contacts.values.compact.uniq.to_json if in_hash == false
+    return aspect_contacts.values.flatten.compact.uniq.to_json if in_hash == false
     aspect_contacts.to_json
   end
 
