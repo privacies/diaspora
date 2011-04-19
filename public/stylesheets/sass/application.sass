@@ -236,7 +236,10 @@ header
       :display block
 
 .unread
-  :background-color #eee
+  :font-weight bold
+  :color #333 !important
+  time
+    :color #333 !important
 
 .diaspora_header_logo
   :position relative
@@ -267,8 +270,6 @@ header
       :font
         :weight normal
         :size smaller
-      :position absolute
-      :right 20px
 
 .from
   a
@@ -1773,6 +1774,12 @@ ul#request_result
       :bottom 25px
     input.add
       :color green
+  .stream_element
+    .content
+      :display inline
+      :position relative
+      :bottom 2.5em
+      :padding 0
 
 .contact_list,
 .aspect_list
@@ -2250,6 +2257,14 @@ h3,h4
       :bottom 0.3em
     :padding 0.2em 0.5em
     :width 500px
+
+.day_group
+  :min-height 100px
+  :margin
+    :bottom 10px
+  .stream_element
+    &:last-child
+      :border none
 
 .stream.notifications
   > li:hover
@@ -2824,3 +2839,41 @@ h1.tag
       :bottom 4px
   .see_all
     :text-align center
+
+.date
+  :background
+    :color #e6e6e6
+  :border-radius 8px
+  :padding 5px
+  :color #999
+
+  :text-align center
+  .day
+    :font-size 50px
+    :font-weight 200
+    :margin-bottom -15px
+    :margin-top -10px
+
+  .month
+    :font-size 14px
+
+.notification_count
+  :background
+    :color #f0f0f0
+  :color #999
+  :font
+    :weight normal
+
+  :padding 0 5px
+    :left 11px
+  :margin
+    :right 5px
+  :border
+    :radius 5px
+
+  &.unread
+    :background
+      :color lighten(#A40802, 5%)
+    :color #eee !important
+    :font
+      :weight bold
