@@ -17,8 +17,6 @@
     = owner_image_link
     %h3{:style => "position:relative;"}
       = current_user.name
-      #ui_components_links
-        = ui_components_links(params[:a_ids])
       .description
         = link_to current_user.diaspora_handle, person_path(current_user.person)
 

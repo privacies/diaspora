@@ -1,0 +1,14 @@
+ul#aspect_nav > li#ui_components_links {
+  padding-left:0px;
+}
+
+#ui_components_links a.lfn {
+  background-image: url('/images/third_party_services/icons/lfn.png');
+  position:fixed;
+  width:25px;
+  height:18px;
+}
+
+#ui_components_links a.lfn.activated {
+  background-image: url('/images/third_party_services/icons/lfn_activated.png');
+}

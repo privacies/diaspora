@@ -21,6 +21,7 @@
 
     = stylesheet_link_tag "blueprint/screen", :media => 'screen'
     = stylesheet_link_tag "blueprint/print", :media => 'print'
+    = stylesheet_link_tag 'third_party_services/lfn'
     = include_stylesheets :default, :media => 'all'
     - if rtl?
       = include_stylesheets :rtl, :media => 'all'

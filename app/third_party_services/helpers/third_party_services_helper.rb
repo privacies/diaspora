@@ -2,8 +2,13 @@ module ThirdPartyServicesHelper
 
   def ui_components_links(aspect_ids = 'all')
     aspect_ids = aspect_ids.nil? ? 'all' : aspect_ids
-    link_to(image_tag('third_party_services/icons/lfn.png', :alt => "Lfn", :title => "Lfn"),
-            component_url('lfn', 'load', {:aspect_ids => aspect_ids}))
+    # TODO Refactor and Loop inside the third party services to display, when more tps
+    # Add new method to retrieve the id of the third party service
+    if @third_party_service.try(:view_file) == 'lfn'
+      link_to('', aspects_url(:a_ids => params[:a_ids]), :class => 'lfn activated')
+    else
+      link_to('', component_url('lfn', 'load', {:a_ids => aspect_ids}), :class => 'lfn')
+    end
   end
 
   def component_url(service_name, action, params = {})
