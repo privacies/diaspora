@@ -8,6 +8,7 @@ class ThirdPartyServicesController < ApplicationController
     render @third_party_service.view_file
   end
 
+  # TODO remove the ajax call and just add the ids to the url after the click
   def update_links
     @aspect_ids = params[:aspect_ids]
     respond_to do |format|
