@@ -7,6 +7,7 @@ ul#aspect_nav > li#ui_components_links {
   position:fixed;
   width:17px;
   height:17px;
+  top:33px;
 }
 
 #ui_components_links a.lfn.activated {
