@@ -14,47 +14,49 @@ It basically loads XAP file with the arguments passed to this aspect
     var aspect_contacts    = <%= raw json_aspect_contacts(@aspect_ids, false) %>;
     var user_id            = "<%= current_user.diaspora_handle %>";
     var authenticity_token = <%= raw form_authenticity_token.to_json %>;
+  });
+  
+  function onSilverlightError(sender, args) {
+      var appSource = "";
+      if (sender != null && sender != 0) {
+          appSource = sender.getHost().Source;
+      }
 
-    function onSilverlightError(sender, args) {
-        var appSource = "";
-        if (sender != null && sender != 0) {
-            appSource = sender.getHost().Source;
-        }
+      var errorType = args.ErrorType;
+      var iErrorCode = args.ErrorCode;
 
-        var errorType = args.ErrorType;
-        var iErrorCode = args.ErrorCode;
+      if (errorType == "ImageError" || errorType == "MediaError") {
+          return;
+      }
 
-        if (errorType == "ImageError" || errorType == "MediaError") {
-            return;
-        }
+      var errMsg = "Unhandled Error in Silverlight Application " + appSource + "\n";
 
-        var errMsg = "Unhandled Error in Silverlight Application " + appSource + "\n";
+      errMsg += "Code: " + iErrorCode + "    \n";
+      errMsg += "Category: " + errorType + "       \n";
+      errMsg += "Message: " + args.ErrorMessage + "     \n";
 
-        errMsg += "Code: " + iErrorCode + "    \n";
-        errMsg += "Category: " + errorType + "       \n";
-        errMsg += "Message: " + args.ErrorMessage + "     \n";
+      if (errorType == "ParserError") {
+          errMsg += "File: " + args.xamlFile + "     \n";
+          errMsg += "Line: " + args.lineNumber + "     \n";
+          errMsg += "Position: " + args.charPosition + "     \n";
+      }
+      else if (errorType == "RuntimeError") {
+          if (args.lineNumber != 0) {
+              errMsg += "Line: " + args.lineNumber + "     \n";
+              errMsg += "Position: " + args.charPosition + "     \n";
+          }
+          errMsg += "MethodName: " + args.methodName + "     \n";
+      }
+      throw new Error(errMsg);
+  }
 
-        if (errorType == "ParserError") {
-            errMsg += "File: " + args.xamlFile + "     \n";
-            errMsg += "Line: " + args.lineNumber + "     \n";
-            errMsg += "Position: " + args.charPosition + "     \n";
-        }
-        else if (errorType == "RuntimeError") {
-            if (args.lineNumber != 0) {
-                errMsg += "Line: " + args.lineNumber + "     \n";
-                errMsg += "Position: " + args.charPosition + "     \n";
-            }
-            errMsg += "MethodName: " + args.methodName + "     \n";
-        }
-        throw new Error(errMsg);
-    }
-
-    function onSilverlightLoad() {
-      var control             = document.getElementById("SLObj");
-      if (control != null)
+  function onSilverlightLoad() {
+    var control             = document.getElementById("SLObj");
+    if (control != null) {
       control.Content.Page.Initialize(user_id, aspect_ids.join(","), aspect_contacts.join(","), authenticity_token);
     }
-  });
+  }
+  
 </script>
 <% end %>
 
