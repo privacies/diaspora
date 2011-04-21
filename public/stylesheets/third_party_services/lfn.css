@@ -2,14 +2,16 @@ ul#aspect_nav > li#ui_components_links {
   padding-left:0px;
 }
 
-#ui_components_links a.lfn {
+#ui_components_links a.lfn span {
   background-image: url('/images/third_party_services/icons/lfn.png');
-  position:fixed;
   width:17px;
   height:17px;
-  top:33px;
+  display:inline-block;
+  position:relative;
+  top:5px;
 }
 
-#ui_components_links a.lfn.activated {
+#ui_components_links a.lfn.activated span {
   background-image: url('/images/third_party_services/icons/lfn_activated.png');
 }
+
