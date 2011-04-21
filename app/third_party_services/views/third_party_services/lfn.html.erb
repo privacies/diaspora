@@ -9,12 +9,10 @@ It basically loads XAP file with the arguments passed to this aspect
 <% content_for :head do %>
 <%= javascript_include_tag 'third_party_services/lfn', 'Silverlight'  %>
 <script type="text/javascript">
-  $(document).ready(function(){
-    var aspect_ids         = <%= raw @aspect_ids.to_json %>;
-    var aspect_contacts    = <%= raw json_aspect_contacts(@aspect_ids, false) %>;
-    var user_id            = "<%= current_user.diaspora_handle %>";
-    var authenticity_token = <%= raw form_authenticity_token.to_json %>;
-  });
+  var aspect_ids         = <%= raw @aspect_ids.to_json %>;
+  var aspect_contacts    = <%= raw json_aspect_contacts(@aspect_ids, false) %>;
+  var user_id            = "<%= current_user.diaspora_handle %>";
+  var authenticity_token = <%= raw form_authenticity_token.to_json %>;
   
   function onSilverlightError(sender, args) {
       var appSource = "";
