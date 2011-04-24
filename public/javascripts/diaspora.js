@@ -29,9 +29,9 @@
 
   Diaspora.WidgetCollection.prototype.init = function() {
     this.initialized = true;
-    
+
     for(var widgetId in this.collection) {
-      if(this.collection[widgetId].hasOwnProperty("start")) {
+      if(typeof this.collection[widgetId].start !== "undefined") {
         this.collection[widgetId].start();
       }
     }
@@ -46,10 +46,10 @@
   };
 
   Diaspora.widgets = new Diaspora.WidgetCollection();
-  
+
   window.Diaspora = Diaspora;
 })();
 
 
-$(document).ready(Diaspora.widgets.init);
+$(document).ready(function() { Diaspora.widgets.init(); });
 

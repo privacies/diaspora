@@ -35,10 +35,10 @@ var AspectFilters = {
     if( !link.hasClass('aspect_selector') ){
       AspectFilters.switchToAspect(link);
     }
-    
+
     // remove focus
     this.blur();
-    
+
     $('html, body').animate({scrollTop:0}, 'fast');
   },
   switchToAspect: function(aspectLi){
@@ -77,7 +77,7 @@ var AspectFilters = {
         }
         listElement.removeClass('selected');
 
-        if(AspectFilters.selectedGUIDS.length == 0){
+        if(AspectFilters.selectedGUIDS.length === 0){
           homeListElement.addClass('selected');
         }
 
@@ -117,7 +117,7 @@ var AspectFilters = {
     // update the open aspects in the user
     updateURL = "/user";
     updateURL += '?';
-    if(AspectFilters.selectedGUIDS.length == 0){
+    if(AspectFilters.selectedGUIDS.length === 0){
       updateURL += 'user[a_ids][]=home';
     } else {
       for(i=0; i < AspectFilters.selectedGUIDS.length; i++){
@@ -127,7 +127,7 @@ var AspectFilters = {
 
     $.ajax({
       url : updateURL,
-      type: "PUT",
+      type: "PUT"
       });
   },
   updateUIComponentLinks: function(home){
@@ -172,9 +172,9 @@ var AspectFilters = {
         // (not cached because this element changes)
 
         var textarea = $("#publisher textarea");
-        var photozone = $('#photodropzone')
+        var photozone = $('#photodropzone');
 
-        if( post != "" ) {
+        if( post !== "" ) {
           textarea.val(post);
           textarea.focus();
         }
@@ -190,7 +190,7 @@ var AspectFilters = {
         Diaspora.widgets.publish("stream/reloaded");
 
         // fade contents back in
-        if(AspectFilters.requests == 0){
+        if(AspectFilters.requests === 0){
           AspectFilters.fadeIn();
           AspectFilters.performAspectUpdate();
           AspectFilters.updateUIComponentLinks();
