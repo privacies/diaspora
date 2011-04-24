@@ -6,6 +6,8 @@ class ApplicationController < ActionController::Base
   has_mobile_fu
   protect_from_forgery :except => :receive
 
+  helper :third_party_services
+
   before_filter :ensure_http_referer_is_set
   before_filter :set_header_data, :except => [:create, :update]
   before_filter :count_requests

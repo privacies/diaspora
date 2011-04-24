@@ -11,7 +11,6 @@ class AspectsController < ApplicationController
   respond_to :json, :only => [:show, :create]
   respond_to :js
 
-  helper :third_party_services
   before_filter :index do
     @ui_components = ThirdPartyService::load_components
   end
