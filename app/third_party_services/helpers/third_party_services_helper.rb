@@ -1,13 +1,14 @@
 module ThirdPartyServicesHelper
 
-  def ui_components_links(aspect_ids = 'all')
-    aspect_ids = aspect_ids.nil? ? 'all' : aspect_ids
+  def ui_components_links(aspect_ids = nil)
+    params = {}
+    params[:a_ids] = aspect_ids if aspect_ids
     # TODO Refactor and Loop inside the third party services to display, when more tps
     # Add new method to retrieve the id of the third party service
     if @third_party_service.try(:view_file) == 'lfn'
-      link_to(content_tag(:span), aspects_url(:a_ids => params[:a_ids]), :class => 'lfn activated')
+      link_to(content_tag(:span), aspects_url(params), :class => 'lfn activated')
     else
-      link_to(content_tag(:span), component_url('lfn', 'load', {:a_ids => aspect_ids}), :class => 'lfn')
+      link_to(content_tag(:span), component_url('lfn', 'load', params), :class => 'lfn')
     end
   end
 
