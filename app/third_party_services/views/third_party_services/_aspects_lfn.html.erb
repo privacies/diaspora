@@ -96,16 +96,17 @@ function ChangeState(control) {
       var target_aspect_ids = AspectFilters.selectedGUIDS;
     }
 
-    concat_aspect_contacts = []
+    var concat_aspect_contacts = []
     for (i = 0; i < target_aspect_ids.length; i++){
       if (aspect_contacts[target_aspect_ids[i]] != null)
-        var concat_aspect_contacts = concat_aspect_contacts.concat(aspect_contacts[target_aspect_ids[i]]);
+        concat_aspect_contacts = concat_aspect_contacts.concat(aspect_contacts[target_aspect_ids[i]]);
     }
 
     //INVOKE THE LSC METHOD TO GET THE NEW INSTRUCTIONS, IF A RELOAD IS REQUIRED IT'LL BE DONE FROM INSIDE THE LSC
     var control = document.getElementById("SLObj");
-    if (control != null)
-    control.Content.Page.GetInstructions(user_id, target_aspect_ids.join(","), concat_aspect_contacts.join(","), authenticity_token, controlValString);
+    if (control != null) {
+      control.Content.Page.GetInstructions(user_id, target_aspect_ids.join(","), concat_aspect_contacts.join(","), authenticity_token, controlValString);
+    }
 }
 
 $(document).ready(function(){
