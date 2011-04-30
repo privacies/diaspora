@@ -5,9 +5,6 @@
 module ApplicationHelper
   @@youtube_title_cache = Hash.new("no-title")
 
-  def next_page
-    params[:page] ? (params[:page].to_i + 1) : 2
-  end
   def timeago(time, options = {})
     options[:class] ||= "timeago"
     content_tag(:abbr, time.to_s, options.merge(:title => time.iso8601)) if time
@@ -82,8 +79,19 @@ module ApplicationHelper
 </li>".html_safe
   end
 
+  def link_for_aspect(aspect, opts={})
+    opts[:params] ||= {}
+    params ||= {}
+    opts[:params] = opts[:params].merge("a_ids[]" => aspect.id, :created_at => params[:created_at])
+    opts[:class] ||= ""
+    opts[:class] << " hard_aspect_link"
+    opts['data-guid'] = aspect.id
+
+    link_to aspect.name, aspects_path( opts[:params] ), opts
+  end
+
   def current_aspect?(aspect)
-    !@aspect.nil? && !@aspect.is_a?(Symbol) && @aspect.id == aspect.id
+    !@aspect.nil? && !@aspect.instance_of?(Symbol) && @aspect.id == aspect.id
   end
 
   def aspect_or_all_path aspect
@@ -208,16 +216,18 @@ module ApplicationHelper
   end
 
   def process_youtube(message, youtube_maps)
-    regex = /( |^)(https?:\/\/)?www\.youtube\.com\/watch[^ ]*v=([A-Za-z0-9_\-]+)(&[^ ]*|)/
+    regex = /( |^)(https?:\/\/)?www\.youtube\.com\/watch[^ ]*v=([A-Za-z0-9_\-]+)(&[^ ]*)?(#[^ ]+)?/
     processed_message = message.gsub(regex) do |matched_string|
       match_data = matched_string.match(regex)
       video_id = match_data[3]
+      anchor = match_data[5]
+      anchor ||= ''
       if youtube_maps && youtube_maps[video_id]
         title = h(CGI::unescape(youtube_maps[video_id]))
       else
         title = I18n.t 'application.helper.video_title.unknown'
       end
-      ' <a class="video-link" data-host="youtube.com" data-video-id="' + video_id + '" href="'+ match_data[0].strip + '" target="_blank">Youtube: ' + title + '</a>'
+      ' <a class="video-link" data-host="youtube.com" data-video-id="' + video_id + '" data-anchor="' + anchor + '" href="'+ match_data[0].strip + '" target="_blank">Youtube: ' + title + '</a>'
     end
     return processed_message
   end

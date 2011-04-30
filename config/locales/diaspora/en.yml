@@ -255,9 +255,9 @@ en:
     header:
       profile: "profile"
       settings: "settings"
-      logout: "logout"
+      logout: "log out"
       blog: "blog"
-      login: "login"
+      login: "log in"
       code: "code"
     application:
       powered_by: "POWERED BY DIASPORA*"
