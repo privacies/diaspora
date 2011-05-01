@@ -7,7 +7,7 @@ cs:
   javascripts: 
     confirm_dialog: "Jste si jisti?"
     infinite_scroll: 
-      no_more: "No more posts."
+      no_more: "Žádné další příspěvky."
     publisher: 
       at_least_one_aspect: "Musíte publikovat alespoň do jednoho aspektu"
     search_for: "Hledat {{name}}"
@@ -33,3 +33,7 @@ cs:
     videos: 
       unknown: "Neznámý typ videa"
       watch: "Podívejte se na tohle video na {{provider}}"
+    web_sockets: 
+      disconnected: 
+        body: "Příspěvky nebude možno sledovat živě."
+        title: "Byli jste odpojeni."
