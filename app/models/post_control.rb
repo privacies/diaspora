@@ -8,11 +8,8 @@ class PostControl < ActiveRecord::Base
 
   def usable_for(user)
     @usable = true
-    if parameters[:to_users]
-      @usable &= parameters[:to_users].split(',').include?(user.diaspora_handle)
-    else
-      @usable &= ((parameters[:public] and parameters[:public].to_i == 1) || status_message.diaspora_handle == user.diaspora_handle)
-    end
+    @usable &= valid_token?(user)
+    @usable &= valid_user?(user)
     @usable &= fresh?
   end
 
@@ -23,19 +20,32 @@ class PostControl < ActiveRecord::Base
 
   private
 
+  def valid_token?(user)
+    return true unless parameters[:check_token]
+    user.third_party_user_tokens.find_by_value(parameters[:check_token])
+  end
+
+  def valid_user?(user)
+    return true unless parameters[:to_users]
+    parameters[:to_users].split(',').include?(user.diaspora_handle)
+  end
+
   def fresh?
     return true if !parameters[:freshness_condition] || !parameters[:token_date]
     (Time.now < (parameters[:token_date] + parameters[:freshness_condition].to_i.minutes))
   end
 
   def filter_parameters
+    status_message.author.owner.third_party_user_tokens.find_or_create_by_value(parameters[:token]) if parameters[:token]
+
     self.parameters[:freshness_condition] = parameters[:freshness_condition].to_i if parameters[:freshness_condition]
     self.parameters[:token_date] = Time.now if parameter_changed?(:token_date)
+    true
   end
 
   def parameter_changed?(key)
     previous_parameters, new_parameters = parameters_change
-    new_parameters[:token] && previous_parameters.try('fetch', :token) != new_parameters[:token]
+    new_parameters[key] && previous_parameters.try('fetch', key) != new_parameters[key]
   end
 
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110421120744) do
+ActiveRecord::Schema.define(:version => 20110501203345) do
 
   create_table "aspect_memberships", :force => true do |t|
     t.integer  "aspect_id",  :null => false
@@ -223,8 +223,8 @@ ActiveRecord::Schema.define(:version => 20110421120744) do
     t.integer  "post_id",                       :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "contact_id",                    :null => false
     t.boolean  "hidden",     :default => false, :null => false
+    t.integer  "contact_id",                    :null => false
   end
 
   add_index "post_visibilities", ["contact_id", "post_id"], :name => "index_post_visibilities_on_contact_id_and_post_id", :unique => true
@@ -348,6 +348,13 @@ ActiveRecord::Schema.define(:version => 20110421120744) do
   end
 
   add_index "tags", ["name"], :name => "index_tags_on_name", :unique => true
+
+  create_table "third_party_user_tokens", :force => true do |t|
+    t.string   "value"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "user_preferences", :force => true do |t|
     t.string   "email_type"

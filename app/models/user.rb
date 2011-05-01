@@ -38,6 +38,7 @@ class User < ActiveRecord::Base
   has_many :contact_people, :through => :contacts, :source => :person
   has_many :services
   has_many :user_preferences
+  has_many :third_party_user_tokens
 
   before_destroy :disconnect_everyone, :remove_mentions, :remove_person
   before_save do
