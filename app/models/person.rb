@@ -33,6 +33,8 @@ class Person < ActiveRecord::Base
   has_many :notification_actors
   has_many :notifications, :through => :notification_actors
 
+  has_many :third_party_user_tokens, :dependent => :destroy
+
   has_many :mentions, :dependent => :destroy
 
   before_destroy :remove_all_traces

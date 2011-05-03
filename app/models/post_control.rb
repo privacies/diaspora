@@ -36,7 +36,7 @@ class PostControl < ActiveRecord::Base
   end
 
   def filter_parameters
-    status_message.author.owner.third_party_user_tokens.find_or_create_by_value(parameters[:token]) if parameters[:token]
+    status_message.author.third_party_user_tokens.find_or_create_by_value(parameters[:token]) if parameters[:token]
 
     self.parameters[:freshness_condition] = parameters[:freshness_condition].to_i if parameters[:freshness_condition]
     self.parameters[:token_date] = Time.now if parameter_changed?(:token_date)
