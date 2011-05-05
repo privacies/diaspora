@@ -169,21 +169,17 @@ module ApplicationHelper
   def markdownify(message, options = {})
     message = h(message).html_safe
 
-    if !options.has_key?(:newlines)
-      options[:newlines] = true
-    end
+    options[:newlines] = true if !options.has_key?(:newlines)
+    options[:emoticons] = true if !options.has_key?(:emoticons)
 
     message = process_links(message)
     message = process_autolinks(message)
     message = process_emphasis(message)
     message = process_youtube(message, options[:youtube_maps])
     message = process_vimeo(message, options[:vimeo_maps])
+    message = process_emoticons(message) if options[:emoticons]
 
-    message.gsub!(/&lt;3/, "&hearts;")
-
-    if options[:newlines]
-      message.gsub!(/\n+/, '<br />')
-    end
+    message.gsub!(/\n+/, '<br />') if options[:newlines]
 
     return message
   end
@@ -216,11 +212,10 @@ module ApplicationHelper
   end
 
   def process_youtube(message, youtube_maps)
-    regex = /( |^)(https?:\/\/)?www\.youtube\.com\/watch[^ ]*v=([A-Za-z0-9_\-]+)(&[^ ]*)?(#[^ ]+)?/
-    processed_message = message.gsub(regex) do |matched_string|
-      match_data = matched_string.match(regex)
-      video_id = match_data[3]
-      anchor = match_data[5]
+    processed_message = message.gsub(YoutubeTitles::YOUTUBE_ID_REGEX) do |matched_string|
+      match_data = matched_string.match(YoutubeTitles::YOUTUBE_ID_REGEX)
+      video_id = match_data[1]
+      anchor = match_data[2]
       anchor ||= ''
       if youtube_maps && youtube_maps[video_id]
         title = h(CGI::unescape(youtube_maps[video_id]))
@@ -277,6 +272,27 @@ module ApplicationHelper
       ' <a class="video-link" data-host="vimeo.com" data-video-id="' + video_id + '" href="' + match_data[0] + '" target="_blank">Vimeo: ' + title + '</a>'
     end
     return processed_message
+  end
+
+  def process_emoticons(message)
+    map = {
+      "&lt;3" => "&hearts;",
+      ":("    => "&#9785;",
+      ":-("   => "&#9785;",
+      ":)"    => "&#9786;",
+      ":-)"   => "&#9786;",
+      "-&gt;" => "&rarr;",
+      "&lt;-" => "&larr;",
+      "..."   => "&hellip;",
+      "(tm)"  => "&trade;",
+      "(r)"   => "&reg;",
+      "(c)"   => "&copy;"
+    }
+    
+    map.each do |search, replace|
+      message.gsub!(search, replace)
+    end
+    message
   end
 
   def info_text(text)

@@ -139,13 +139,13 @@ describe ApplicationHelper do
       end
 
       it "recognizes multiple links of different types" do
-        message = "http:// Hello World, this is for www.joindiaspora.com and not for http://www.google.com though their Youtube service is neat, take http://www.youtube.com/watch?v=foobar or www.youtube.com/watch?foo=bar&v=BARFOO&whatever=related It is a good idea we finally have youtube, so enjoy this video http://www.youtube.com/watch?v=rickrolld"
+        message = "http:// Hello World, this is for www.joindiaspora.com and not for http://www.google.com though their Youtube service is neat, take http://www.youtube.com/watch?v=foobar----- or www.youtube.com/watch?foo=bar&v=BARFOO-----&whatever=related It is a good idea we finally have youtube, so enjoy this video http://www.youtube.com/watch?v=rickrolld--"
         res = markdownify(message)
         res.should =~ /a target=\"_blank\" href=\"http:\/\/www.joindiaspora.com\"/
         res.should =~ /a target=\"_blank\" href=\"http:\/\/www.google.com\"/
-        res.should =~ /data-video-id="foobar"/
-        res.should =~ /data-video-id="BARFOO"/
-        res.should =~ /data-video-id="rickrolld"/
+        res.should =~ /data-video-id="foobar-----"/
+        res.should =~ /data-video-id="BARFOO-----"/
+        res.should =~ /data-video-id="rickrolld--"/
       end
 
       it "should recognize basic ftp links" do
@@ -161,10 +161,20 @@ describe ApplicationHelper do
       end
     end
 
-    describe "hearts" do
+    describe "emoticons" do
       it "replaces &lt;3 with &hearts;" do
         message = "i <3 you"
         markdownify(message).should == "i &hearts; you"
+      end
+      
+      it "replaces various things with (their) HTML entities" do
+        message = ":) :-) :( :-( ... -> <- (tm) (r) (c)"
+        markdownify(message).should == "&#9786; &#9786; &#9785; &#9785; &hellip; &rarr; &larr; &trade; &reg; &copy;"
+      end
+      
+      it "skips doing it if you say so" do
+        message = ":) :-) :( :-( ... -> <-"
+        markdownify(message, :emoticons => false).should == ":) :-) :( :-( ... -&gt; &lt;-"
       end
     end
 
