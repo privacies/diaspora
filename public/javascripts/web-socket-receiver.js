@@ -8,8 +8,9 @@ var WebSocketReceiver = {
     ws.onclose = function() {
       Diaspora.widgets.notifications.showNotification({
         html: '<div class="notification">' +
-          Diaspora.widgets.i18n.t("web_sockets.disconnected") +
-          '</div>'
+            Diaspora.widgets.i18n.t("web_sockets.disconnected") +
+          '</div>',
+        incrementCount: false
       });
 
       WSR.debug("socket closed");
@@ -127,29 +128,7 @@ var WebSocketReceiver = {
 
   processPost: function(className, postId, html, aspectIds) {
     if(WebSocketReceiver.onPageForAspects(aspectIds)) {
-      WebSocketReceiver.addPostToStream(postId, html);
-    }
-  },
-
-  addPostToStream: function(postId, html) {
-    if( $(".stream_element[data-guid='" + postId + "']").length === 0 ) {
-      var streamElement = $(html);
-
-      var showMessage = function() {
-        $("#main_stream:not('.show')").prepend(
-          streamElement.fadeIn("fast", function() {
-            streamElement.find("label").inFieldLabels();
-          })
-        );
-      };
-
-      if( $("#no_posts").is(":visible") ) {
-        $("#no_posts").fadeOut(400, showMessage()).hide();
-      } else {
-        showMessage();
-      }
-      Diaspora.widgets.timeago.updateTimeAgo();
-      Diaspora.widgets.directionDetector.updateBinds();
+      ContentUpdater.addPostToStream(postId, html);
     }
   },
 
